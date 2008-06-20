@@ -1,0 +1,354 @@
+plugin.tx_trade_pi1 {
+	template=EXT:trade/res/misc_template.html,EXT:trade/res/item_list_template.html,EXT:trade/res/basket_template.html,EXT:trade/res/confirm_template.html,EXT:trade/res/email_checkout_template.html,EXT:trade/res/saved_order_items_template.html,EXT:trade/res/thanks_template.html,EXT:trade/res/order_history_template.html,EXT:trade/res/misc_component.html,EXT:trade/res/userdetails_component.html,EXT:trade/res/paymentdetails_component.html,EXT:trade/res/shippingdetails_component.html
+	templateCache=typo3temp/trade_templatecache.html
+	noImageAvailable=EXT:trade/res/no_picture.gif
+	RTE.stdWrap {
+      parseFunc < tt_content.text.20.parseFunc
+    }
+    #< tt_content.text.20.parseFunc.stdWrap
+	#lib.parseFunc_RTE 
+	
+	adminEmail=
+	bccOrderEmail=
+	maxListRows=20
+	currencyCode=AUD
+	currencySymbol=$
+	invoiceDescription=
+	confirmEmailTitle=Regarding your order 
+	confirmEmailAdminTitle=New Order Placed
+	plainTextEmails=1
+	shopOwnerDetails=
+	priceField=1
+	customerUserGroup=1
+	customerUserGroupWhenOrderClosed=0
+	imageWidthList=100
+	singleViewImage {
+	  file.maxW = 300
+	  imageLinkWrap = 1
+	  imageLinkWrap {
+	    enable = 1
+	    bodyTag = <body bgColor=black leftmargin=0 topmargin=0 marginwidth=0 marginheight=0>
+	    wrap = <A href="javascript:close();"> | </A>
+	    width = 700
+	    height = 
+	    JSwindow = 1
+	    JSwindow.newWindow = 1
+	    JSwindow.expand = 0,0
+	  }
+	}
+	listViewImage {
+	  file.maxW = 75
+	}
+
+	emailDataSheet=1
+	
+	tracking_code_label=order-
+	tracking_code_start=1
+	tracking_code_increment=1
+	
+	userRequiredFields=username,password,email,name
+	shippingRequiredFields=tx_trade_shipping_name
+	cmdList=productstorage,categorystorage,orderstorage,userstorage,list,list_default,list_search,list_recent,list_specialoffers,singleview,basket,basket_overview,checkout,user_details,user_shipping_details,user_shipping_payment_details,usersave,login,lost_password,confirm,thanks,order_history_list,order_history_single,copy_address_to_shipping,wishlist_list
+    # all stages in checkout are added to this list
+    validCmds=list,checkout,singleview,copy_address_to_shipping,order_history_single,order_history_list
+    showLoginAt=list,basket,user_shipping_details
+	hideMenuAt=thanks,order_history_list,order_history_single
+	progressBar {
+	    stdWrap.wrap=<ul id="trade_progress">|</ul>
+	    itemStdWrap.wrap=<li>|</li>
+	    currentStdWrap.wrap=<span style="background-color:{$tradecolor2};">|</span>
+	}
+	listMenu {
+	      stdWrap.wrap=<UL id="trade_listmenu">|</UL>
+	      itemStdWrap.wrap=<LI>|</LI>
+	      currentStdWrap.wrap=<b>|</b>
+	}
+    checkout {
+    	list {
+    		condition=$testResult=true;
+    		next=basket
+    		label=Select&nbsp;Products
+    		label.stdWrap.wrap=
+    	}
+		basket {
+			condition=if (sizeof($this->basket)>0 && $this->shipping['method']>0 && $this->payment['method']>0 && (($this->piVars['submit_payment_method']==1 && $this->piVars['submit_shipping_method']==1)||$this->user['basket_approved']==1) ) $testResult=true;
+			next=user_shipping_details
+			templateSubpart=BASKET
+			label=Payment/Shipping&nbsp;Details
+			label.stdWrap.wrap=
+		}
+		user_shipping_details {
+			condition=if ($this->user['valid']==1 && $this->user['valid_shipping_details']==1&&$this->user['basket_approved']==1) $testResult=true;
+			next=confirm
+			templateSubpart=USER_SHIPPING_DETAILS
+			label=Customer&nbsp;Details
+			label.stdWrap.wrap=
+		}
+		# auto basket process takes you as far as the confirm page
+		# confirm page must include tx_trade_pi[finalise_checkout]=1 
+		confirm {
+			#condition=if ($this->order['status']==1) $testResult=true;
+			condition=$testResult=false;
+			next=NOT USED
+			templateSubpart=CONFIRM
+			label=Confirmation
+			label.stdWrap.wrap=
+		}
+		disabled-thanks {
+			condition=$testResult=false;
+			next=NOT USED
+			templateSubpart=THANKS
+			label=Order&nbsp;Complete
+			label.stdWrap.wrap=
+		}
+	}
+	
+	lists {
+		default {
+			title=
+			label=All Products
+			#extraWhere= category_uid=3
+			extraWhere= 
+			templateSubpart=ITEM_LIST
+			search=0
+			orderBy=sorting
+			categoryOrderBy=sorting
+		}
+		search {
+			title=Search
+			label=Search
+			extraWhere=
+			templateSubpart=ITEM_LIST
+			search=1
+			orderBy=sorting
+			categoryOrderBy=sorting
+		}
+		recent {
+			title=Recently Added Products
+			label=Recently Added Products
+			# last 7 days
+			extraWhere= DATE_SUB(CURDATE(),INTERVAL 7 DAY) <= crdate
+			templateSubpart=ITEM_LIST
+			search=0
+			orderBy=crdate desc
+			categoryOrderBy=sorting
+		}
+		specialoffers {
+			title=Special Offers
+			label=Special Offers
+			extraWhere= special=1
+			templateSubpart=ITEM_LIST
+			search=0
+			orderBy=sorting
+			categoryOrderBy=sorting
+		}
+	}
+	# WARNING. DO NOT RENUMBER THE FOLLOWING SETTINGS OR YOU WILL BREAK THE FLEX FORM 
+	# CONFIGURATION TO ENABLE/DISABLE THE PAYMENT OPTIONS
+	payment {
+		radio = 1
+		10.title = Credit Card (Eway)
+		10.description=Secure payment gateway, real time transaction. 
+		10.image.file = EXT:trade/res/creditcard.gif
+		10.priceTax = 
+		#10.calculationScript = EXT:tt_products/pi1/products_comp_calcScript.inc
+		10.percentOfGoodsTotal = 1.4
+		10.detailsOK=if ($this->validateCreditCard($this->piVars['card_number'],$this->payment['card_exp_month'],$this->payment['card_exp_year'],$this->payment['card_name'])) $detailsOK=true; else  $detailsOK=false;
+		10.detailsError=Invalid credit card information. Please check and try again.
+		10.handleScript=EXT:trade/lib/eway_payment.php
+		10.merchantCode=
+		10.useTestGateway=
+		
+		
+		20.title = Credit Card/Paypal
+		20.description=Secure payment gateway, real time transaction. 
+		20.image.file = EXT:trade/res/paypal.gif
+		20.priceTax = .60
+		#10.calculationScript = EXT:tt_products/pi1/products_comp_calcScript.inc
+		20.percentOfGoodsTotal = 2.9
+		20.handleScript=EXT:trade/lib/paypal.php
+		20.paypalEmail=
+		
+		40.title = Direct Deposit/Cheque/Money Order
+		40.description=Your order will be shipped when your cheque or money order is received. 
+		40.image.file = EXT:trade/res/money.gif
+		40.priceTax = 2
+		#40.percentOfGoodsTotal = 0
+
+	}
+
+	## EXAMPLE shipping config:
+	shipping {
+		10.title = Ground
+		10.image.file = EXT:trade/res/pakketrans.gif
+		10.priceTax = 5
+		10.hideDetails=0
+
+		20.title = Airmail
+		20.image.file = EXT:trade/res/postdanmark.gif
+		20.priceTax =10
+		20.percentOfGoodsTotal=10
+		20.hideDetails=0
+
+		40.title = Pick up in store
+		40.priceTax =0
+		40.excludePayment=10
+		40.hideDetails=1
+	}
+	
+	# By setting the associated constants these as defaults can carry through to child pages
+	# This is useful where you set singleviewpid (or any other) to a different sub page
+	# and these default values cause links and submit buttons to submit back to the default
+	# pages. 
+	PIDS {
+	  #storage pages
+	  productstorage={$tradestoragepid}
+	  categorystorage={$tradestoragepid}
+	  orderstorage={$tradestoragepid}
+	  userstorage={$tradeuserstoragepid}
+	
+	 # presentation pages
+	  list={$tradepid}
+	  list_default={$tradepid}
+	  list_search={$tradepid}
+	  list_recent={$tradepid}
+	  list_specialoffers={$tradepid}
+	  singleview={$tradesingleviewpid}
+	  basket={$tradepid}
+	  basket_overview={$tradepid}
+	  checkout={$tradepid}
+	  user_details={$tradepid}
+	  user_shipping_details={$tradepid}
+	  user_shipping_payment_details={$tradepid}
+	  usersave={$tradepid}
+	  login={$tradepid}
+	  lost_password={$tradepid}
+	  confirm={$tradepid}
+	  thanks={$tradepid}
+	  order_history_list={$tradepid}
+	  order_history_single={$tradepid}
+	  wishlist_list={$tradepid}  
+	  wishlist_single={$tradepid}  
+	}
+	
+	hooks {
+		# MARKERS
+		#getGlobalMarkers=
+		# PRICE CALCULATIONS
+		getPrice=
+		getShippingPrice=
+		getPaymentProcessingPrice=
+		# CONTROL
+		#processUserInput=	
+		# MISC
+		#getRandomPassword=
+	}
+	
+_CSS_DEFAULT_STYLE (
+
+div.trade_login{
+	font-size: x-small;
+}
+div.trade_cat1 {
+	font-size: x-large;
+		font-weight: bold;
+}
+div.trade_cat2 {
+	font-size: large;
+	font-weight: bold;
+}
+table.trade tr td{
+	margin: 1px;
+	padding: 2px 4px;
+}
+
+table.trade tr th, table.trade_minibasket tr th{
+	background-color: {$tradecolor1};
+	border-bottom: 1px solid {$tradecolor2};
+	font-size: small;
+	font-weight: 700;
+	margin: 1px;
+	padding: 2px 4px;
+}
+
+table.trade, table.trade_minibasket{
+	border: 1px solid {$tradecolor3};
+}
+
+table.trade_details{
+	background-color: {$tradecolor1};
+	float: right;
+	width: 300px;
+}
+
+table.trade_minibasket{
+	border: 1px solid {$tradecolor3};
+}
+
+table.trade_minibasket tr th{
+	font-size: x-small;
+}
+
+td.trade_browse{
+	background-color: {$tradecolor1};
+}
+
+td.trade_small, span.small{
+	font-size: x-small;
+}
+
+td.trade_title{
+	font-weight: 700;
+}
+
+td.trade_title a{
+	text-decoration: none;
+}
+
+ul#trade_listmenu{
+	padding: 0px;
+}
+
+ul#trade_listmenu li{
+	background-color: {$tradecolor1};
+	color: {$tradecolor3};
+	font-size: x-small;
+	font-weight: 700;
+	list-style: none outside none;
+	padding: 3px;
+}
+
+ul#trade_listmenu li a{
+	text-decoration: none;
+}
+
+ul#trade_progress{
+	padding: 0px;
+}
+
+ul#trade_progress li{
+	background-color: {$tradecolor1};
+	color: {$tradecolor3};
+	display: inline;
+	font-size: x-small;
+	font-weight: 700;
+	list-style: none outside none;
+	padding: 3px;
+}
+
+ul#trade_progress li a{
+	color: {$tradecolor2};
+	text-decoration: none;
+}
+
+ul#trade_progress li b{
+	color: {$tradecolor1};
+	text-decoration: none;
+}
+
+)
+
+
+
+}
+

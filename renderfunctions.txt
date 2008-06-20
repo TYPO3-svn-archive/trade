@@ -1,0 +1,24 @@
+// junk file
+	function renderUserShippingDetails() {
+	function renderPaymentDetailsConfirm() {
+	function renderConfirm() {
+	function renderThanks() {
+	function renderPaymentMethod() {
+	function renderShippingMethod() {
+	function renderUserForm() {
+	function renderLoginBox() {
+	function renderProductList($listConf) {
+	function renderBasket($markerArray) {
+	function renderSingleView() {
+	 * This function initialises the parent object and main template file
+	function init(&$parent) {
+	 * This function embeds content in a form (from main marker FORM_WRAPPER)
+	function renderFormWrap($content,$markers=array()) {
+	 * This function does a marker replace on main marker $section 
+	function renderTemplateSection($section,$markers) {
+	 * This function renders $templateSection subpart from the main template
+	function renderCategorisedProductList($templateSection,$emptySection,$listArray) {//     $mainSection,$listSection,$mainListSection,$mainMarkers,$list,$extraListMarkers) {
+	 * This function iterates $list replacing and concatenating $itemSingleTemplate
+	function renderProductListItems($list,$itemSingleTemplate) {
+	 * This function renders and arbitrary content record by $uid
+	function renderContent($uid) {

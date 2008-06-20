@@ -1,0 +1,143 @@
+ 
+ 
+ <H1>Basket Overview</H1>
+ <!-- ###BASKET_OVERVIEW_TEMPLATE### begin -->
+<table class="trade_minibasket" border="0" cellspacing="0" cellpadding="0" width=150>
+  <tr align="left" valign="bottom"> 
+    <th colspan="2" valign="top" class="trade_title">Cart Contents</th>
+  </tr>
+  <!-- ###ITEM_CATEGORY_AND_ITEMS### begin -->
+  <!-- ###ITEM_CATEGORY### begin -->
+  <!-- ###ITEM_CATEGORY### end -->
+  <!-- ###ITEM_LIST### begin -->
+  <!-- ###ITEM_SINGLE### begin-->
+  <tr valign="bottom"> 
+    <td class="trade_small"> ###FIELD_QTY### x 
+      <!--###LINK_ITEM###-->
+      ###PRODUCT_TITLE### 
+      <!--###LINK_ITEM###-->
+    </td>
+    <td class="trade_small">###PRICE_TOTAL_TAX###</td>
+  </tr>
+  <!-- ###ITEM_SINGLE### end -->
+  <!-- ###ITEM_LIST### end -->
+  <!-- ###ITEM_CATEGORY_AND_ITEMS###  end -->
+  <!--tr> 
+    <th align="right">Shipping<b>:</b></th>
+    <td align="right" class="trade_small">###PRICE_SHIPPING_TAX### </td>
+  </tr-->
+  <tr> 
+    <th align="right">Cart Total: </th>
+    <td align="right" class="trade_small"><b>###PRICE_NOSHIPPINGPAYMENT_TAX###</b> </td>
+  </tr>
+  <tr> 
+    <td colspan="2"><a href="http://www.x-rates.com/cgi-bin/cgicalc.cgi?base=###CURRENCY_CODE###&value=###PRICE_TOTAL_TAX###"  target="_blank"> 
+      </a> <input type='submit' value='Checkout' ###SUBMIT_TO_CHECKOUT###></td>
+  </tr>
+  <tr> 
+    <td colspan="2" align="right" class="trade_small"><a href="http://www.x-rates.com/cgi-bin/cgicalc.cgi?base=###CURRENCY_CODE###&value=###PRICE_TOTAL_TAX###"  target="_blank">exchange 
+      rates</a> (new window)</td>
+  </tr>
+</table>
+    
+<!-- ###EMPTY### begin -->
+<table class="trade_minibasket" border="0" cellspacing="0" cellpadding="0" width=150>
+  <tr align="left" valign="bottom"> 
+    <th valign="top" class="trade_title">Cart Contents</th>
+  </tr>
+  <tr> 
+    <td align="left" class="trade_small" > <a href="http://www.x-rates.com/cgi-bin/cgicalc.cgi?base=###CURRENCY_CODE###&value=###PRICE_TOTAL_TAX###" target="_blank"> 
+      </a>Your basket is empty. </td>
+  </tr> 
+</table>
+<!-- ###EMPTY### end --->
+<!-- ###BASKET_OVERVIEW_TEMPLATE### end -->
+<br>
+###NUMBER_GOODSTOTAL### Products ( ###PRICE_GOODSTOTAL_TAX###.-)
+<HR>
+    <BR>
+    <BR>
+    <BR>
+  </div>
+
+  <BR> <HR> <BR> <BR> <BR> <h3> BASKET _TEMPLATE </h3>
+  <!-- ###BASKET_TEMPLATE### begin
+
+	Subpart used to display the content of the shopping basket.
+
+	The product list part has the exact same features as the regular LIST_ITEM_TEMPLATE subpart.
+
+	In addition there's a number of fields used for delivery and payment information.
+
+-->
+  <input type="hidden" name="tx_trade_pi1[shipping][user_selected]" value="1" />
+  <input type="hidden" name="tx_trade_pi1[payment][user_selected]" value="1" />
+  
+<table class="trade" border="0" cellspacing="0" cellpadding="0" width="500">
+  <tr align="right"> 
+    <th align="left" ><img src="clear.gif" width="350" height="1"></th>
+    <th><img src="clear.gif" width="50" height="1"></th>
+    <th><img src="clear.gif" width="50" height="1"></th>
+    <th ><img src="clear.gif" width="50" height="1"></th>
+  </tr>
+  <tr align="right"> 
+    <th align="left" >Basket Contents:</th>
+    <th>Price:</th>
+    <th>Qty:</th>
+    <th >Total:</th>
+  </tr>
+  <!-- ###ITEM_CATEGORY_AND_ITEMS### begin -->
+  <!-- ###ITEM_CATEGORY### begin -->
+  <tr> 
+    <td colspan=4><div class="trade_cat1"> ###CATEGORY_TITLE_HEADER_1###</div><div class="trade_cat2"> ###CATEGORY_TITLE_HEADER_2###</div></td>
+  </tr>
+  <!-- ###ITEM_CATEGORY### end -->
+  <!-- ###ITEM_LIST### begin -->
+  <!-- ###ITEM_SINGLE### begin-->
+  <tr> 
+    <td valign=top class="trade_title"> 
+      <!--###LINK_ITEM###-->
+      ###PRODUCT_TITLE### 
+      <!--###LINK_ITEM###-->
+    </td>
+    <td align="right" >###PRICE_TAX###</td>
+    <td align="right"><input size="3" maxlength="4" type="text" name="###FIELD_NAME###" value="###FIELD_QTY###"></td>
+    <td valign=top align=right><b>###PRICE_TOTAL_TAX###</b></td>
+  </tr>
+  <!-- ###ITEM_SINGLE### end -->
+  <!-- ###ITEM_LIST### end -->
+  <!-- ###ITEM_CATEGORY_AND_ITEMS###  end -->
+  <tr align="right"> 
+    <td colspan=3>&nbsp; </td>
+    <td><input type="submit"  value="Update" > </td>
+  </tr>
+  <tr> 
+    <th colspan=4 align="left" >Delivery:</th>
+  </tr>
+  <tr> 
+    <td colspan="3"> ###SHIPPING_METHOD_SECTION###</td>
+    <td valign=top align=right><b>###PRICE_SHIPPING_TAX###</b> </td>
+  </tr>
+
+  <tr> 
+    <th colspan=4 align="left" >Select payment method:</th>
+  </tr>
+  <tr> 
+    <td colspan="3"> ###PAYMENT_METHOD_SECTION### </td>
+    <td valign=bottom align=right><b>###PRICE_PAYMENT_TAX###</b></td>
+  </tr>
+  <tr> 
+    <th colspan="3" >TOTAL (###CURRENCY_CODE### ###CURRENCY_SYMBOL###): 
+    </th>
+    <th valign=top align=right nowrap><b>###PRICE_TOTAL_TAX###</b></th>
+  </tr>
+  <tr> 
+    <td colspan="4" align="right"> 
+      <input type="submit" value="Go to payment/ordering" onClick="document.myform.id.value=###PID_CHECKOUT###; document.myform.extrainfo.value='approvebasket'; document.myform.cmd.value='checkout';" ></td>
+  </tr>
+</table>
+  <!-- ###EMPTY### begin -->
+  <B>Basket is empty.</B> 
+  <!-- ###EMPTY### end --->
+  <!-- ###BASKET_TEMPLATE### end -->
+  

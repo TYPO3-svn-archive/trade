@@ -1,0 +1,110 @@
+<H1>PRODUCT TEMPLATES</H1>
+<h2>EXAMPLE</h2>
+
+<BR>
+<BR>
+<BR>
+<h1>component templates</h1>
+
+
+<!--###REPEAT_VISITOR### start-->
+Welcome back ###NAME###<br/>It appears that you have used our store previously. Login to retrieve your details.<br/>
+<!--###REPEAT_VISITOR### end-->
+
+<!--###NEW_VISITOR### start-->
+Welcome
+<!--###NEW_VISITOR### end-->
+
+
+
+<BR>
+<HR>
+<BR>
+<BR>
+<BR>
+<h3>ITEM_SINGLE_ DISPLAY</h3>
+<!-- ###ITEM_SINGLE_DISPLAY_COMPONENT### begin
+	This subpart is used to display single products.
+-->
+
+<input type="hidden" name="tx_trade_pi1[uid]" value="###PRODUCT_UID###" />
+<table class="trade" border="0" cellspacing="0" cellpadding="0" width=1>
+  <tr> 
+    <td><img src="clear.gif" width=100 height=1></td>
+    <td><img src="clear.gif" width=300 height=1></td>
+  </tr>
+  <tr> 
+    <td colspan=2> <h4> <a href='index.php?id=###LISTTYPE_PID###&cmd=list_###LISTTYPE###'  > &lt;-Go back</a> 
+      </h4></td>
+  </tr>
+  <tr> 
+    <td colspan=2 class="trade_title" > ###PRODUCT_TITLE### </td>
+  </tr>
+  <tr> 
+    <td class="prod_image" valign=top rowspan="4"> ###CATEGORY_TITLE###<br> ###PRODUCT_SINGLE_IMAGE_1###<br>
+      product code: ###PRODUCT_CODE### </td>
+    <td align="right" class="prod_price"> <strong>###PRICE_TAX###</strong> Qty: 
+      <input size="3" maxlength="4" type="text" name="###FIELD_NAME###" value="###FIELD_QTY###"> 
+      <input type="Submit" border="0" name="order" value="add to cart" onClick="if (!document.###FORM_NAME###.###FIELD_NAME###.value!=''){document.###FORM_NAME###.###FIELD_NAME###.value=1;}; document.myform.id.value=###PID_BASKET###; document.###FORM_NAME###.cmd.value='basket';" > 
+    </td>
+  </tr>
+  <tr> 
+    <td class="prod_sub" valign="top"> ###PRODUCT_SUBHEADER###</td>
+  </tr>
+  <tr> 
+    <td class="prod_desc" valign="top">###PRODUCT_DESCRIPTION###</td>
+  </tr>
+   <tr> 
+    <td colspan="2" valign=top>###PRODUCT_SINGLE_IMAGE_2### ###PRODUCT_SINGLE_IMAGE_3###</td>
+  </tr>
+  <tr> 
+    <td valign=top> <h4> <a href='index.php?id=###LISTTYPE_PID###&cmd=list_###LISTTYPE###'  > &lt;-Go back</a> 
+      </h4></td>
+    <td valign="top">&nbsp;</td>
+  </tr>
+</table>
+<!-- ###ITEM_SINGLE_DISPLAY_COMPONENT### end -->
+<BR>
+<HR>
+<BR>
+<BR>
+<BR>
+<h3>ITEM _SEARCH</h3>
+<!-- ###ITEM_SEARCH_COMPONENT### begin
+	Subpart for the search-form
+-->
+<INPUT class="search" size="20" maxlength="100" type="text"  onKeyPress="return noSubmit(this,event);"  name="###SEARCH_FIELD_NAME###" value="###SWORDS###" >
+<div class="search"> 
+  <input type="submit" border="0" value="Search"  alt="search products" align="bottom" ###SUBMIT_TO_LIST_SEARCH### >
+</div>
+<!-- ###ITEM_SEARCH_COMPONENT### end -->
+<BR>
+<HR>
+<BR>
+<BR>
+<BR>
+
+  <!--###LOGIN_BOX_COMPONENT### ---><div class="trade_login">
+  <b>Login</b><br/>
+###REPEAT_VISITOR### 
+<input name="logintype" value="login" type="hidden"> <input name="pid" value="###PID_USERSTORAGE###" type="hidden">
+
+  <br>
+  name 
+  <input name="user" title="Enter username" value="###USER_USERNAME###" type="text">
+  pass 
+  <input name="pass" value="" title="Enter password" type="password">
+  <input name="login" class="loginButton" value="login" border="0" type="submit"></div> 
+  <!--###LOGIN_BOX_COMPONENT### END--->
+  
+  
+  
+  <BR> <HR> <BR> <BR> <BR> <h3>SESSION TIMEOUT</h3>
+  <!-- ###SESSION_TIMEOUT###-->
+  It appears your login session has timed out for security reasons. Any products 
+  or other information in your shopping cart has been lost. Please recommence 
+  your shopping session. 
+  <!-- ###SESSION_TIMEOUT###-->
+
+
+

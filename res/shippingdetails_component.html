@@ -1,0 +1,112 @@
+   
+<BR> <HR> <BR> <BR> <BR> <h3> SHIPPING _DETAILS </h3>
+  <!--###SHIPPING_DETAILS_COMPONENT### START-->
+  <input name="tx_trade_pi1[submit_shipping_details]" value="1" type="hidden"> 
+  
+<table border="0" cellpadding="0" cellspacing="0" class="trade">
+  <tr align="left"> 
+    <th colspan="2" valign="top" nowrap class="trade_title" >Shipping Details</th>
+  </tr>
+  <tr> 
+    <td colspan="2" align="right" valign="top" ><input type='submit' value='Copy' ###SUBMIT_TO_COPY_ADDRESS_TO_SHIPPING###> 
+      <span class="trade_small"> If shipping details are the same as the invoice 
+      detail, click to copy</span></td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top" nowrap>*Contact Name</th>
+    <td><input type="text"  onKeyPress="return noSubmit(this,event);" name="tx_trade_pi1[user][tx_trade_shipping_name]" value="###USER_TX_TRADE_SHIPPING_NAME###"  ></td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top" nowrap>*Address</th>
+    <td><textarea name="tx_trade_pi1[user][tx_trade_shipping_address]" cols="40" onKeyPress="return noSubmit(this,event);">###USER_TX_TRADE_SHIPPING_ADDRESS###</textarea></td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top" nowrap>*City</th>
+    <td><input type="text" onKeyPress="return noSubmit(this,event);"  name="tx_trade_pi1[user][tx_trade_shipping_city]" value="###USER_TX_TRADE_SHIPPING_CITY###"  ></td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top" nowrap>*Postcode/ZIP</th>
+    <td><input type="text"  onKeyPress="return noSubmit(this,event);" name="tx_trade_pi1[user][tx_trade_shipping_zip]" value="###USER_TX_TRADE_SHIPPING_ZIP###"  ></td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top" nowrap>*State</th>
+    <td><input type="text"  onKeyPress="return noSubmit(this,event);" name="tx_trade_pi1[user][tx_trade_shipping_zone]" value="###USER_TX_TRADE_SHIPPING_ZONE###"  ></td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top" nowrap>*Country</th>
+    <td><select name="tx_trade_pi1[user][tx_trade_shipping_country]" size="1" value="###USER_TX_TRADE_SHIPPING_COUNTRY###"  >
+        <option value="###USER_TX_TRADE_SHIPPING_COUNTRY###">###USER_TX_TRADE_SHIPPING_COUNTRY###</option>
+        <option value="Australia">Australia</option>
+        <option value="New_Zealand">New Zealand</option>
+        <option value="Japan">Japan</option>
+        <option value="USA">United States Of America</option>
+        <option value="Canada">Canada</option>
+        <option value="UK">United Kingdom</option>
+        <option value="Austria">Austria</option>
+        <option value="Belgium">Belgium</option>
+        <option value="China">China</option>
+        <option value="Denmark_and_Greenland">Denmark and Greenland</option>
+        <option value="Finland">Finland</option>
+        <option value="France">France</option>
+        <option value="Germany">Germany</option>
+        <option value="Greece">Greece</option>
+        <option value="India">India</option>
+        <option value="Indonesia">Indonesia</option>
+        <option value="Ireland">Ireland Rep.Of</option>
+        <option value="Italy">Italy</option>
+        <option value="Malaysia">Malaysia</option>
+        <option value="Malta">Malta</option>
+        <option value="Netherlands">Netherlands</option>
+        <option value="Norway">Norway</option>
+        <option value="Portugal">Portugal</option>
+        <option value="South_Africa_Rep.Of">South Africa Rep.Of</option>
+        <option value="South_Korea">South Korea</option>
+        <option value="Spain">Spain</option>
+        <option value="Sweden">Sweden</option>
+        <option value="Switzerland">Switzerland</option>
+        <option value="Taiwan">Taiwan</option>
+        <option value="Thailand">Thailand</option>
+        <option value="Turkey">Turkey</option>
+        <option value="not listed">Not listed</option>
+      </select> 
+         </td>
+  </tr>
+</table>
+  <!--###SHIPPING_DETAILS_COMPONENT### END-->
+ 
+ 
+ 
+ 
+  <h3> SHIPPING _DETAILS VIEW </h3>
+  <!--###SHIPPING_DETAILS_VIEW_COMPONENT### START-->
+  
+<table width="0" height="0" cellpadding="0" cellspacing="0" class="trade">
+  <tr align="left"> 
+    <th colspan="2"><b>Shipping Details</b></th>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">Contact Name</th>
+    <td>###USER_TX_TRADE_SHIPPING_NAME###</td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">Address</th>
+    <td>###USER_TX_TRADE_SHIPPING_ADDRESS###</td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">City</th>
+    <td>###USER_TX_TRADE_SHIPPING_CITY###</td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">Postcode/ZIP</th>
+    <td>###USER_TX_TRADE_SHIPPING_ZIP###</td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">State</th>
+    <td>###USER_TX_TRADE_SHIPPING_ZONE###</td>
+  </tr>
+  <tr> 
+    <th height="21" align="right" valign="top">Country</th>
+    <td>###USER_TX_TRADE_SHIPPING_COUNTRY###</td>
+  </tr>
+</table>
+  <!--###SHIPPING_DETAILS_VIEW_COMPONENT### END-->

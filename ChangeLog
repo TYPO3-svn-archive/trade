@@ -1,0 +1,21 @@
+(add new changes on top of this file)
+
+06-03-04 Steve Ryan (programming) and Roger Bunyan (graphic design and documentation)  <stever@syntithenai.com>
+
+	* Initial release
+
+	
+	
+	
+	
+3/6/06
+
+* alter order history list to sort by create date descending
+* fix basket markers to update correctly by splitting renderer->init 
+so loadTemplate and renderComponent can be called without full init
+* add marker and alter minibasket template to show new marker PRICE_NOPAYMENTSHIPPING_TAX
+* set crdate,tstamp for new user
+* fix password generation routine to limit to 6 characters
+* alter basket template to show payment costs in basket
+* alter user validation not to change username to email address for existing users 
+NOTE FOR UPGRADES that an extra hidden field for usernameis required in the user details component

@@ -1,0 +1,44 @@
+ 
+  <!--###ORDER_HISTORY_LIST_TEMPLATE###-->
+
+
+  <h3>Your Order History</h3>
+  <table class='trade' width="500" border="0" cellspacing="0" cellpadding="0">
+    <tr> 
+      <th>Order Date</th>
+      <th>Order Tracking Code</th>
+      <th>Order Status</th>
+      <th>Order Total</th>
+      <td>&nbsp;</td>
+    </tr>
+    <!-- ###ITEM_LIST### begin -->
+    <!-- ###ITEM_SINGLE### begin-->
+    <tr> 
+      <td>###ORDER_CRDATE###</td>
+      <td>###ORDER_TRACKING_CODE###</td>
+      <td> ###ORDER_STATUS### </td>
+      <td>###ORDER_PRICE_TOTAL_TAX###</td>
+      <td><a href='###LINK_TO_ORDER_HISTORY_SINGLE###'>View Order Details</a> 
+      </td>
+    </tr>
+    <!-- ###ITEM_SINGLE### end -->
+    <!-- ###ITEM_LIST### end -->
+  </table>
+  <!--###ORDER_HISTORY_LIST_TEMPLATE### end-->
+  
+  
+  
+  <HR> <h3>ORDER HISTORY SINGLE DISPLAY</h3>
+  <!-- ###ORDER_HISTORY_SINGLE_TEMPLATE### begin
+	This subpart is used to display single orders.
+-->
+  <h3>Order Details</h3>
+  <p>###ORDER_CRDATE###<br>
+    ###ORDER_TRACKING_CODE###<br>
+    ###ORDER_STATUS###<br>
+    ###ORDER_ORDER_DATA### <br>
+    ###ORDER_COMMENT###<br>
+ </p>
+  <a href='###LINK_TO_ORDER_HISTORY_LIST###'><- Back to Order List</a> <br/>
+  <BR> 
+  <!-- ###ORDER_HISTORY_SINGLE_TEMPLATE### end -->

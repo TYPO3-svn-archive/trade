@@ -1,0 +1,926 @@
+a:2:{s:4:"meta";a:3:{s:5:"title";s:22:"trade ecommerce system";s:5:"descr";s:0:"";s:7:"options";a:2:{s:10:"usageCount";s:1:"1";s:19:"includeCodeAbstract";s:1:"1";}}s:5:"files";a:8:{s:14:"MD5_f424c3a77b";a:5:{s:8:"filename";s:26:"pi1/class.tx_trade_pi1.php";s:8:"filesize";i:48936;s:6:"header";a:5:{s:4:"text";s:45:"
+
+Plugin 'Trade ' for the 'trade' extension.
+";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}s:5:"other";a:1:{i:0;s:60:"@author	Steve Ryan <stever@syntithenai.com>, Roger Bunyan <>";}s:11:"other_index";a:1:{s:7:"@author";a:1:{i:0;s:52:"Steve Ryan <stever@syntithenai.com>, Roger Bunyan <>";}}}s:3:"DAT";a:27:{i:1;a:7:{s:6:"header";s:41:"class tx_trade_pi1 extends tslib_pibase {";s:5:"class";i:1;s:11:"parentClass";s:12:"tx_trade_pi1";s:7:"content";a:2:{i:0;s:1575:"	var $prefixId = 'tx_trade_pi1';		// Same as class name
+	var $scriptRelPath = 'pi1/class.tx_trade_pi1.php';	// Path to this script relative to the extension dir.
+	var $extKey = 'trade';	// The extension key.
+	var $pi_checkCHash = TRUE;
+
+	// library instances
+		var $renderer;
+		var $TSParser;
+		var $LANG;
+
+	// user session variables
+		var $basket;			// an array of product records with array key basket_qty set
+		var $order;
+		var $user;				// array corresponding to fe_users table
+		var $payment;			// array containing payment selections and details
+		var $shipping;			// user shipping details - array corresponding to extended fields in fe_users table
+	// storage for database results between controller doing query and renderer-> init creating markers
+		var $record;		// single view
+		var $list;			// search
+	// control variables
+		var $cmd='list';  	 	// default action for this request
+			//set by post variables config or default action is list of items on this page
+		var $renderWith;		// template section to render
+		var $template='';  		// contains content of main template file
+		var $listType;			// derived from cmd where cmd begins with list to select custom list configuration
+		var $doReset=false;		// set by controller if a complete session reset is required
+	// feedback variables to pass error/warning feedback from controller to renderer
+		var $errors;
+		var $messages;
+	// form constants for javascript
+		var $formName='myform';
+		var $searchButtonName='do_search';
+		var $saveUserButtonName='do_save_user';
+		var $finaliseButtonName='finalise_order';
+
+
+	";i:1;i:-1;}s:12:"content_size";i:1575;s:13:"content_lines";i:36;s:6:"atLine";i:36;}i:3;a:7:{s:6:"header";s:31:"function main($content,$conf)	{";s:11:"parentClass";s:12:"tx_trade_pi1";s:4:"cDat";a:3:{s:4:"text";s:50:"
+
+Main controller, entry point to plugin execution";s:5:"param";a:2:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:13:"$content: ...";}i:1;a:2:{i:0;s:6:"[type]";i:1;s:10:"$conf: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		$this->conf=$conf;
+		$this->pi_setPiVarDefaults();
+		$this->pi_loadLL();
+		// markers are added to the renderer markerArray variable during user input
+		// processing and init so make the instance available first
+		$this->renderer=t3lib_div::makeInstance('tx_trade_render');
+
+		$this->init();
+		//debug($GLOBALS['_SERVER']);
+		//debug($GLOBALS['_POST']);
+		//debug($GLOBALS
+[...]
+this->renderWith);
+		if ($this->doReset) {
+			$this->processReset();
+		}
+		return $this->pi_wrapInBaseClass($content);
+	}
+
+
+	";i:1;i:1;}s:12:"content_size";i:3379;s:13:"content_lines";i:93;s:6:"atLine";i:80;}i:5;a:7:{s:6:"header";s:18:"function init()  {";s:11:"parentClass";s:12:"tx_trade_pi1";s:4:"cDat";a:3:{s:4:"text";s:39:"
+
+  Initialisation of various resources";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		session_start();
+		// enable database debug
+		$GLOBALS['TYPO3_DB']->debugOutput=true;
+		$this->includeFFConf();
+		// grab basket from session
+		$this->basket=tx_trade_div::getSession('basket');
+
+		// set PIDS
+		$cmdList=$this->conf['cmdList'];
+		foreach (explode(",",$cmdList) as $pK => $pV) {
+			if ($this->conf['PIDS'][$pV]>0) {
+				$this->PIDS[$pV]['uid']=$this->conf['P
+[...]
+order_status',"",'','','','');
+		foreach ($tmoStat as $oK => $oV) {
+			$this->orderStatus[$oV['uid']]=$oV['title'];
+		}
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:980;s:13:"content_lines";i:30;s:6:"atLine";i:179;}i:7;a:7:{s:6:"header";s:26:"function includeFFConf() {";s:11:"parentClass";s:12:"tx_trade_pi1";s:4:"cDat";a:3:{s:4:"text";s:71:"
+
+  Merge flexform configuration with typoscript template configuration";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		$this->pi_initPIflexForm(); // Init and get the flexform data of the plugin
+		$this->lConf = array(); // Setup our storage array...
+		// Assign the flexform data to a local variable for easier access
+		$piFlexForm = $this->cObj->data['pi_flexform'];
+		// Traverse the entire array based on the language...
+		// and assign each configuration option to $this->lConf array...
+
+[...]
+*****************
+	 * Controller Support Methods
+	 **********************************************************************/
+
+	";i:1;i:1;}s:12:"content_size";i:3186;s:13:"content_lines";i:69;s:6:"atLine";i:215;}i:9;a:8:{s:6:"header";s:29:"function processUserInput() {";s:11:"parentClass";s:12:"tx_trade_pi1";s:11:"sectionText";a:1:{i:0;s:26:"Controller Support Methods";}s:4:"cDat";a:3:{s:4:"text";s:64:"
+
+Scan post data for appropriate flags and take relevant actions";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		$this->processAddToBasket();
+
+		// do search
+		$list=array();
+		//debug($this->listType);
+		if (strlen($this->listType)>0) {
+			$this->processProductSearch();
+		}
+
+		// ensure basket stays on same page when values are updated
+		if ($GLOBALS['_POST']['extrainfo']=='approvebasket') {
+			 $this->user['basket_approved']=1;
+		}
+
+
+		// save user
+		//if (strlen($GLOBALS['_POST'
+[...]
+_SINGLE_VIEW']=$this->processLoadProduct();
+		} else {
+			$this->renderer->markerArray['PRODUCT_SINGLE_VIEW']=' ';
+		}
+
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:2164;s:13:"content_lines";i:67;s:6:"atLine";i:290;}i:11;a:7:{s:6:"header";s:34:"function copyAddressToShipping() {";s:11:"parentClass";s:12:"tx_trade_pi1";s:4:"cDat";a:3:{s:4:"text";s:52:"
+
+Map data in the user fields to the shipping fields";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:530:"		$this->user['tx_trade_shipping_name']=$this->user['name'];
+		$this->user['tx_trade_shipping_address']=$this->user['address'];
+		$this->user['tx_trade_shipping_city']=$this->user['city'];
+		$this->user['tx_trade_shipping_zip']=$this->user['zip'];
+		$this->user['tx_trade_shipping_zone']=$this->user['tx_trade_state'];
+		$this->user['tx_trade_shipping_country']=$this->user['country'];
+		// force renderer back to previous editing page
+		$this->errors[]=' ';
+		// save updates
+		tx_trade_div::setSession('user',$this->user);
+	}
+
+	";i:1;i:0;}s:12:"content_size";i:530;s:13:"content_lines";i:12;s:6:"atLine";i:363;}i:13;a:7:{s:6:"header";s:32:"function processLoadProduct () {";s:11:"parentClass";s:12:"tx_trade_pi1";s:4:"cDat";a:3:{s:4:"text";s:106:"
+
+Load a product record and associated categories, then render it and store in this->renderer->markerArray";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		$res=$GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_trade_products','uid='.mysql_escape_string($this->piVars['uid']),'','title ASC','');
+		if ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			$markerArray=$this->getProductMarkers($row);
+			if ($row['category_uid']>0) {
+				$res2=$GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_trade_categories','uid='.mysql_escape_st
+[...]
+,$this->renderer->markerArray,'###|###',true)  ;
+		} else {
+			$content='No such product found';
+		}
+		return $content;
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:1199;s:13:"content_lines";i:24;s:6:"atLine";i:381;}i:15;a:7:{s:6:"header";s:28:"function processPostData() {";s:11:"parentClass";s:12:"tx_trade_pi1";s:4:"cDat";a:3:{s:4:"text";s:68:"
+
+Capture post data into user,order,basket,search, shipping, payment";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		if (!is_array($this->user)) $this->user=array();
+		// merge posted search params with session
+		$this->search=tx_trade_div::getSession('search');
+		if (!is_array($this->search)) $this->search=array();
+		if (!is_array($this->piVars['search'])) $this->piVars['search']=array();
+		$this->search=t3lib_div::array_merge($this->search,$this->piVars['search']);
+		tx_trade_div::se
+[...]
+s->order=t3lib_div::array_merge($this->order,$this->piVars['order']);
+		tx_trade_div::setSession('order',$this->order);
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:4244;s:13:"content_lines";i:79;s:6:"atLine";i:411;}i:17;a:7:{s:6:"header";s:31:"function processAddToBasket() {";s:11:"parentClass";s:12:"tx_trade_pi1";s:4:"cDat";a:3:{s:4:"text";s:102:"
+
+Iterate tx_trade_pi1_addtobasket_* post vars, looking up and adding products to basket as necessary.";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		// add to basket
+		reset($GLOBALS['_POST']);
+		foreach ($GLOBALS['_POST'] as $pK => $pV) {
+			// if it is an add to basket post var
+			if (strpos('x'.$pK,'tx_trade_pi1_addtobasket_')==1) {
+				$aK=substr($pK,25);
+				$aV=$pV;
+				if (strlen(trim($aV))==0||trim($aV)=='0') {
+					unset($this->basket[$aK]);
+					tx_trade_div::setSession('basket',$this->basket);
+				} else i
+[...]
+('basket_no_product');
+					}
+				} else {
+					$this->messages[]=$this->pi_getLL('basket_invalid_qty');
+				}
+			}
+		}
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:977;s:13:"content_lines";i:28;s:6:"atLine";i:496;}i:19;a:7:{s:6:"header";s:33:"function processProductSearch() {";s:11:"parentClass";s:12:"tx_trade_pi1";s:4:"cDat";a:3:{s:4:"text";s:68:"
+
+Execute search query based on $this->search and list configuration";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		$where=' (1=1) ';
+		// if pages are selected in the content starting point field, select products from those pages
+		$pages=$this->PIDS['productstorage']['uid'];
+		if (strlen($pages)>0) {
+			foreach (explode(',',$pages) as $pK =>$pV) {
+				$where.=' and pid='.mysql_escape_string($pV);
+			}
+		} else {
+			// otherwise select from this page
+			$where.=' and pid='.mysql_esca
+[...]
+orderBy,$limit);
+		while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			$list[]=$row;
+		}
+		$this->list=$list;
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:2557;s:13:"content_lines";i:56;s:6:"atLine";i:530;}i:21;a:7:{s:6:"header";s:28:"function processSaveUser() {";s:11:"parentClass";s:12:"tx_trade_pi1";s:4:"cDat";a:3:{s:4:"text";s:68:"
+
+Execute search query based on $this->search and list configuration";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		$saveFields=explode(",",'uid,pid,'.$GLOBALS['TCA']['fe_users']['feInterface']['fe_admin_fieldList']);
+		// limit save fields to TCA[fe_users][feInterface][fe_admin_fieldList]
+		reset($this->user);
+		foreach ($saveFields as $uK =>$uV) {
+			if (strlen(trim($this->user[$uV]))>0) {
+				$user[$uV]=$this->user[$uV];
+			}
+		}
+		$user['pid']=$this->PIDS['userstorage']['uid'];
+		
+[...]
+is->messages['saveuser']=$this->pi_getLL('save_successful');
+			}
+		}
+		tx_trade_div::setUserCookie($user['username']);
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:903;s:13:"content_lines";i:24;s:6:"atLine";i:592;}i:23;a:7:{s:6:"header";s:36:"function processFinaliseCheckout() {";s:11:"parentClass";s:12:"tx_trade_pi1";s:4:"cDat";a:3:{s:4:"text";s:117:"
+
+Order finalisation - save user, save order, process payment(handlescript), send confirm email, update order record.";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		tx_trade_pricecalc::updateBasketMarkers($this->renderer->markerArray,$this->basket,$this->conf,$this->shipping,$this->payment,$this->order,$this->user);
+		//  populate order information for save
+		$this->processSaveUser();
+		if (sizeof($this->errors)==0) {
+			unset($this->messages['saveuser']);
+			if ($this->user['uid']>0) {
+				if ($this->PIDS['orderstorage']['uid']>0) 
+[...]
+	}
+			}
+		} else {
+			 // failed save user
+			 $this->errors[]='Failed order processing when saving user details.';
+		}
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:3718;s:13:"content_lines";i:67;s:6:"atLine";i:622;}i:25;a:7:{s:6:"header";s:25:"function processReset() {";s:11:"parentClass";s:12:"tx_trade_pi1";s:4:"cDat";a:3:{s:4:"text";s:36:"
+
+Clear session of all shopping data";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:531:"		// if test mode return;
+		unset($this->user);
+		unset($this->shipping);
+		unset($this->payment);
+		unset($this->order);
+		unset($this->basket);
+		tx_trade_div::removeSession('user');
+		tx_trade_div::removeSession('shipping');
+		tx_trade_div::removeSession('payment');
+		tx_trade_div::removeSession('order');
+		tx_trade_div::removeSession('basket');
+	}
+
+
+	/***********************************************************************
+	 * Marker Array Methods
+	 **********************************************************************/
+
+	";i:1;i:0;}s:12:"content_size";i:531;s:13:"content_lines";i:18;s:6:"atLine";i:695;}i:27;a:8:{s:6:"header";s:27:"function getFormMarkers() {";s:11:"parentClass";s:12:"tx_trade_pi1";s:11:"sectionText";a:1:{i:0;s:20:"Marker Array Methods";}s:4:"cDat";a:3:{s:4:"text";s:42:"
+
+Create markers for form wrapper template";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		$formMarkers=array();
+		$formMarkers['FORM_URL']='index.php';
+		$formMarkers['FORM_NAME']=$this->formName;
+		$formMarkers['HIDDEN_FIELDS']='' .
+				'<input type="hidden" name="id" value="'.$GLOBALS['TSFE']->id.'">' .
+				'<input type="hidden" name="cmd" value="'.$this->cmd.'">'.
+				'<input type="hidden" name="prevcmd" value="'.$this->cmd.'">'.
+				'<input type="hidden" 
+[...]
+this->conf['priceField'];
+	         	}
+	        }
+		}
+		$formMarkers['LOGIN_BOX_USER']=$content;
+		return $formMarkers;
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:3493;s:13:"content_lines";i:83;s:6:"atLine";i:719;}i:29;a:7:{s:6:"header";s:41:"function getGlobalMarkers($markerArray) {";s:11:"parentClass";s:12:"tx_trade_pi1";s:4:"cDat";a:3:{s:4:"text";s:70:"
+
+Create various markers including the various component level markers";s:5:"param";a:1:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:17:"$markerArray: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		if (!is_array($markerArray)) $markerArray=array();
+		$markerArray=t3lib_div::array_merge($markerArray,$this->getPaymentMarkers($this->payment));
+		$markerArray=t3lib_div::array_merge($markerArray,$this->getOrderMarkers($this->order));
+		$markerArray=t3lib_div::array_merge($markerArray,$this->getUserMarkers($this->user));
+		$markerArray=t3lib_div::array_merge($markerArray
+[...]
+stdWrap($listMenu,$this->conf['listMenu.']['stdWrap.']);
+		$markerArray['LIST_MENU']=$listMenu;
+
+		return $markerArray;
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:4064;s:13:"content_lines";i:73;s:6:"atLine";i:809;}i:31;a:7:{s:6:"header";s:33:"function getOrderMarkers($data) {";s:11:"parentClass";s:12:"tx_trade_pi1";s:4:"cDat";a:3:{s:4:"text";s:37:"
+
+Create markers related to form data";s:5:"param";a:1:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:10:"$data: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		$markerArray=array();
+		if (is_array($data)) {
+			reset($data);
+			foreach ($data as $dK=>$dV) {
+				$key="ORDER_".strtoupper($dK);
+				$markerArray[$key]=$dV;
+			}
+			$markerArray['ORDER_CRDATE']=date('d/m/Y',$data['crdate']);
+			if (strlen($data['comment'])==0) $markerArray['ORDER_COMMENT']='';
+			$markerArray['ORDER_STATUS']=$this->orderStatus[$data['status']];
+			if 
+[...]
+single']['uid'].'&tx_trade_pi1[cmd]=order_history_single&tx_trade_pi1[order_uid]='.$data['uid'];
+		return $markerArray;
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:803;s:13:"content_lines";i:17;s:6:"atLine";i:889;}i:33;a:7:{s:6:"header";s:35:"function getPaymentMarkers($data) {";s:11:"parentClass";s:12:"tx_trade_pi1";s:4:"cDat";a:3:{s:4:"text";s:40:"
+
+Create markers related to payment data";s:5:"param";a:1:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:10:"$data: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		$markerArray=array();
+		if (is_array($data)) {
+			reset($data);
+			foreach ($data as $dK=>$dV) {
+				$key="PAYMENT_".strtoupper($dK);
+				$markerArray[$key]=$dV;
+			}
+		}
+		if (strlen($data['card_number'])==0) $markerArray['PAYMENT_CARD_NUMBER']='';
+		if (strlen($data['card_name'])==0) $markerArray['PAYMENT_CARD_NAME']='';
+
+		for ($i=date('Y'); ($i-date('Y') < 12); $i++)
+[...]
+		$markerArray['PAYMENT_TITLE']=$this->conf['payment.'][$this->payment['method'].'.']['title'];
+
+		return $markerArray;
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:937;s:13:"content_lines";i:26;s:6:"atLine";i:913;}i:35;a:7:{s:6:"header";s:32:"function getUserMarkers($data) {";s:11:"parentClass";s:12:"tx_trade_pi1";s:4:"cDat";a:3:{s:4:"text";s:37:"
+
+Create markers related to user data";s:5:"param";a:1:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:10:"$data: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		$markerArray=array();
+		foreach (explode(",","uid,".$GLOBALS['TCA']['fe_users']['feInterface']['fe_admin_fieldList']) as $tK => $tV) {
+			$key="USER_".strtoupper($tV);
+			$markerArray[$key]='';
+			$key2="USER_TX_TRADE_SHIPPING_".strtoupper($tV);
+			$markerArray[$key2]='';
+		}
+		if (is_array($data)) {
+			reset($data);
+			foreach ($data as $dK=>$dV) {
+				$key="USER_".strt
+[...]
+arkerArray['SHIPPING_TITLE']=$this->conf['shipping.'][$this->shipping['method'].'.']['title'];
+
+		return $markerArray;
+	}
+
+
+	";i:1;i:1;}s:12:"content_size";i:955;s:13:"content_lines";i:24;s:6:"atLine";i:946;}i:37;a:7:{s:6:"header";s:52:"function getSearchBoxMarkers($markerArray=array()) {";s:11:"parentClass";s:12:"tx_trade_pi1";s:4:"cDat";a:3:{s:4:"text";s:43:"
+
+Create markers related to the search form";s:5:"param";a:1:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:17:"$markerArray: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:477:"			$markerArray['FORM_URL']=$this->PIDS['search']['link'];
+			$markerArray['SWORDS']=$this->search['text'];
+			$markerArray['SEARCH_FIELD_NAME']=$this->prefixId.'[search][text]';
+			return $markerArray;
+	}
+
+	/***********************************************************************
+	 * These functions differs from the previous marker functions in that they
+	 * are used iteratively to compile a list
+	 **********************************************************************/
+
+
+	";i:1;i:0;}s:12:"content_size";i:477;s:13:"content_lines";i:12;s:6:"atLine";i:977;}i:39;a:8:{s:6:"header";s:35:"function getProductMarkers($data) {";s:11:"parentClass";s:12:"tx_trade_pi1";s:11:"sectionText";a:2:{i:0;s:71:"These functions differs from the previous marker functions in that they";i:1;s:38:"are used iteratively to compile a list";}s:4:"cDat";a:3:{s:4:"text";s:40:"
+
+Create markers related to product data";s:5:"param";a:1:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:10:"$data: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		$markerArray=array();
+		foreach ($data as $dK=>$dV) {
+			$key="PRODUCT_".strtoupper($dK);
+			$markerArray[$key]=$dV;
+		}
+		$markerArray=tx_trade_pricecalc::updateProductMarkers($markerArray,$data,$this->user);
+		// need to use no brackets to allow javascript update
+		$markerArray['FIELD_NAME']='tx_trade_pi1_addtobasket_'.$data['uid'];
+		$imgFiles=explode(",",$data['image
+[...]
+f="'.$data['url'].'" target="_new">External Website</a>';
+		else $markerArray['PRODUCT_URL']='';
+		return $markerArray;
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:1150;s:13:"content_lines";i:22;s:6:"atLine";i:996;}i:41;a:7:{s:6:"header";s:36:"function getCategoryMarkers($data) {";s:11:"parentClass";s:12:"tx_trade_pi1";s:4:"cDat";a:3:{s:4:"text";s:46:"
+
+Create markers related to product categories";s:5:"param";a:1:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:10:"$data: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		$markerArray=array();
+		foreach ($data as $dK=>$dV) {
+			$key="CATEGORY_".strtoupper($dK);
+			$markerArray[$key]=$dV;
+		}
+		// indent second level categories
+		if ($data['parent']>0) {
+			$markerArray['CATEGORY_TITLE_HEADER']="<H2>".$markerArray['CATEGORY_TITLE']."</H2>";
+			$markerArray['CATEGORY_TITLE_HEADER_2']=$markerArray['CATEGORY_TITLE'];
+			$markerArray['CATEGORY
+[...]
+LE_HEADER_1']=$markerArray['CATEGORY_TITLE'];
+			$markerArray['CATEGORY_TITLE_HEADER_2']='';
+		}
+		return $markerArray;
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:652;s:13:"content_lines";i:19;s:6:"atLine";i:1025;}i:43;a:7:{s:6:"header";s:36:"function getEmptyCategoryMarkers() {";s:11:"parentClass";s:12:"tx_trade_pi1";s:4:"cDat";a:3:{s:4:"text";s:52:"
+
+Create empty markers related to product categories";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:381:"		$markerArray['CATEGORY_TITLE']=" ";
+		$markerArray['CATEGORY_TITLE_HEADER_1']=" ";
+		$markerArray['CATEGORY_TITLE_HEADER_2']=" ";
+		$markerArray['CATEGORY_TITLE_HEADER']=" ";
+		return $markerArray;
+	}
+
+
+	/***********************************************************************
+	 * Validation Functions
+	 **********************************************************************/
+
+
+	";i:1;i:0;}s:12:"content_size";i:381;s:13:"content_lines";i:13;s:6:"atLine";i:1050;}i:45;a:8:{s:6:"header";s:21:"function validate() {";s:11:"parentClass";s:12:"tx_trade_pi1";s:11:"sectionText";a:1:{i:0;s:20:"Validation Functions";}s:4:"cDat";a:3:{s:4:"text";s:218:"
+********************************************************************
+Determine what data to validate based on hidden fields in each form component
+*********************************************************************/";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		// dont validate when logging in
+		if (trim($GLOBALS['_POST']['login'])!='login') {
+			if ($this->piVars['submit_payment_method']&&$this->payment['method']==0) {
+				$this->errors[]=$this->pi_getLL('payment_method_required');
+			}
+			if ($this->piVars['submit_shipping_method']&&$this->shipping['method']==0) {
+				$this->errors[]=$this->pi_getLL('shipping_method_required'
+[...]
+hippingDetails();
+			}
+			if ($this->piVars['submit_payment_details']) {
+				$this->validatePaymentDetails();
+			}
+
+		}
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:705;s:13:"content_lines";i:21;s:6:"atLine";i:1071;}i:47;a:7:{s:6:"header";s:32:"function validateUserDetails() {";s:11:"parentClass";s:12:"tx_trade_pi1";s:4:"cDat";a:3:{s:4:"text";s:103:"
+
+Validate user details and update user data to ensure unique username and possibly generate a password";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		$valid=1;
+		// valid email
+		if (!t3lib_div::validEmail($this->user['email'])) {
+			$valid=0;
+			$this->errors[]='Invalid email address';
+		}
+
+		// if username is not sent as post, use email address
+		if (!isset($this->piVars['user']['username'])) {
+		//if (!isset($this->user['username'])) {
+			if ($this->user['force_new_user']==1) {
+				$this->user['username']=rand(100,
+[...]
+_in_use');
+					$valid=0;
+				}
+			}
+		}
+		$this->user['valid']=$valid;
+		tx_trade_div::setSession('user',$this->user);
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:2355;s:13:"content_lines";i:67;s:6:"atLine";i:1098;}i:49;a:7:{s:6:"header";s:36:"function validateShippingDetails() {";s:11:"parentClass";s:12:"tx_trade_pi1";s:4:"cDat";a:3:{s:4:"text";s:36:"
+
+Validate required shipping details";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		$valid=1;
+		// TODO ensure shipping methods is set		if ()
+		foreach (explode(',',trim($this->conf['shippingRequiredFields'])) as $uK =>  $uV) {
+			if (!strlen(trim($this->user[$uV]))>0) {
+				$valid=0;
+				$fieldName=$GLOBALS['TCA']['fe_users']['columns'][$uV]['label'];
+				$fieldName=$this->LANG->sL($fieldName);
+				$this->errors[]=$this->pi_getLL('missing_required_fiel
+[...]
+this->pi_getLL('shipping_method_required');
+		}
+		tx_trade_div::setSession('user',$this->user);
+		return $this->errors;
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:686;s:13:"content_lines";i:20;s:6:"atLine";i:1171;}i:51;a:4:{s:6:"header";s:35:"function validatePaymentDetails() {";s:11:"parentClass";s:12:"tx_trade_pi1";s:4:"cDat";a:3:{s:4:"text";s:35:"
+
+Validate required payment details";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:6:"atLine";i:1197;}i:53;a:7:{s:6:"header";s:59:"function validateCreditCard($cc_no,$month,$year,$cc_name) {";s:11:"parentClass";s:12:"tx_trade_pi1";s:4:"cDat";a:3:{s:4:"text";s:37:"
+
+General credit card validity checks";s:5:"param";a:4:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:11:"$cc_no: ...";}i:1;a:2:{i:0;s:6:"[type]";i:1;s:11:"$month: ...";}i:2;a:2:{i:0;s:6:"[type]";i:1;s:10:"$year: ...";}i:3;a:2:{i:0;s:6:"[type]";i:1;s:13:"$cc_name: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		if (credit_card::checkDate ($month, $year)) {
+			if (credit_card::validate ($cc_no)) {
+				if (strlen(trim($cc_name))==0) {
+					$this->errors[]=$this->pi_getLL('cc_name_required');
+				} else {
+					return true;
+				}
+			} else {
+				$this->errors[]=$this->pi_getLL('invalid_cc_number');
+			}
+		} else {
+			$this->errors[]=$this->pi_getLL('invalid_cc_date');
+		}
+		return 
+[...]
+s.tx_trade_pi1.php'])	{
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/trade/pi1/class.tx_trade_pi1.php']);
+}
+
+?>
+";i:1;i:1;}s:12:"content_size";i:602;s:13:"content_lines";i:24;s:6:"atLine";i:1235;}}s:10:"usageCount";a:27:{s:12:"H_b2b10a6854";a:2:{s:24:"_searchtime_milliseconds";d:294;s:15:"_functionHeader";s:41:"class tx_trade_pi1 extends tslib_pibase {";}s:12:"H_e8476b0991";a:2:{s:24:"_searchtime_milliseconds";d:6;s:15:"_functionHeader";s:31:"function main($content,$conf)	{";}s:12:"H_52db3257f9";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:5;s:5:"TOTAL";i:5;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:5;s:5:"TOTAL";i:5;}s:24:"_searchtime_milliseconds";d:15;s:15:"_functionHeader";s:18:"function init()  {";}s:12:"H_18e81a15b1";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:9;s:15:"_functionHeader";s:26:"function includeFFConf() {";}s:12:"H_da5aa1eebd";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:19;s:15:"_functionHeader";s:29:"function processUserInput() {";}s:12:"H_6f67ff1383";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:160;s:15:"_functionHeader";s:34:"function copyAddressToShipping() {";}s:12:"H_9c5a7cc2a0";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:15;s:15:"_functionHeader";s:32:"function processLoadProduct () {";}s:12:"H_1b2cff6240";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:9;s:15:"_functionHeader";s:28:"function processPostData() {";}s:12:"H_4e9a88fbd2";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:24;s:15:"_functionHeader";s:31:"function processAddToBasket() {";}s:12:"H_e6ebd8b8ad";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:14;s:15:"_functionHeader";s:33:"function processProductSearch() {";}s:12:"H_f7fb334b3f";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:24:"_searchtime_milliseconds";d:20;s:15:"_functionHeader";s:28:"function processSaveUser() {";}s:12:"H_446b442b2e";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:24:"_searchtime_milliseconds";d:18;s:15:"_functionHeader";s:36:"function processFinaliseCheckout() {";}s:12:"H_4326addf90";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:24:"_searchtime_milliseconds";d:158;s:15:"_functionHeader";s:25:"function processReset() {";}s:12:"H_c5806e1beb";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_0057ff2cdc";a:3:{s:8:"fileName";s:29:"lib/class.tx_trade_render.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:7;s:15:"_functionHeader";s:27:"function getFormMarkers() {";}s:12:"H_93d40dd9f3";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_0057ff2cdc";a:3:{s:8:"fileName";s:29:"lib/class.tx_trade_render.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:19;s:15:"_functionHeader";s:41:"function getGlobalMarkers($markerArray) {";}s:12:"H_867a8c424a";a:5:{s:3:"ALL";a:2:{s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_0057ff2cdc";a:3:{s:8:"fileName";s:29:"lib/class.tx_trade_render.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:30;s:15:"_functionHeader";s:33:"function getOrderMarkers($data) {";}s:12:"H_067e48ee5b";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:26;s:15:"_functionHeader";s:35:"function getPaymentMarkers($data) {";}s:12:"H_84b8d38540";a:5:{s:3:"ALL";a:2:{s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_0057ff2cdc";a:3:{s:8:"fileName";s:29:"lib/class.tx_trade_render.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:204;s:15:"_functionHeader";s:32:"function getUserMarkers($data) {";}s:12:"H_73ec72da31";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:39;s:15:"_functionHeader";s:52:"function getSearchBoxMarkers($markerArray=array()) {";}s:12:"H_e11417fe87";a:5:{s:3:"ALL";a:2:{s:11:"objectUsage";i:3;s:5:"TOTAL";i:3;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_0057ff2cdc";a:3:{s:8:"fileName";s:29:"lib/class.tx_trade_render.php";s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:24:"_searchtime_milliseconds";d:21;s:15:"_functionHeader";s:35:"function getProductMarkers($data) {";}s:12:"H_f34fd23437";a:5:{s:3:"ALL";a:2:{s:11:"objectUsage";i:3;s:5:"TOTAL";i:3;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_0057ff2cdc";a:3:{s:8:"fileName";s:29:"lib/class.tx_trade_render.php";s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:24:"_searchtime_milliseconds";d:81;s:15:"_functionHeader";s:36:"function getCategoryMarkers($data) {";}s:12:"H_f4306179d2";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:24:"_searchtime_milliseconds";d:134;s:15:"_functionHeader";s:36:"function getEmptyCategoryMarkers() {";}s:12:"H_991e999267";a:5:{s:3:"ALL";a:3:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:3;s:14:"nonObjectUsage";i:2;}s:14:"MD5_f424c3a77b";a:4:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:2;s:14:"nonObjectUsage";i:1;}s:14:"MD5_cf5578e7d4";a:3:{s:8:"fileName";s:19:"lib/credit_card.php";s:14:"nonObjectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:110;s:15:"_functionHeader";s:21:"function validate() {";}s:12:"H_e7df3e6c56";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:154;s:15:"_functionHeader";s:32:"function validateUserDetails() {";}s:12:"H_4f8f95fa93";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:116;s:15:"_functionHeader";s:36:"function validateShippingDetails() {";}s:12:"H_bc9d1f9e10";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:148;s:15:"_functionHeader";s:35:"function validatePaymentDetails() {";}s:12:"H_d76808d77b";a:2:{s:24:"_searchtime_milliseconds";d:6;s:15:"_functionHeader";s:59:"function validateCreditCard($cc_no,$month,$year,$cc_name) {";}}}s:14:"MD5_231a4ce99e";a:5:{s:8:"filename";s:26:"lib/class.tx_trade_div.php";s:8:"filesize";i:3298;s:6:"header";a:5:{s:4:"text";s:45:"
+
+Plugin 'Trade ' for the 'trade' extension.
+";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}s:5:"other";a:1:{i:0;s:60:"@author	Steve Ryan <stever@syntithenai.com>, Roger Bunyan <>";}s:11:"other_index";a:1:{s:7:"@author";a:1:{i:0;s:52:"Steve Ryan <stever@syntithenai.com>, Roger Bunyan <>";}}}s:3:"DAT";a:9:{i:1;a:7:{s:6:"header";s:41:"class tx_trade_div extends tslib_pibase {";s:5:"class";i:1;s:11:"parentClass";s:12:"tx_trade_div";s:7:"content";a:2:{i:0;s:239:"	var $prefixId = 'tx_trade_div';		// Same as class name
+	var $scriptRelPath = 'pi1/class.tx_trade_div.php';	// Path to this script relative to the extension dir.
+	var $extKey = 'trade';	// The extension key.
+	var $pi_checkCHash = TRUE;
+
+
+	";i:1;i:-1;}s:12:"content_size";i:239;s:13:"content_lines";i:6;s:6:"atLine";i:31;}i:3;a:7:{s:6:"header";s:32:"function setSession($key,$val) {";s:11:"parentClass";s:12:"tx_trade_div";s:4:"cDat";a:3:{s:4:"text";s:167:"
+********************************************************************
+Session Handling Functions
+*********************************************************************/";s:5:"param";a:2:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:9:"$key: ...";}i:1;a:2:{i:0;s:6:"[type]";i:1;s:9:"$val: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:52:"		$GLOBALS['_SESSION']['tx_trade'][$key]=$val;
+	}
+
+	";i:1;i:0;}s:12:"content_size";i:52;s:13:"content_lines";i:3;s:6:"atLine";i:47;}i:5;a:6:{s:6:"header";s:27:"function getSession($key) {";s:11:"parentClass";s:12:"tx_trade_div";s:7:"content";a:2:{i:0;s:54:"		return $GLOBALS['_SESSION']['tx_trade'][$key];
+	}
+
+	";i:1;i:0;}s:12:"content_size";i:54;s:13:"content_lines";i:3;s:6:"atLine";i:57;}i:7;a:6:{s:6:"header";s:30:"function removeSession($key) {";s:11:"parentClass";s:12:"tx_trade_div";s:7:"content";a:2:{i:0;s:54:"		unset($GLOBALS['_SESSION']['tx_trade'][$key]);
+	}
+
+	";i:1;i:0;}s:12:"content_size";i:54;s:13:"content_lines";i:3;s:6:"atLine";i:67;}i:9;a:6:{s:6:"header";s:30:"function setUserCookie($val) {";s:11:"parentClass";s:12:"tx_trade_div";s:7:"content";a:2:{i:0;s:91:"		// one year expiry
+		setcookie('tx_trade_pi_repeatuser',$val,time()+60*60*24*365)	;
+	}
+
+	";i:1;i:0;}s:12:"content_size";i:91;s:13:"content_lines";i:4;s:6:"atLine";i:77;}i:11;a:6:{s:6:"header";s:27:"function getUserCookie () {";s:11:"parentClass";s:12:"tx_trade_div";s:7:"content";a:2:{i:0;s:61:"		return $GLOBALS['_COOKIE']['tx_trade_pi_repeatuser'];
+	}
+
+	";i:1;i:0;}s:12:"content_size";i:61;s:13:"content_lines";i:3;s:6:"atLine";i:87;}i:13;a:7:{s:6:"header";s:49:"function isBitwiseOptionEnabled($option,$value) {";s:11:"parentClass";s:12:"tx_trade_div";s:4:"cDat";a:3:{s:4:"text";s:51:"
+
+Determine if a bit is turned on in a given value.";s:5:"param";a:2:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:12:"$option: ...";}i:1;a:2:{i:0;s:6:"[type]";i:1;s:11:"$value: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:95:"		$pos=($option-1);
+		$pwer=pow(2,$pos);
+		$res=(boolean)($value & $pwer);
+		return $res;
+	}
+
+	";i:1;i:0;}s:12:"content_size";i:95;s:13:"content_lines";i:6;s:6:"atLine";i:98;}i:15;a:4:{s:6:"header";s:30:"function getRandomPassword() {";s:11:"parentClass";s:12:"tx_trade_div";s:4:"cDat";a:3:{s:4:"text";s:83:"
+
+Generate a random password with upper and lower case letters and up to one number";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:6:"atLine";i:110;}i:17;a:7:{s:6:"header";s:28:"function getFileName($val) {";s:11:"parentClass";s:12:"tx_trade_div";s:4:"cDat";a:3:{s:4:"text";s:60:"
+
+Get a relative url from a string in the form EXT:trade/???";s:5:"param";a:1:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:9:"$val: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:436:"		$parts=explode('/',$val);
+		foreach ($parts as $pK => $pV) {
+			if (substr($pV,0,4)=='EXT:') $parts[$pK]=substr(t3lib_extMgm::extPath(substr($pV,4)),strlen(PATH_site));
+		}
+		$val2=implode('/',$parts);
+		return $val2;
+	}
+}
+
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/trade/pi1/class.tx_trade_div.php'])	{
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/trade/pi1/class.tx_trade_div.php']);
+}
+?>";i:1;i:0;}s:12:"content_size";i:436;s:13:"content_lines";i:12;s:6:"atLine";i:141;}}s:10:"usageCount";a:9:{s:12:"H_12f23ec0e0";a:2:{s:24:"_searchtime_milliseconds";d:286;s:15:"_functionHeader";s:41:"class tx_trade_div extends tslib_pibase {";}s:12:"H_37c4e53a2b";a:4:{s:3:"ALL";a:2:{s:14:"nonObjectUsage";i:14;s:5:"TOTAL";i:14;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:14:"nonObjectUsage";i:14;s:5:"TOTAL";i:14;}s:24:"_searchtime_milliseconds";d:174;s:15:"_functionHeader";s:32:"function setSession($key,$val) {";}s:12:"H_7038b43683";a:4:{s:3:"ALL";a:2:{s:14:"nonObjectUsage";i:6;s:5:"TOTAL";i:6;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:14:"nonObjectUsage";i:6;s:5:"TOTAL";i:6;}s:24:"_searchtime_milliseconds";d:15;s:15:"_functionHeader";s:27:"function getSession($key) {";}s:12:"H_5357451377";a:4:{s:3:"ALL";a:2:{s:14:"nonObjectUsage";i:5;s:5:"TOTAL";i:5;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:14:"nonObjectUsage";i:5;s:5:"TOTAL";i:5;}s:24:"_searchtime_milliseconds";d:23;s:15:"_functionHeader";s:30:"function removeSession($key) {";}s:12:"H_aa92ab76cc";a:4:{s:3:"ALL";a:2:{s:14:"nonObjectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:14:"nonObjectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:30;s:15:"_functionHeader";s:30:"function setUserCookie($val) {";}s:12:"H_8d4e4b1725";a:4:{s:3:"ALL";a:2:{s:14:"nonObjectUsage";i:2;s:5:"TOTAL";i:2;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:14:"nonObjectUsage";i:2;s:5:"TOTAL";i:2;}s:24:"_searchtime_milliseconds";d:15;s:15:"_functionHeader";s:27:"function getUserCookie () {";}s:12:"H_54839a5fcc";a:4:{s:3:"ALL";a:2:{s:14:"nonObjectUsage";i:3;s:5:"TOTAL";i:3;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:14:"nonObjectUsage";i:3;s:5:"TOTAL";i:3;}s:24:"_searchtime_milliseconds";d:185;s:15:"_functionHeader";s:49:"function isBitwiseOptionEnabled($option,$value) {";}s:12:"H_6f8bec8c12";a:4:{s:3:"ALL";a:2:{s:14:"nonObjectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:14:"nonObjectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:33;s:15:"_functionHeader";s:30:"function getRandomPassword() {";}s:12:"H_e3f2357299";a:5:{s:3:"ALL";a:2:{s:14:"nonObjectUsage";i:5;s:5:"TOTAL";i:5;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:14:"nonObjectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_0057ff2cdc";a:3:{s:8:"fileName";s:29:"lib/class.tx_trade_render.php";s:14:"nonObjectUsage";i:4;s:5:"TOTAL";i:4;}s:24:"_searchtime_milliseconds";d:35;s:15:"_functionHeader";s:28:"function getFileName($val) {";}}}s:14:"MD5_9b52ac884c";a:5:{s:8:"filename";s:32:"lib/class.tx_trade_pricecalc.php";s:8:"filesize";i:5587;s:6:"header";a:5:{s:4:"text";s:45:"
+
+Plugin 'Trade ' for the 'trade' extension.
+";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}s:5:"other";a:1:{i:0;s:57:"@author	Steve Ryan <stever@syntithenai.com>, Roger Bunyan";}s:11:"other_index";a:1:{s:7:"@author";a:1:{i:0;s:49:"Steve Ryan <stever@syntithenai.com>, Roger Bunyan";}}}s:3:"DAT";a:6:{i:1;a:7:{s:6:"header";s:47:"class tx_trade_pricecalc extends tslib_pibase {";s:5:"class";i:1;s:11:"parentClass";s:18:"tx_trade_pricecalc";s:7:"content";a:2:{i:0;s:250:"	var $prefixId = 'tx_trade_pricecalc';		// Same as class name
+	var $scriptRelPath = 'pi1/class.tx_trade_pricecalc.php';	// Path to this script relative to the extension dir.
+	var $extKey = 'trade';	// The extension key.
+	var $pi_checkCHash = TRUE;
+
+	";i:1;i:-1;}s:12:"content_size";i:250;s:13:"content_lines";i:5;s:6:"atLine";i:31;}i:3;a:7:{s:6:"header";s:32:"function getPrice($data,$user) {";s:11:"parentClass";s:18:"tx_trade_pricecalc";s:4:"cDat";a:3:{s:4:"text";s:125:"
+
+Return a price value taking into account any user or group discounts
+Pass in an array containing fields of a product record";s:5:"param";a:2:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:10:"$data: ...";}i:1;a:2:{i:0;s:6:"[type]";i:1;s:10:"$user: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:558:"		$priceTax=0;
+		$fieldToUse='1';
+		// allow for using different prices by user group
+		if (strlen($this->conf['priceField'])>0) $fieldToUse=$this->conf['priceField'];
+		$priceTax=$data['price'.$fieldToUse];
+		// apply user discount
+		if ($GLOBALS['TSFE']->fe_user->user['tx_trade_discount']>0) {
+			$priceTax-=($priceTax*($GLOBALS['TSFE']->fe_user->user['tx_trade_discount']/100));
+		}
+		//debug(array('get price',$priceTax,$GLOBALS['TSFE']->fe_user->user['name'],$GLOBALS['TSFE']->fe_user->user['tx_trade_discount'],$fieldToUse));
+		return $priceTax;
+	}
+
+	";i:1;i:0;}s:12:"content_size";i:558;s:13:"content_lines";i:13;s:6:"atLine";i:45;}i:5;a:7:{s:6:"header";s:56:"function getShippingPrice($conf,$shipping,$totalPrice) {";s:11:"parentClass";s:18:"tx_trade_pricecalc";s:4:"cDat";a:3:{s:4:"text";s:58:"
+
+Calculate and return the cost of shipping for this order";s:5:"param";a:3:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:10:"$conf: ...";}i:1;a:2:{i:0;s:6:"[type]";i:1;s:14:"$shipping: ...";}i:2;a:2:{i:0;s:6:"[type]";i:1;s:16:"$totalPrice: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:588:"		$priceTax=0;
+		if ($this->conf['shipping.'][$shipping['method'].'.']['priceTax']>0) {
+			$priceTax=$this->conf['shipping.'][$shipping['method'].'.']['priceTax'];
+		}
+		if ($this->conf['shipping.'][$shipping['method'].'.']['percentOfGoodsTotal']>0) {
+			$priceTax+=($this->conf['shipping.'][$shipping['method'].'.']['percentOfGoodsTotal']/100)*$totalPrice;
+		}
+		if ($this->conf['shipping.'][$shipping['method'].'.']['calculationScript']>0) {
+			require(t3lib_div::getFileAbsFileName($this->conf['shipping.'][$shipping['method'].'.']['calculationScript']));
+		}
+		return $priceTax;
+	}
+
+	";i:1;i:0;}s:12:"content_size";i:588;s:13:"content_lines";i:13;s:6:"atLine";i:67;}i:7;a:7:{s:6:"header";s:64:"function getPaymentProcessingPrice($conf,$payment,$totalPrice) {";s:11:"parentClass";s:18:"tx_trade_pricecalc";s:4:"cDat";a:3:{s:4:"text";s:68:"
+
+Calculate and return the cost of payment processing for this order";s:5:"param";a:3:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:10:"$conf: ...";}i:1;a:2:{i:0;s:6:"[type]";i:1;s:13:"$payment: ...";}i:2;a:2:{i:0;s:6:"[type]";i:1;s:16:"$totalPrice: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:577:"		$priceTax=0;
+		if ($this->conf['payment.'][$payment['method'].'.']['priceTax']>0) {
+			$priceTax=$this->conf['payment.'][$payment['method'].'.']['priceTax'];
+		}
+		if ($this->conf['payment.'][$payment['method'].'.']['percentOfGoodsTotal']>0) {
+			$priceTax=($this->conf['payment.'][$payment['method'].'.']['percentOfGoodsTotal']/100)*$totalPrice;
+		}
+		if ($this->conf['payment.'][$payment['method'].'.']['calculationScript']>0) {
+			require(t3lib_div::getFileAbsFileName($this->conf['payment.'][$payment['method'].'.']['calculationScript']));
+		}
+		return $priceTax;
+	}
+
+
+
+	";i:1;i:0;}s:12:"content_size";i:577;s:13:"content_lines";i:15;s:6:"atLine";i:89;}i:9;a:4:{s:6:"header";s:57:"function updateProductMarkers($markerArray,$data,$user) {";s:11:"parentClass";s:18:"tx_trade_pricecalc";s:4:"cDat";a:3:{s:4:"text";s:78:"
+
+Generate a marker array containing price and qty totals for a single product";s:5:"param";a:3:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:17:"$markerArray: ...";}i:1;a:2:{i:0;s:6:"[type]";i:1;s:10:"$data: ...";}i:2;a:2:{i:0;s:6:"[type]";i:1;s:10:"$user: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:6:"atLine";i:113;}i:11;a:7:{s:6:"header";s:92:"function updateBasketMarkers($markerArray,&$basket,$conf,$shipping,$payment,&$order,$user) {";s:11:"parentClass";s:18:"tx_trade_pricecalc";s:4:"cDat";a:3:{s:4:"text";s:130:"
+
+Generate a marker array containing price and qty totals for a basket of products.
+Update the order combined price in the process";s:5:"param";a:7:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:17:"$markerArray: ...";}i:1;a:2:{i:0;s:6:"[type]";i:1;s:12:"$basket: ...";}i:2;a:2:{i:0;s:6:"[type]";i:1;s:10:"$conf: ...";}i:3;a:2:{i:0;s:6:"[type]";i:1;s:14:"$shipping: ...";}i:4;a:2:{i:0;s:6:"[type]";i:1;s:13:"$payment: ...";}i:5;a:2:{i:0;s:6:"[type]";i:1;s:11:"$order: ...";}i:6;a:2:{i:0;s:6:"[type]";i:1;s:10:"$user: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		$total=0;
+		$totalPrice=0;
+		if (is_array($basket)) {
+			reset($basket);
+			foreach ($basket as $bK => $bV ) {
+				$total+=$bV['basket_qty'];
+				$totalPrice+=$bV['basket_qty']*tx_trade_pricecalc::getPrice($bV,$user);
+			}
+		}
+		$markerArray['NUMBER_GOODSTOTAL']=$total;
+		$markerArray['PRICE_GOODSTOTAL_TAX']=$this->conf['currencySymbol'].sprintf("%01.2f", $totalPrice);
+
+
+[...]
+_pricecalc.php'])	{
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/trade/pi1/class.tx_trade_pricecalc.php']);
+}
+?>";i:1;i:1;}s:12:"content_size";i:1261;s:13:"content_lines";i:30;s:6:"atLine";i:133;}}s:10:"usageCount";a:6:{s:12:"H_346109848d";a:2:{s:24:"_searchtime_milliseconds";d:311;s:15:"_functionHeader";s:47:"class tx_trade_pricecalc extends tslib_pibase {";}s:12:"H_001aa1f89c";a:6:{s:3:"ALL";a:2:{s:14:"nonObjectUsage";i:5;s:5:"TOTAL";i:5;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:14:"nonObjectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_9b52ac884c";a:3:{s:8:"fileName";s:32:"lib/class.tx_trade_pricecalc.php";s:14:"nonObjectUsage";i:3;s:5:"TOTAL";i:3;}s:14:"MD5_8326af5fc5";a:3:{s:8:"fileName";s:14:"lib/paypal.php";s:14:"nonObjectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:26;s:15:"_functionHeader";s:32:"function getPrice($data,$user) {";}s:12:"H_b0a58db10a";a:4:{s:3:"ALL";a:2:{s:14:"nonObjectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_9b52ac884c";a:3:{s:8:"fileName";s:32:"lib/class.tx_trade_pricecalc.php";s:14:"nonObjectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:8;s:15:"_functionHeader";s:56:"function getShippingPrice($conf,$shipping,$totalPrice) {";}s:12:"H_ec72ca8fb7";a:4:{s:3:"ALL";a:2:{s:14:"nonObjectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_9b52ac884c";a:3:{s:8:"fileName";s:32:"lib/class.tx_trade_pricecalc.php";s:14:"nonObjectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:180;s:15:"_functionHeader";s:64:"function getPaymentProcessingPrice($conf,$payment,$totalPrice) {";}s:12:"H_845c77b9e0";a:4:{s:3:"ALL";a:2:{s:14:"nonObjectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:14:"nonObjectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:34;s:15:"_functionHeader";s:57:"function updateProductMarkers($markerArray,$data,$user) {";}s:12:"H_d89ccfd68b";a:4:{s:3:"ALL";a:2:{s:14:"nonObjectUsage";i:2;s:5:"TOTAL";i:2;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:14:"nonObjectUsage";i:2;s:5:"TOTAL";i:2;}s:24:"_searchtime_milliseconds";d:27;s:15:"_functionHeader";s:92:"function updateBasketMarkers($markerArray,&$basket,$conf,$shipping,$payment,&$order,$user) {";}}}s:14:"MD5_0057ff2cdc";a:5:{s:8:"filename";s:29:"lib/class.tx_trade_render.php";s:8:"filesize";i:19058;s:6:"header";a:5:{s:4:"text";s:45:"
+
+Plugin 'Trade ' for the 'trade' extension.
+";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}s:5:"other";a:1:{i:0;s:60:"@author	Steve Ryan <stever@syntithenai.com>, Roger Bunyan <>";}s:11:"other_index";a:1:{s:7:"@author";a:1:{i:0;s:52:"Steve Ryan <stever@syntithenai.com>, Roger Bunyan <>";}}}s:3:"DAT";a:12:{i:1;a:7:{s:6:"header";s:44:"class tx_trade_render extends tslib_pibase {";s:5:"class";i:1;s:11:"parentClass";s:15:"tx_trade_render";s:7:"content";a:2:{i:0;s:512:"	var $prefixId = 'tx_trade_render';		// Same as class name
+	var $scriptRelPath = 'pi1/class.tx_trade_render.php';	// Path to this script relative to the extension dir.
+	var $extKey = 'trade';	// The extension key.
+	var $pi_checkCHash = TRUE;
+	var $parent='';
+	var $template='';
+	var $cObj='';
+	var $conf;
+	var $markerArray=array();
+
+
+
+	/***********************************************************************
+	 * General Render Methods
+	 **********************************************************************/
+
+	";i:1;i:-1;}s:12:"content_size";i:512;s:13:"content_lines";i:16;s:6:"atLine";i:31;}i:3;a:8:{s:6:"header";s:25:"function init(&$parent) {";s:11:"parentClass";s:15:"tx_trade_render";s:11:"sectionText";a:1:{i:0;s:22:"General Render Methods";}s:4:"cDat";a:3:{s:4:"text";s:207:"
+********************************************************************
+This function initialises the parent object and main template file
+*********************************************************************/";s:5:"param";a:1:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:13:"$$parent: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		$this->parent=&$parent;
+		$this->cObj=&$parent->cObj;
+		$this->conf=&$parent->conf;
+		// read template file
+		$templateFiles=explode(",",$this->parent->conf['template']);
+		$this->template="";
+		if (strlen($this->conf['templateCache']>0)&&file_exists($this->conf['templateCache'])&&is_readable(($this->conf['templateCache']))) {
+			$this->template=file_get_contents($this->
+[...]
+ session data (plus tweaks) in a marker array
+		$this->markerArray=$this->parent->getGlobalMarkers($this->markerArray);
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:899;s:13:"content_lines";i:23;s:6:"atLine";i:56;}i:5;a:7:{s:6:"header";s:44:"function renderFormWrap($content,$markers) {";s:11:"parentClass";s:15:"tx_trade_render";s:4:"cDat";a:3:{s:4:"text";s:211:"
+********************************************************************
+This function embeds content in a form (from main marker FORM_WRAPPER)
+*********************************************************************/";s:5:"param";a:2:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:13:"$content: ...";}i:1;a:2:{i:0;s:6:"[type]";i:1;s:13:"$markers: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:486:"		// wrap in form with its own handfull of markers
+		$template=$this->cObj->getSubpart($this->template,'FORM_WRAPPER');
+		if (!is_array($markers)) $markers=array();
+		$markers=t3lib_div::array_merge($this->parent->getFormMarkers(),$markers);
+		$markers['CONTENT']=$content;
+		// substite again to achieve wrap
+		$ret=$this->cObj->substituteMarkerArray($template,$markers,'###|###',true)  ;
+		$ret=$this->cObj->substituteMarkerArray($ret,$markers,'###|###',true)  ;
+		return $ret;
+	}
+
+
+	";i:1;i:0;}s:12:"content_size";i:486;s:13:"content_lines";i:12;s:6:"atLine";i:89;}i:7;a:7:{s:6:"header";s:68:"function renderCategorisedProductList($templateSection,$listArray) {";s:11:"parentClass";s:15:"tx_trade_render";s:4:"cDat";a:3:{s:4:"text";s:447:"
+*************************************
+This function renders $templateSection subpart from the main template
+and iterates through the nested templates in the standard format
+ITEM_CATEGORY_AND_ITEMS
+		ITEM_CATEGORY
+		ITEM_LIST
+			ITEM_SINGLE
+$listArray is the array of products sourced from a query or from the cart
+
+Used by renderProductList, renderBasket, renderConfirm, renderThanks, email templates, ...
+***************************************/";s:5:"param";a:2:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:21:"$templateSection: ...";}i:1;a:2:{i:0;s:6:"[type]";i:1;s:15:"$listArray: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		$content='';
+		// get template sections
+		$itemListMainTemplate=$this->cObj->getSubpart($this->template,$templateSection);
+		$itemListAndCategoryTemplate=$this->cObj->getSubpart($itemListMainTemplate,"ITEM_CATEGORY_AND_ITEMS");
+		$itemCategoryTemplate=$this->cObj->getSubpart($itemListAndCategoryTemplate,"ITEM_CATEGORY");
+		$itemListTemplate=$this->cObj->getSubpart($itemL
+[...]
+is->cObj->substituteSubpart($itemListMainTemplate,'ITEM_CATEGORY_AND_ITEMS',$content.$list,false)  ;
+		return $content;
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:3927;s:13:"content_lines";i:86;s:6:"atLine";i:119;}i:9;a:7:{s:6:"header";s:60:"function renderProductListItems($list,$itemSingleTemplate) {";s:11:"parentClass";s:15:"tx_trade_render";s:4:"cDat";a:3:{s:4:"text";s:217:"
+********************************************************************
+This function iterates $list replacing and concatenating $itemSingleTemplate
+*********************************************************************/";s:5:"param";a:2:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:10:"$list: ...";}i:1;a:2:{i:0;s:6:"[type]";i:1;s:24:"$itemSingleTemplate: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		$listItems='';
+		if (is_array($list)) {
+			reset($list);
+			foreach ($list as $clK => $clV) {
+				$markerArray=$this->parent->getProductMarkers($clV);
+				$tmp=$this->cObj->substituteMarkerArray($itemSingleTemplate,$markerArray,'###|###',true)  ;
+				// ITEM_LINK SUBPART
+				do {
+					$itemLink=$this->cObj->getSubpart($tmp,'LINK_ITEM');
+					if (strlen(trim($itemLink))==
+[...]
+mplate
+		$content=$this->cObj->substituteSubpart($itemListMainTemplate,'ITEM_SINGLE',$list,false)  ;
+		return $content;
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:1722;s:13:"content_lines";i:43;s:6:"atLine";i:215;}i:11;a:7:{s:6:"header";s:53:"function renderListItems($list,$itemSingleTemplate) {";s:11:"parentClass";s:15:"tx_trade_render";s:4:"cDat";a:3:{s:4:"text";s:217:"
+********************************************************************
+This function iterates $list replacing and concatenating $itemSingleTemplate
+*********************************************************************/";s:5:"param";a:2:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:10:"$list: ...";}i:1;a:2:{i:0;s:6:"[type]";i:1;s:24:"$itemSingleTemplate: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:94:"		$listItems='';
+		if (is_array($list)) {
+			reset($list);
+			foreach ($list as $clK => $clV) ";i:1;i:0;}s:12:"content_size";i:94;s:13:"content_lines";i:3;s:6:"atLine";i:268;}i:13;a:6:{s:6:"header";s:30:"function renderContent($uid) {";s:11:"parentClass";s:15:"tx_trade_render";s:7:"content";a:2:{i:0;s:404:"		$table='tt_content';
+		$res=$GLOBALS['TYPO3_DB']->exec_SELECTquery('*',$table,' uid='.$uid,'','',1);
+		$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+		$lCObj=t3lib_div::makeInstance('tslib_cObj');
+		$lCObj->setParent($this->cObj->data,$this->c0bj->currentRecord);
+		$lCObj->start($row,$table);
+		$content=$lCObj->cObjGetSingle($conf["renderObj"],$conf["renderObj."]);
+		return $content;
+	}
+	*/
+
+
+
+	";i:1;i:0;}s:12:"content_size";i:404;s:13:"content_lines";i:13;s:6:"atLine";i:287;}i:15;a:7:{s:6:"header";s:33:"function renderShippingMethod() {";s:11:"parentClass";s:15:"tx_trade_render";s:4:"cDat";a:3:{s:4:"text";s:128:"
+*************************************
+This function creates a shipping method selector
+***************************************/";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		// first payment input items
+		$content='';
+		$conf=$this->conf['shipping.'];
+		if (sizeof($conf)==0) {
+			debug('No shipping options configured. Critical Error.');
+			exit;
+		}
+		ksort($conf);
+		if ($conf['radio']==1) {
+			// render as radio buttons
+			foreach ($conf as $cK => $cV) {
+				$cK=substr($cK,0,strlen($cK)-1);
+				if ($cK>0) {
+					if ($this->parent->payment['
+[...]
+ct>&nbsp;'.$image;
+		}
+		return '<input name="tx_trade_pi1[submit_shipping_method]" value="1" type="hidden">'.$content;
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:1733;s:13:"content_lines";i:43;s:6:"atLine";i:308;}i:17;a:7:{s:6:"header";s:32:"function renderPaymentMethod() {";s:11:"parentClass";s:15:"tx_trade_render";s:4:"cDat";a:3:{s:4:"text";s:127:"
+*************************************
+This function creates a payment method selector
+***************************************/";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		// first payment input items
+		$content='';
+		$conf=$this->conf['payment.'];
+		if (sizeof($conf)==0) {
+			debug('No payment options configured. Critical Error.');
+			exit;
+		}
+		// remove excluded payment options
+		if ($this->parent->shipping['method']>0) {
+			if (strlen($this->conf['shipping.'][$this->parent->shipping['method'].'.']['excludePayment'])>0) {
+				foreach (
+[...]
+br/>'.$description;
+		}
+		return '<input name="tx_trade_pi1[submit_payment_method]" value="1" type="hidden">'.$content;
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:2412;s:13:"content_lines";i:59;s:6:"atLine";i:359;}i:19;a:7:{s:6:"header";s:40:"function renderSectionNoWrap($section) {";s:11:"parentClass";s:15:"tx_trade_render";s:4:"cDat";a:3:{s:4:"text";s:105:"
+*************************************
+Render a template section
+***************************************/";s:5:"param";a:1:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:13:"$section: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		$section=strtoupper($section.'_TEMPLATE');
+		$content=$this->cObj->getSubpart($this->template,strtoupper($section));
+		if (strlen(trim($content))==0) debug(array('template not found',$section));
+		$catTemplate=$this->cObj->getSubpart($content,'ITEM_CATEGORY_AND_ITEMS');
+		$listTemplate=$this->cObj->getSubpart($content,'ITEM_LIST');
+		// does the template have a section I
+[...]
+rue)  ;
+		$content=$this->cObj->substituteMarkerArray($content,$this->markerArray,'###|###',true)  ;
+		return $content;
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:1638;s:13:"content_lines";i:37;s:6:"atLine";i:427;}i:21;a:4:{s:6:"header";s:34:"function renderSection($section) {";s:11:"parentClass";s:15:"tx_trade_render";s:4:"cDat";a:3:{s:4:"text";s:135:"
+*************************************
+Render a template section and wrap in the form template
+***************************************/";s:5:"param";a:1:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:13:"$section: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:6:"atLine";i:473;}i:23;a:7:{s:6:"header";s:36:"function renderComponent($section) {";s:11:"parentClass";s:15:"tx_trade_render";s:4:"cDat";a:3:{s:4:"text";s:105:"
+*************************************
+Return a template subpart
+***************************************/";s:5:"param";a:1:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:13:"$section: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:532:"		$content=$this->cObj->getSubpart($this->template,strtoupper($section));
+		if (strlen(trim($content))==0) debug(array('could not find component ',$section,' in your HTML template. Please ensure this template subpart is available. ','Also ensure that there are no conflicting markers'));
+		return $content;
+	}
+
+}
+
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/trade/pi1/class.tx_trade_render.php'])	{
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/trade/pi1/class.tx_trade_render.php']);
+}
+
+?>
+";i:1;i:0;}s:12:"content_size";i:532;s:13:"content_lines";i:12;s:6:"atLine";i:487;}}s:10:"usageCount";a:12:{s:12:"H_08f59990ab";a:4:{s:3:"ALL";a:2:{s:12:"makeinstance";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:12:"makeinstance";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:373;s:15:"_functionHeader";s:44:"class tx_trade_render extends tslib_pibase {";}s:12:"H_5868971081";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:5;s:5:"TOTAL";i:5;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:5;s:5:"TOTAL";i:5;}s:24:"_searchtime_milliseconds";d:15;s:15:"_functionHeader";s:25:"function init(&$parent) {";}s:12:"H_6d091e42ff";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_0057ff2cdc";a:3:{s:8:"fileName";s:29:"lib/class.tx_trade_render.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:133;s:15:"_functionHeader";s:44:"function renderFormWrap($content,$markers) {";}s:12:"H_6222483d0a";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_0057ff2cdc";a:3:{s:8:"fileName";s:29:"lib/class.tx_trade_render.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:93;s:15:"_functionHeader";s:68:"function renderCategorisedProductList($templateSection,$listArray) {";}s:12:"H_9f4bd69590";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:3;s:5:"TOTAL";i:3;}s:14:"MD5_0057ff2cdc";a:3:{s:8:"fileName";s:29:"lib/class.tx_trade_render.php";s:11:"objectUsage";i:3;s:5:"TOTAL";i:3;}s:24:"_searchtime_milliseconds";d:12;s:15:"_functionHeader";s:60:"function renderProductListItems($list,$itemSingleTemplate) {";}s:12:"H_f628ea0aa7";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_0057ff2cdc";a:3:{s:8:"fileName";s:29:"lib/class.tx_trade_render.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:11;s:15:"_functionHeader";s:53:"function renderListItems($list,$itemSingleTemplate) {";}s:12:"H_60152e0ff5";a:2:{s:24:"_searchtime_milliseconds";d:5;s:15:"_functionHeader";s:30:"function renderContent($uid) {";}s:12:"H_a5a7b3993e";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:197;s:15:"_functionHeader";s:33:"function renderShippingMethod() {";}s:12:"H_6c95efc319";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:40;s:15:"_functionHeader";s:32:"function renderPaymentMethod() {";}s:12:"H_a0f842a407";a:5:{s:3:"ALL";a:2:{s:11:"objectUsage";i:5;s:5:"TOTAL";i:5;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:4;s:5:"TOTAL";i:4;}s:14:"MD5_0057ff2cdc";a:3:{s:8:"fileName";s:29:"lib/class.tx_trade_render.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:41;s:15:"_functionHeader";s:40:"function renderSectionNoWrap($section) {";}s:12:"H_c36e21f85e";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:196;s:15:"_functionHeader";s:34:"function renderSection($section) {";}s:12:"H_e1125d6199";a:5:{s:3:"ALL";a:2:{s:11:"objectUsage";i:8;s:5:"TOTAL";i:8;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:7;s:5:"TOTAL";i:7;}s:14:"MD5_0057ff2cdc";a:3:{s:8:"fileName";s:29:"lib/class.tx_trade_render.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:42;s:15:"_functionHeader";s:36:"function renderComponent($section) {";}}}s:14:"MD5_cf5578e7d4";a:5:{s:8:"filename";s:19:"lib/credit_card.php";s:8:"filesize";i:4717;s:6:"header";N;s:3:"DAT";a:5:{i:1;a:7:{s:6:"header";s:20:"class credit_card  {";s:5:"class";i:1;s:11:"parentClass";s:11:"credit_card";s:7:"content";a:2:{i:0;s:129:"	function clean_no ($cc_no)	{
+		// Remove non-numeric characters from $cc_no
+		return ereg_replace ('[^0-9]+', '', $cc_no);
+	}
+
+	";i:1;i:-1;}s:12:"content_size";i:129;s:13:"content_lines";i:5;s:6:"atLine";i:36;}i:3;a:6:{s:6:"header";s:28:"function identify ($cc_no) {";s:11:"parentClass";s:11:"credit_card";s:7:"content";a:2:{i:0;s:507:"		$cc_no = credit_card::clean_no ($cc_no);
+
+		// Get card type based on prefix and length of card number
+		if (ereg ('^4(.{12}|.{15})$', $cc_no))
+			return 'Visa';
+			if (ereg ('^5[1-5].{14}$', $cc_no))
+			return 'Mastercard';
+		if (ereg ('^(560|561)', $cc_no))
+			return 'Bankcard';
+		if (ereg ('^3[47].{13}$', $cc_no))
+			return 'Arican Express';
+		if (ereg ('^3(0[0-5].{11
+[...]
+{11})$', $cc_no))
+			return 'JCB';
+		if (ereg ('^2(014|149).{11})$', $cc_no))
+			return 'enRoute';
+
+		return 'unknown';
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:661;s:13:"content_lines";i:23;s:6:"atLine";i:48;}i:5;a:6:{s:6:"header";s:28:"function validate ($cc_no) {";s:11:"parentClass";s:11:"credit_card";s:7:"content";a:2:{i:0;s:507:"		// Reverse and clean the number
+		$cc_no = strrev (credit_card::clean_no ($cc_no));
+
+		// VALIDATION ALGORITHM
+		// Loop through the number one digit at a time
+		// Double the value of every second digit (starting from the right)
+		// Concatenate the new values with the unaffected digits
+		for ($ndx = 0; $ndx < strlen ($cc_no); ++$ndx) {
+			$digits .= ($ndx % 2) ? $cc_no
+[...]
+ard sum',$sum));
+		// Valid card numbers will be transformed into a multiple of 10
+		return ($sum % 10) ? FALSE : TRUE;
+	}
+
+	";i:1;i:1;}s:12:"content_size";i:682;s:13:"content_lines";i:20;s:6:"atLine";i:78;}i:7;a:3:{s:6:"header";s:41:"function check ($cc_no, $month, $year)
+	{";s:11:"parentClass";s:11:"credit_card";s:6:"atLine";i:107;}i:9;a:6:{s:6:"header";s:36:"function checkDate ($month, $year) {";s:11:"parentClass";s:11:"credit_card";s:7:"content";a:2:{i:0;s:239:"		if ( checkdate( $month, 1, $year)) {
+			$tstamp=time();
+			//debug(array('credit card date',date($tstamp)));
+			$tstamp_date=mktime(0, 0, 0, $month+1, 1, $year);
+			if ($tstamp < $tstamp_date)
+				return true;
+		}
+		return false;
+	}
+}
+?>";i:1;i:0;}s:12:"content_size";i:239;s:13:"content_lines";i:10;s:6:"atLine";i:123;}}s:10:"usageCount";a:5:{s:12:"H_0922340ccf";a:2:{s:24:"_searchtime_milliseconds";d:424;s:15:"_functionHeader";s:20:"class credit_card  {";}s:12:"H_1594bb6b00";a:4:{s:3:"ALL";a:2:{s:14:"nonObjectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_cf5578e7d4";a:3:{s:8:"fileName";s:19:"lib/credit_card.php";s:14:"nonObjectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:8;s:15:"_functionHeader";s:28:"function identify ($cc_no) {";}s:12:"H_9926baeb21";a:5:{s:3:"ALL";a:3:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:3;s:14:"nonObjectUsage";i:2;}s:14:"MD5_f424c3a77b";a:4:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:2;s:14:"nonObjectUsage";i:1;}s:14:"MD5_cf5578e7d4";a:3:{s:8:"fileName";s:19:"lib/credit_card.php";s:14:"nonObjectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:61;s:15:"_functionHeader";s:28:"function validate ($cc_no) {";}s:12:"H_9dda93f6c2";a:2:{s:24:"_searchtime_milliseconds";d:25;s:15:"_functionHeader";s:41:"function check ($cc_no, $month, $year)
+	{";}s:12:"H_f19309900a";a:5:{s:3:"ALL";a:2:{s:14:"nonObjectUsage";i:2;s:5:"TOTAL";i:2;}s:14:"MD5_f424c3a77b";a:3:{s:8:"fileName";s:26:"pi1/class.tx_trade_pi1.php";s:14:"nonObjectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_cf5578e7d4";a:3:{s:8:"fileName";s:19:"lib/credit_card.php";s:14:"nonObjectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:201;s:15:"_functionHeader";s:36:"function checkDate ($month, $year) {";}}}s:14:"MD5_93b886c695";a:5:{s:8:"filename";s:16:"lib/epayment.php";s:8:"filesize";i:5273;s:6:"header";N;s:3:"DAT";a:9:{i:1;a:7:{s:6:"header";s:26:"class electronic_payment {";s:5:"class";i:1;s:11:"parentClass";s:18:"electronic_payment";s:7:"content";a:2:{i:0;s:111:"     var $parser;
+     var $xml_data;
+     var $current_tag;
+
+     /* Call back Functions for the XML Parser */";i:1;i:-1;}s:12:"content_size";i:111;s:13:"content_lines";i:4;s:6:"atLine";i:34;}i:3;a:6:{s:6:"header";s:60:"function ep_xml_element_start ($parser, $tag, $attributes) {";s:11:"parentClass";s:18:"electronic_payment";s:7:"content";a:2:{i:0;s:45:"         $this->current_tag = $tag;
+     }
+
+	";i:1;i:0;}s:12:"content_size";i:45;s:13:"content_lines";i:3;s:6:"atLine";i:40;}i:5;a:6:{s:6:"header";s:45:"function ep_xml_element_end ($parser, $tag) {";s:11:"parentClass";s:18:"electronic_payment";s:7:"content";a:2:{i:0;s:43:"         $this->current_tag = "";
+     }
+
+	";i:1;i:0;}s:12:"content_size";i:43;s:13:"content_lines";i:3;s:6:"atLine";i:51;}i:7;a:6:{s:6:"header";s:40:"function ep_xml_data ($parser, $cdata) {";s:11:"parentClass";s:18:"electronic_payment";s:7:"content";a:2:{i:0;s:92:"         $this->xml_data[$this->current_tag] = $cdata;
+     }
+
+
+     /* Public Properties */";i:1;i:0;}s:12:"content_size";i:92;s:13:"content_lines";i:4;s:6:"atLine";i:62;}i:9;a:6:{s:6:"header";s:24:"function trxn_error () {";s:11:"parentClass";s:18:"electronic_payment";s:7:"content";a:2:{i:0;s:59:"         return $this->xml_data['ewayTrxnError'];
+     }
+
+	";i:1;i:0;}s:12:"content_size";i:59;s:13:"content_lines";i:3;s:6:"atLine";i:68;}i:11;a:6:{s:6:"header";s:25:"function trxn_status () {";s:11:"parentClass";s:18:"electronic_payment";s:7:"content";a:2:{i:0;s:60:"         return $this->xml_data['ewayTrxnStatus'];
+     }
+
+	";i:1;i:0;}s:12:"content_size";i:60;s:13:"content_lines";i:3;s:6:"atLine";i:77;}i:13;a:6:{s:6:"header";s:25:"function trxn_number () {";s:11:"parentClass";s:18:"electronic_payment";s:7:"content";a:2:{i:0;s:60:"         return $this->xml_data['ewayTrxnNumber'];
+     }
+
+	";i:1;i:0;}s:12:"content_size";i:60;s:13:"content_lines";i:3;s:6:"atLine";i:86;}i:15;a:3:{s:6:"header";s:28:"function trxn_reference () {";s:11:"parentClass";s:18:"electronic_payment";s:6:"atLine";i:95;}i:17;a:6:{s:6:"header";s:345:"function electronic_payment ($my_customerid, $my_totalamount, $my_firstname, $my_lastname,
+                                  $my_email, $my_address, $my_postcode, $my_invoice_description,
+                                  $my_invoice_ref, $my_card_name, $my_card_number, $my_card_exp_month,
+                                  $my_card_exp_year) {";s:11:"parentClass";s:18:"electronic_payment";s:7:"content";a:2:{i:0;s:507:"
+         /* PHP currently lacks stable XML DOM functions - instead we build our
+            XML request manually. */
+
+         $xml_request = "
+                <ewaygateway>
+                    <ewayCustomerID>$my_customerid</ewayCustomerID>
+                    <ewayTotalAmount>$my_totalamount</ewayTotalAmount>
+                    <ewayCustomerFirstName>$my_firstname</ewa
+[...]
+ves */
+          xml_parser_free ($this->parser);
+          fclose ($fh);
+          unlink ($temp_filename);
+
+     }
+
+ }
+
+?>
+";i:1;i:1;}s:12:"content_size";i:3034;s:13:"content_lines";i:71;s:6:"atLine";i:100;}}s:10:"usageCount";a:9:{s:12:"H_e2b3af9ba8";a:2:{s:24:"_searchtime_milliseconds";d:470;s:15:"_functionHeader";s:26:"class electronic_payment {";}s:12:"H_7310b25dfd";a:2:{s:24:"_searchtime_milliseconds";d:5;s:15:"_functionHeader";s:60:"function ep_xml_element_start ($parser, $tag, $attributes) {";}s:12:"H_a7a7915d25";a:2:{s:24:"_searchtime_milliseconds";d:5;s:15:"_functionHeader";s:45:"function ep_xml_element_end ($parser, $tag) {";}s:12:"H_756797a0e0";a:2:{s:24:"_searchtime_milliseconds";d:5;s:15:"_functionHeader";s:40:"function ep_xml_data ($parser, $cdata) {";}s:12:"H_52d73b39c8";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_b830ef226d";a:3:{s:8:"fileName";s:20:"lib/eway_payment.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:6;s:15:"_functionHeader";s:24:"function trxn_error () {";}s:12:"H_0004bea891";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_b830ef226d";a:3:{s:8:"fileName";s:20:"lib/eway_payment.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:6;s:15:"_functionHeader";s:25:"function trxn_status () {";}s:12:"H_402837fe8c";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_b830ef226d";a:3:{s:8:"fileName";s:20:"lib/eway_payment.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:6;s:15:"_functionHeader";s:25:"function trxn_number () {";}s:12:"H_08b1fdaca5";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_b830ef226d";a:3:{s:8:"fileName";s:20:"lib/eway_payment.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:6;s:15:"_functionHeader";s:28:"function trxn_reference () {";}s:12:"H_424001ca55";a:2:{s:24:"_searchtime_milliseconds";d:5;s:15:"_functionHeader";s:345:"function electronic_payment ($my_customerid, $my_totalamount, $my_firstname, $my_lastname,
+                                  $my_email, $my_address, $my_postcode, $my_invoice_description,
+                                  $my_invoice_ref, $my_card_name, $my_card_number, $my_card_exp_month,
+                                  $my_card_exp_year) {";}}}s:14:"MD5_b830ef226d";a:4:{s:8:"filename";s:20:"lib/eway_payment.php";s:8:"filesize";i:2069;s:6:"header";N;s:3:"DAT";a:0:{}}s:14:"MD5_8326af5fc5";a:4:{s:8:"filename";s:14:"lib/paypal.php";s:8:"filesize";i:2660;s:6:"header";N;s:3:"DAT";a:0:{}}}}

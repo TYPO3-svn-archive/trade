@@ -1,0 +1,128 @@
+
+    <!--###CONFIRM_TEMPLATE###-->
+    <!-- required to indicate that the user has confirmed -->
+    <input  name="tx_trade_pi1[finalise_checkout]" value="1" type="hidden" >
+    <input  name="tx_trade_pi1[submit_payment_details]" value="1" type="hidden" >
+    <input  name="cmd" value="checkout" type="hidden" >
+    <h3>Final Approval</h3>
+<table width="500" border="0" cellpadding="0" cellspacing="0" class="trade">
+      <tr> 
+    <th colspan="2">Qty x Product:</th>
+        <th>Price:</th>
+        <th>Total:</th>
+      </tr>
+      <!-- ###ITEM_CATEGORY_AND_ITEMS### begin -->
+      <!-- ###ITEM_CATEGORY### begin -->
+      <!-- ###ITEM_CATEGORY### end -->
+      <!-- ###ITEM_LIST### begin -->
+      <!-- ###ITEM_SINGLE### begin-->
+      <tr> 
+        <td colspan="2"> ###FIELD_QTY### x ###PRODUCT_TITLE###</td>
+    <td align="right" nowrap >###PRICE_TAX### </td>
+    <td align="right" nowrap >###PRICE_TOTAL_TAX###</td>
+      </tr>
+      <!-- ###ITEM_SINGLE### end -->
+      <!-- ###ITEM_LIST### end -->
+      <!-- ###ITEM_CATEGORY_AND_ITEMS###  end -->
+       <TR> 
+    <th colspan="2" align="left" >Shipping: </th>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </TR>
+      <TR> 
+        <td colspan="2">###SHIPPING_IMAGE### ###SHIPPING_TITLE###</td>
+        <td>&nbsp;</td>
+    <td align="right" >###PRICE_SHIPPING_TAX###</td>
+      </TR>
+            ###PAYMENT_DETAILS_SECTION### 
+      <TR> 
+    <th colspan=3 align="right"> Total amount in ###CURRENCY_CODE### ###CURRENCY_SYMBOL###:</th>
+    <th align="right" nowrap>###PRICE_TOTAL_TAX###</th>
+      </TR>
+      <tr>
+  <th align="right" valign="top">Invoice Address: </th>
+        <td colspan="2"><p>###USER_NAME###<br/>
+            ###USER_ADDRESS###<br/>
+            ###USER_CITY###, ###USER_TX_TRADE_STATE###, ###USER_ZIP###<br/>
+            ###USER_COUNTRY###</p>
+          <p>Phone: ###USER_TELEPHONE### <br/>
+            Email: ###USER_EMAIL### </p></td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr> 
+        <td>&nbsp; </td>
+        <td colspan="2">&nbsp; </td>
+        <td>&nbsp;</td>
+    </tr>
+      <tr> 
+    <th align="right" valign="top">Delivery Address:</th>
+    <td colspan="2" ><p>###USER_TX_TRADE_SHIPPING_NAME###<br/>
+            ###USER_TX_TRADE_SHIPPING_ADDRESS###<br/>
+            ###USER_TX_TRADE_SHIPPING_CITY###, ###USER_TX_TRADE_SHIPPING_ZONE###, 
+            ###USER_TX_TRADE_SHIPPING_ZIP###<br/>
+            ###USER_TX_TRADE_SHIPPING_COUNTRY###</p></td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr> 
+        <td><p>&nbsp;</p></td>
+        <td colspan="2">&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr> 
+    <th align="right" valign="top" >Comments and requests:</th>
+    <td colspan="3" ><TEXTAREA name='tx_trade_pi1[order][comment]' cols="30" rows="3" >###ORDER_COMMENT###</TEXTAREA></td>
+      </tr>
+      
+       <tr> 
+        <th align="right" valign="top">I agree to the <a href='index.php?id=36' target='_new'>Terms and Conditions </a></th>
+        <td colspan="2"><input type='checkbox' name='agreeterms' id='agreeterms'  ></td>
+        <td>&nbsp;</td>
+      
+      </tr> 
+
+      
+      <tr> 
+        <th align="right" valign="top">I would like to be sent email including more information about our products. </th>
+        <td colspan="2"><input type='checkbox' name='tx_trade_pi1[user][uc]' id='agreeemail' value='1' checked='true' ></td>
+        <td>&nbsp;</td>
+      
+      </tr> 
+ 
+      
+      <tr>
+        
+    <td colspan='3' align='right' ><input type="Submit" name="###FINALISE_BUTTON_NAME###" value="Finalise order!"   id='submitbutton' onclick='' ></td>
+      </tr>
+</table>
+<!--  form submission  -->
+<script src='typo3conf/ext/trade/res/jquery.js' ></script>
+<script> 
+$(document).ready(function() {
+   $("#submitbutton").bind('click',function(event) {
+        if (!$("#agreeterms").attr("checked")) {
+		alert('You must tick the box to agree to our terms and conditions');
+		event.preventDefault();
+		 event.stopPropagation();
+		return false;
+	} else {
+		// TODO problems with js in non validating pages. Disabled  so user can checkout reliably.
+		//$("#myform").attr("id","###PID_THANKS###");
+		//$("#submitbutton").attr('disabled','true');
+		//alert($(".myform").html());
+		//alert($("#submitbutton").html());
+		//$("#myform").submit();
+	}
+   });
+ });
+
+</script> 
+<p><br/>
+  <!-- ###EMPTY### begin -->
+  <B>You cannot checkout because you do not have products in your shopping basket.<br>
+  If you just submitted an order, it is likely that you have submitted the order 
+  in duplicate. If this is the case, the order has only been processed once and 
+  you will receive confirmation by email. </B> 
+    <!-- ###EMPTY### end --->
+  <!--###CONFIRM_TEMPLATE###-->
+</p>
+<p>&nbsp; </p>

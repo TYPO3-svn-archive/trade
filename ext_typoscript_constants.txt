@@ -1,0 +1,21 @@
+tradepid=
+tradesingleviewpid=
+tradestoragepid=
+tradeuserstoragepid=
+
+#barbie
+tradecolor1=#FFDFDF
+tradecolor2=#FF8F8F
+tradecolor3=#FF0000
+# psychedelic
+tradecolor1=#9FFF6F
+tradecolor2=#FF6E1F
+tradecolor3=#00C0CF
+# cool blue
+tradecolor1=#DFE5FF
+tradecolor2=#5F7BFF
+tradecolor3=#00096F
+#business grey
+tradecolor1=#ede9e5
+tradecolor2=#8F8F8F
+tradecolor3=#000000

@@ -1,0 +1,73 @@
+  <h3>ITEM _LIST_TEMPLATE</h3>
+  <!-- ###ITEM_LIST_TEMPLATE### begin-->
+  
+<TABLE class="trade">
+<tr> 
+      <td >###SUBMIT_TO_PREVIOUS###</td>
+      <td >&nbsp;</td>
+      <td >###SUBMIT_TO_NEXT###</td>
+    </tr>
+  <TR>
+    <TD valign='top' >
+      ###SEARCH_BOX_COMPONENT### 
+      <TABLE width=100% border="0" cellpadding="0" cellspacing="0">
+
+        <!-- ###ITEM_CATEGORY_AND_ITEMS### begin -->
+        <!-- ###ITEM_CATEGORY### begin -->
+        <tr> 
+          <td colspan=3><div class="trade_cat1"> ###CATEGORY_TITLE_HEADER_1###</div><div class="trade_cat2"> ###CATEGORY_TITLE_HEADER_2###</div><div class="trade_cat_description">###CATEGORY_DESCRIPTION###</div></td>
+        </tr>
+        <!-- ###ITEM_CATEGORY### end -->
+        <!-- ###ITEM_LIST### begin -->
+       <!-- ###ITEM_SINGLE### begin-->
+        <tr> 
+          <td colspan=3 class="trade_title" > 
+	   ###PRODUCT_ANCHOR###
+            <!--###LINK_ITEM###-->
+            ###PRODUCT_TITLE### 
+            <!--###LINK_ITEM###-->
+          </td>
+        </tr>
+        <tr> 
+          <td width="50" valign="top" class="products" >
+            <!--###LINK_ITEM###-->
+            ###PRODUCT_LIST_IMAGE_1###
+            <!--###LINK_ITEM###-->
+          </td>
+          <td valign="top" class="products" >###PRODUCT_SUBHEADER### 
+            <!--###LINK_ITEM###-->
+            more info 
+            <!--###LINK_ITEM###-->
+          </td>
+          <TD width="120" align="right" valign=top class="products"> <strong>###PRICE_TAX### 
+            ea </strong> 
+            <INPUT size="2" maxlength="4" type="text" name="###FIELD_NAME###" value="###FIELD_QTY###"> 
+            <input type="submit"  value="add" onclick="if (!document.###FORM_NAME###.###FIELD_NAME###.value!=''){document.###FORM_NAME###.###FIELD_NAME###.value=1;};  "> 
+            
+          </TD>
+        </tr>
+        <!-- ###ITEM_SINGLE### end -->
+        <!-- ###ITEM_LIST### end -->
+        <!-- ###ITEM_CATEGORY_AND_ITEMS### end -->
+    <tr> 
+      <td >###SUBMIT_TO_PREVIOUS###</td>
+      <td >&nbsp;</td>
+      <td >###SUBMIT_TO_NEXT###</td>
+    </tr>
+      </TABLE>
+    <TD width="150"  valign='top' > ###LIST_MENU###<br>
+      ###MINI_BASKET###<br>
+      <img src="clear.gif" width="150" height="1"></TD>
+  </TR>
+</TABLE>
+  
+<!-- ###EMPTY### begin -->
+<p>###SEARCH_BOX_COMPONENT### <B>No products found.</B> 
+  <!-- ###EMPTY### end -->
+  <!-- ###ITEM_LIST_TEMPLATE### end -->
+  <br>
+  <br>
+  <br>
+  ###SEARCH_BOX_COMPONENT### </p>
+<p>###LIST_TITLE### ###LIST_MENU### </p>
+<p>###SUBMIT_TO_PREVIOUS### ###SUBMIT_TO_NEXT###</p>
