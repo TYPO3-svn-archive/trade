@@ -144,9 +144,9 @@ $TCA["tx_trade_products"] = Array (
 				),
 				"foreign_table" => "tx_trade_categories",	
 				"foreign_table_where" => "AND tx_trade_categories.pid=###STORAGE_PID### ORDER BY tx_trade_categories.uid",	
-				"size" => 1,	
+				"size" => 10,	
 				"minitems" => 0,
-				"maxitems" => 1,
+				"maxitems" => 10,
 			)
 		),
 		"price1" => Array (		

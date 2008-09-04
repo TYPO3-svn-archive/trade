@@ -157,7 +157,7 @@ class tx_trade_pi1 extends tslib_pibase {
 					// initially the order is saved as hidden and deleted with status=0
 					$this->order['hidden']='1';
 					$this->order['deleted']='1';
-					$this->processSaveOrder();
+					$this->processSaveOrderNoUser();
 					//debug('preset cookie');
 					tx_trade_div::setCurrentOrder($this->order['uid']);
 					//debug('postset cookie');
@@ -804,7 +804,9 @@ class tx_trade_pi1 extends tslib_pibase {
 		if (strlen(trim($this->conf['lists.'][$this->listType.'.']['extraWhere']))>0) {
 			$where.=' and '.$this->conf['lists.'][$this->listType.'.']['extraWhere'].' ';
 		} 
-		
+		if ($this->piVars['search']['category']&&$this->piVars['search']['category']>0) {
+			$where.=' and find_in_set('.intval($this->piVars['search']['category']).',category_uid) '; 
+		}
 		// search criteria
 		//$this->hideList=false;
 		$criteria=$this->search;
@@ -827,6 +829,8 @@ class tx_trade_pi1 extends tslib_pibase {
 		// fix for typo3 src v 4.1.1
 		//.$where.=t3lib_pageSelect::enableFields('tx_trade_products');
 		$where.=$GLOBALS['TSFE']->sys_page->enableFields("tx_trade_products", 0);
+		
+		//debug(array($where));
 		$orderBy=$this->conf['lists.'][$this->listType.'.']['orderBy'];
 		// get count results and generate next/prev buttons
 		$res=$GLOBALS['TYPO3_DB']->exec_SELECTquery('count(uid) numrows','tx_trade_products',$where,'','',$this->conf['maxListRows']);  
@@ -870,7 +874,9 @@ class tx_trade_pi1 extends tslib_pibase {
 		//debug($user);
 		
 		//$user['module_sys_dmail_category']=$this->conf['dmailCategory']; 
-		if ($user['usergroup']==0) $user['usergroup']=$this->conf['customerUserGroup'];
+		$currentGroups=explode(',',$user['usergroup']);
+		if (!in_array($user['usergroup'],$currentGroups)) $user['usergroup']=$user['usergroup'].','.$this->conf['customerUserGroup'];
+		
 		if ($user['pid']<=0) $user['pid']=$this->PIDS['userstorage']['uid'];
 		$user['tstamp']=time(); 	
 		unset($user['force_new_user']);
@@ -957,7 +963,64 @@ class tx_trade_pi1 extends tslib_pibase {
 			 $this->errors[]='Failed order processing when saving user details.';
 		}
 	}
-
+	/**
+	 * Insert/update the order details in the database
+	 */                                                   
+	function processSaveOrderNoUser() {
+		//debug(array('save order'));
+		tx_trade_pricecalc::updateBasketMarkers($this->renderer->markerArray,$this->basket,$this->conf,$this->shipping,$this->payment,$this->order,$this->user,$this);
+		// remove non saved properties
+		//  populate order information for save
+		if ($this->PIDS['orderstorage']['uid']>0)  {
+			$this->order['pid']=$this->PIDS['orderstorage']['uid'];
+		} else { 	
+			$this->order['pid']=$GLOBALS['TSFE']->id;
+		}
+		$this->order['crdate']=strtotime("now");
+		$this->order['feusers_uid']=$this->user['uid'];
+		// skip the insert if this order has already been saved
+		// useful when returning from external payment eg paypal
+		// also applicable where payment processing fails
+		if ($this->order['uid']==0) {
+			// query the database for column names in this table
+			$orderToSave=array();
+			$tt=$GLOBALS['TYPO3_DB']->admin_get_fields('tx_trade_orders');
+			$databaseColumns=array_keys($tt);
+			foreach ($this->order as $k => $v) {
+				if (in_array($k,$databaseColumns)) {
+					$orderToSave[$k]=$v;	
+				}
+			}	
+			$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_trade_orders',$orderToSave);
+			$uid=$GLOBALS['TYPO3_DB']->sql_insert_id();
+			//$this->order=$orderToSave;
+			$this->order['uid']=$uid;
+			tx_trade_div::setSession('order',$this->order);
+		}
+		if ($this->order['uid']>0) {
+			if ($this->conf['tracking_code_increment']==0) $this->conf['tracking_code_increment']=1; 
+			$this->order['tracking_code']=$this->conf['tracking_code_label'].($this->conf['tracking_code_start']+($this->order['uid']*$this->conf['tracking_code_increment']));
+			$this->renderer->init($this);
+			$this->order['order_data']=$this->renderer->renderSectionNoWrap('ORDER_ITEMS');
+			//unset($this->order['price_processing']);
+			//unset($this->order['price_shipping']);
+			
+			// query the database for column names in this table
+			$orderToSave=array();
+			$tt=$GLOBALS['TYPO3_DB']->admin_get_fields('tx_trade_orders');
+			$databaseColumns=array_keys($tt);
+			foreach ($this->order as $k => $v) {
+				if (in_array($k,$databaseColumns)) {
+					$orderToSave[$k]=$v;	
+				}
+			}	
+			
+			$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_trade_orders','uid='.mysql_escape_string($this->order['uid']),$orderToSave);
+		} else {
+			 $this->errors[]='Failed order processing when saving order details.';
+		}
+	}
+	
 	
 	/**
 	 * Order finalisation - save user, save order, process payment(handlescript), send confirm email, update order record.
@@ -1060,7 +1123,10 @@ class tx_trade_pi1 extends tslib_pibase {
 		tx_trade_div::removeSession('basket');
 		unset($GLOBALS['TSFE']->fe_user->user);
 		unset($GLOBALS['_COOKIE']['tx_trade_pi_repeatuser']);
+		//header("Location: index.php?id=".$GLOBALS['TSFE']->id);
+		//exit();	
 	}
+	
 
 	
 	/***********************************************************************
@@ -1394,10 +1460,14 @@ class tx_trade_pi1 extends tslib_pibase {
 		$markerArray['PRODUCT_PRICE2']=$this->conf['currencySymbol'].$data['price2'];
 		$markerArray['PRODUCT_PRICE3']=$this->conf['currencySymbol'].$data['price3'];
 		$markerArray['PRODUCT_PRICE1']=$this->conf['currencySymbol'].tx_trade_pricecalc::getPrice($data,$this->user,$this);
-		if (strlen(trim($$data['url']))>0) $markerArray['PRODUCT_URL']='<a href="'.$data['url'].'" target="_new">External Website</a>';
+		if (strlen(trim($data['url']))>0) $markerArray['PRODUCT_URL']='<a href="'.$data['url'].'" target="_new">External Website</a>';
 		else $markerArray['PRODUCT_URL']='';
 		$markerArray['LISTTYPE']=$this->piVars['listtype'];
-		$markerArray['LISTTYPE_PID']=$this->PIDS['list_'.$this->piVars['listtype']]['uid'];
+		if ($this->piVars['backPID']>0)  {
+			$markerArray['LISTTYPE_PID']=$this->piVars['backPID'];
+		} else {
+			$markerArray['LISTTYPE_PID']=$this->PIDS['list_'.$this->piVars['listtype']]['uid'];
+		}
 		if (strlen(trim($data['datasheet']))>0) {
 			$markerArray['PRODUCT_DATASHEET_LINK']='<a href="uploads/tx_trade/'.$data['datasheet'].'" >Data Sheet</a>';
 		} else {
@@ -1483,37 +1553,38 @@ class tx_trade_pi1 extends tslib_pibase {
 		// valid email
 		// didnt allow email addresses at localhost
 		//if (!t3lib_div::validEmail($this->user['email'])) {
-			if (strlen(trim(($this->user['email'])))==0||strpos($this->user['email'],'@')==0) {
+		if (strlen(trim(($this->user['email'])))==0||strpos($this->user['email'],'@')==0) {
 			$valid=0;
 			$this->errors[]='Invalid email address';
 		}
-		
-		// if username is not sent as post, use email address
-		//debug($this->piVars['user']['force_new_user']);
-		if ((strlen(trim($this->user['username']))==0&&(strlen(trim($this->piVars['user']['username']))==0)||$this->piVars['user']['force_new_user']==1)) {
-		//if (!isset($this->user['username'])) {
-			if ($this->piVars['user']['force_new_user']==1) {
-				$this->user['username']=rand(100,999).'_'.$this->user['email'];
-			} else {
-				$this->user['username']=$this->user['email'];
-			}
-			$usernameGenerated=true;
-		}
-		// is username in use?
-		// if logged in or forcing new user, it certainly is and that is fine
-		if ($GLOBALS['TSFE']->fe_user->user['uid']==0) {
-			// db lookup
-			$prevUser=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid','fe_users',"username='".mysql_escape_string($this->user['username'])."'".' and pid='.$this->PIDS['userstorage']['uid'],'','',1,'');
-			if (sizeof($prevUser)>0) {
-				if ($usernameGenerated) {
-					$this->errors[]=$this->pi_getLL('email_in_use');
-					$this->user['force_new_user']=1;
-					$valid=0;
+		if ($this->user['skipusernamechecks']!=1) { 
+			// if username is not sent as post, use email address
+			//debug($this->piVars['user']['force_new_user']);
+			if ((strlen(trim($this->user['username']))==0&&(strlen(trim($this->piVars['user']['username']))==0)||$this->piVars['user']['force_new_user']==1)) {
+			//if (!isset($this->user['username'])) {
+				if ($this->piVars['user']['force_new_user']==1) {
+					$this->user['username']=rand(100,999).'_'.$this->user['email'];
 				} else {
-					$this->errors[]=$this->pi_getLL('username_in_use').$this->user['username'];
-					$this->user['force_new_user']=1;
-					$valid=0;
-				}	
+					$this->user['username']=$this->user['email'];
+				}
+				$usernameGenerated=true;
+			}
+			// is username in use?
+			// if logged in or forcing new user, it certainly is and that is fine
+			if ($GLOBALS['TSFE']->fe_user->user['uid']==0) {
+				// db lookup
+				$prevUser=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid','fe_users',"username='".mysql_escape_string($this->user['username'])."'".' and pid='.$this->PIDS['userstorage']['uid'].' and disable=0 and deleted=0','','',1,'');
+				if (sizeof($prevUser)>0) {
+					if ($usernameGenerated) {
+						$this->errors[]=$this->pi_getLL('email_in_use');
+						$this->user['force_new_user']=1;
+						$valid=0;
+					} else {
+						$this->errors[]=$this->pi_getLL('username_in_use').$this->user['username'];
+						$this->user['force_new_user']=1;
+						$valid=0;
+					}	
+				}
 			}
 		}
 		$this->user['valid']=$valid;
@@ -1611,14 +1682,16 @@ class tx_trade_pi1 extends tslib_pibase {
 	/**
 	 * General credit card validity checks
 	 */
-	function validateCreditCard($cc_no,$month,$year,$cc_name) {
+	function validateCreditCard($cc_no,$month,$year,$cc_name,$cvn='') {
 		if (credit_card::validate ($cc_no)) {
 			//$this->errors[]=$this->pi_getLL('invalid_cc_number');
 		}
 		if (!credit_card::checkDate ($month, $year)) {
 			//$this->errors[]=$this->pi_getLL('invalid_cc_date');
 		}
-		
+		/*if ($this->conf['requireCVN']==1&&strlen(trim($cvn))==0) {
+			$this->errors[]=$cvn.$this->pi_getLL('cc_cvn_required');
+		}*/
 		if (strlen(trim($cc_name))==0) {
 				$this->errors[]=$this->pi_getLL('cc_name_required');
 		}

@@ -52,7 +52,7 @@ class credit_card  {
 		if (ereg ('^(560|561)', $cc_no))
 			return 'Bankcard';
 		if (ereg ('^3[47].{13}$', $cc_no))
-			return 'Arican Express';
+			return 'American Express';
 		if (ereg ('^3(0[0-5].{11}|[68].{12})$', $cc_no))
 			return 'Diners Club/Carte Blanche';
 		if (ereg ('^6011.{12}$', $cc_no))

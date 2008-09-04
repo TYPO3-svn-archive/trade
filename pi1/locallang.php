@@ -22,6 +22,7 @@ $LOCAL_LANG = Array (
 		'invalid_cc_date' => 'Invalid card date.',
 		'invalid_cc_number' => 'Invalid card number.',
 		'cc_name_required' => 'You must enter the credit card owners name.'	,
+		'cc_cvn_required' => 'You must enter the cvn number on the back of your credit card.'	,
 		'username_in_use' => 'That username is in use. Please try again with a different username.'	,
 		'logged_in_as' => 'Logged in as '	,
 		'user_discount' => 'Applying user discount of %'	,

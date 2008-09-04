@@ -11,19 +11,19 @@
     <th rowspan="3" class="right">Credit Card Details:</th>
     <th nowrap>Number: </th> 
     <td><input type="text"  onKeyPress="return noSubmit(this,event);" name="tx_trade_pi1[card_number]" ></td>
+    <th>CVN:</th><td><input type="text"  onKeyPress="return noSubmit(this,event);" name="tx_trade_pi1[card_cvn]" >
     <td>&nbsp;</td>
   </tr>
   <tr> 
     <th nowrap>Expiry Date: </th>
     <td> <select name="tx_trade_pi1[payment][card_exp_month]" >
           ###SELECT_MONTH_OPTIONS###
-        
       </select>
       - 
       <select name="tx_trade_pi1[payment][card_exp_year]">
           ###SELECT_YEAR_OPTIONS###
-        
       </select></td>
+      
     <td>&nbsp;</td>
   </tr>
   <tr> 
