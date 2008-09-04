@@ -207,5 +207,6 @@ RTE.config.tx_trade_products.description.proc.overruleMode=ts_css
 RTE.config.tx_trade_categories.description.proc.overruleMode=ts_css
 ');
 }
+t3lib_extMgm::addPlugin(array('LLL:EXT:trade/locallang_db.php:tt_content.list_type_minibasket', 'tx_trade_minibasket'),'list_type');
 
 ?>

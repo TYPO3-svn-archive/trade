@@ -81,6 +81,7 @@ class tx_trade_render extends tslib_pibase {
 				fwrite($handle,$this->template);
 			}
 		}
+		//debug(array($this->template));
 	}
 	
 	/***********************************************************************

@@ -53,6 +53,8 @@ plugin.tx_trade_pi1 {
     validCmds=list,checkout,singleview,copy_address_to_shipping,order_history_single,order_history_list
     showLoginAt=list,basket,user_shipping_details
 	hideMenuAt=thanks,order_history_list,order_history_single
+	showMiniBasket=1
+	showMenu=1
 	progressBar {
 	    stdWrap.wrap=<ul id="trade_progress">|</ul>
 	    itemStdWrap.wrap=<li>|</li>
@@ -372,4 +374,9 @@ margin-top: 5px;
 
 
 }
+includeLibs.tx_trade_minibasket =EXT:trade/pi1/class.tx_trade_minibasket.php
+plugin.tx_trade.minibasket< plugin.tx_trade_pi1
+plugin.tx_trade.minibasket.userFunc = tx_trade_minibasket->main
+
+tt_content.list.20.tx_trade_minibasket = <  plugin.tx_trade.minibasket
 

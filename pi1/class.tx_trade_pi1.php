@@ -1265,7 +1265,11 @@ class tx_trade_pi1 extends tslib_pibase {
 		$markerArray['USER_DETAILS_SECTION']= $this->renderer->renderComponent('USER_DETAILS_COMPONENT');
 		$markerArray['USER_DETAILS_VIEW_SECTION']= $this->renderer->renderComponent('USER_DETAILS_VIEW_COMPONENT');
 		$markerArray['ORDER_ITEMS_SECTION']= $this->renderer->renderSectionNoWrap('ORDER_ITEMS');
-		$markerArray['MINI_BASKET']= $this->renderer->renderSectionNoWrap('BASKET_OVERVIEW');	
+		if ($this->conf['showMiniBasket']==1) {
+			$markerArray['MINI_BASKET']= $this->renderer->renderSectionNoWrap('BASKET_OVERVIEW');	
+		} else {
+			$markerArray['MINI_BASKET']=' ';
+		}
    		$markerArray['FORM_URL']='index.php';		
 		// other global
 		foreach ($this->PIDS as $pK =>$pV) {
@@ -1287,7 +1291,7 @@ class tx_trade_pi1 extends tslib_pibase {
 		$markerArray['LIST_TITLE']=$this->conf['lists.'][$this->listType.'.']['title'];
 		$markerArray['SHOP_OWNER_DETAILS']=$this->conf['shopOwnerDetails'];
 		$listMenu="";
-		if (sizeof($this->conf['lists.'])>0) {
+		if ($this->conf['showMenu']==1&&sizeof($this->conf['lists.'])>0) {
 			reset($this->conf['lists.']);
 			$cmdList=explode(',',$this->conf['cmdList']);
 			foreach ($this->conf['lists.'] as $cK => $cV) {
