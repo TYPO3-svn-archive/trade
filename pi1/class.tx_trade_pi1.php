@@ -588,8 +588,12 @@ class tx_trade_pi1 extends tslib_pibase {
 	 * Load a product record and associated categories, then render it and store in this->renderer->markerArray
 	 */	
 	function processLoadProduct () {
+		// load details
 		$res=$GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_trade_products','uid='.mysql_escape_string($this->piVars['uid']).' '.$this->getProductPIDQuery(),'','title ASC','');
 		if ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			// increment view counter
+			$res=$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_trade_products','uid='.mysql_escape_string($this->piVars['uid']),array('viewcount'=>$row['viewcount']+1));
+		
 			// get qty from session
 			if (!is_array($this->basket)) $this->basket=array();
 			$row['basket_qty']=$this->basket[$row['uid']]['basket_qty'];

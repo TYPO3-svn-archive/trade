@@ -1,97 +1,97 @@
 <?php
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
-$TCA["tx_trade_products"] = Array (
+$TCA["tx_trade_products"] = array (
 	"ctrl" => $TCA["tx_trade_products"]["ctrl"],
-	"interface" => Array (
-		"showRecordFieldList" => "sys_language_uid,l18n_parent,l18n_diffsource,hidden,starttime,endtime,fe_group,title,subheader,code,description,category_uid,price1,price2,price3,tax,image,weight,stock,manufacturer,url,attributes,datasheet,special,other_products"
+	"interface" => array (
+		"showRecordFieldList" => "sys_language_uid,l18n_parent,l18n_diffsource,hidden,starttime,endtime,fe_group,title,subheader,code,description,category_uid,price1,price2,price3,tax,image,weight,stock,manufacturer_id,manufacturer,url,attributes,datasheet,special,other_products,viewcount"
 	),
 	"feInterface" => $TCA["tx_trade_products"]["feInterface"],
-	"columns" => Array (
-		'sys_language_uid' => Array (		
+	"columns" => array (
+		'sys_language_uid' => array (		
 			'exclude' => 1,
-			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.language',
-			'config' => Array (
-				'type' => 'select',
-				'foreign_table' => 'sys_language',
+			'label'  => 'LLL:EXT:lang/locallang_general.xml:LGL.language',
+			'config' => array (
+				'type'                => 'select',
+				'foreign_table'       => 'sys_language',
 				'foreign_table_where' => 'ORDER BY sys_language.title',
-				'items' => Array(
-					Array('LLL:EXT:lang/locallang_general.php:LGL.allLanguages',-1),
-					Array('LLL:EXT:lang/locallang_general.php:LGL.default_value',0)
+				'items' => array(
+					array('LLL:EXT:lang/locallang_general.xml:LGL.allLanguages', -1),
+					array('LLL:EXT:lang/locallang_general.xml:LGL.default_value', 0)
 				)
 			)
 		),
-		'l18n_parent' => Array (		
+		'l18n_parent' => array (		
 			'displayCond' => 'FIELD:sys_language_uid:>:0',
-			'exclude' => 1,
-			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.l18n_parent',
-			'config' => Array (
-				'type' => 'select',
-				'items' => Array (
-					Array('', 0),
+			'exclude'     => 1,
+			'label'       => 'LLL:EXT:lang/locallang_general.xml:LGL.l18n_parent',
+			'config'      => array (
+				'type'  => 'select',
+				'items' => array (
+					array('', 0),
 				),
-				'foreign_table' => 'tx_trade_products',
+				'foreign_table'       => 'tx_trade_products',
 				'foreign_table_where' => 'AND tx_trade_products.pid=###CURRENT_PID### AND tx_trade_products.sys_language_uid IN (-1,0)',
 			)
 		),
-		'l18n_diffsource' => Array (		
-			'config' => Array (
+		'l18n_diffsource' => array (		
+			'config' => array (
 				'type' => 'passthrough'
 			)
 		),
-		"hidden" => Array (		
-			"exclude" => 1,
-			"label" => "LLL:EXT:lang/locallang_general.php:LGL.hidden",
-			"config" => Array (
-				"type" => "check",
-				"default" => "0"
+		'hidden' => array (		
+			'exclude' => 1,
+			'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.hidden',
+			'config'  => array (
+				'type'    => 'check',
+				'default' => '0'
 			)
 		),
-		"starttime" => Array (		
-			"exclude" => 1,
-			"label" => "LLL:EXT:lang/locallang_general.php:LGL.starttime",
-			"config" => Array (
-				"type" => "input",
-				"size" => "8",
-				"max" => "20",
-				"eval" => "date",
-				"default" => "0",
-				"checkbox" => "0"
+		'starttime' => array (		
+			'exclude' => 1,
+			'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.starttime',
+			'config'  => array (
+				'type'     => 'input',
+				'size'     => '8',
+				'max'      => '20',
+				'eval'     => 'date',
+				'default'  => '0',
+				'checkbox' => '0'
 			)
 		),
-		"endtime" => Array (		
-			"exclude" => 1,
-			"label" => "LLL:EXT:lang/locallang_general.php:LGL.endtime",
-			"config" => Array (
-				"type" => "input",
-				"size" => "8",
-				"max" => "20",
-				"eval" => "date",
-				"checkbox" => "0",
-				"default" => "0",
-				"range" => Array (
-					"upper" => mktime(0,0,0,12,31,2020),
-					"lower" => mktime(0,0,0,date("m")-1,date("d"),date("Y"))
+		'endtime' => array (		
+			'exclude' => 1,
+			'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.endtime',
+			'config'  => array (
+				'type'     => 'input',
+				'size'     => '8',
+				'max'      => '20',
+				'eval'     => 'date',
+				'checkbox' => '0',
+				'default'  => '0',
+				'range'    => array (
+					'upper' => mktime(0, 0, 0, 12, 31, 2020),
+					'lower' => mktime(0, 0, 0, date('m')-1, date('d'), date('Y'))
 				)
 			)
 		),
-		"fe_group" => Array (		
-			"exclude" => 1,
-			"label" => "LLL:EXT:lang/locallang_general.php:LGL.fe_group",
-			"config" => Array (
-				"type" => "select",
-				"items" => Array (
-					Array("", 0),
-					Array("LLL:EXT:lang/locallang_general.php:LGL.hide_at_login", -1),
-					Array("LLL:EXT:lang/locallang_general.php:LGL.any_login", -2),
-					Array("LLL:EXT:lang/locallang_general.php:LGL.usergroups", "--div--")
+		'fe_group' => array (		
+			'exclude' => 1,
+			'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.fe_group',
+			'config'  => array (
+				'type'  => 'select',
+				'items' => array (
+					array('', 0),
+					array('LLL:EXT:lang/locallang_general.xml:LGL.hide_at_login', -1),
+					array('LLL:EXT:lang/locallang_general.xml:LGL.any_login', -2),
+					array('LLL:EXT:lang/locallang_general.xml:LGL.usergroups', '--div--')
 				),
-				"foreign_table" => "fe_groups"
+				'foreign_table' => 'fe_groups'
 			)
 		),
 		"title" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_products.title",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_products.title",		
 			"config" => Array (
 				"type" => "input",	
 				"size" => "30",
@@ -99,7 +99,7 @@ $TCA["tx_trade_products"] = Array (
 		),
 		"subheader" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_products.subheader",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_products.subheader",		
 			"config" => Array (
 				"type" => "text",
 				"cols" => "48",	
@@ -108,7 +108,7 @@ $TCA["tx_trade_products"] = Array (
 		),
 		"code" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_products.code",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_products.code",		
 			"config" => Array (
 				"type" => "input",	
 				"size" => "12",
@@ -116,14 +116,14 @@ $TCA["tx_trade_products"] = Array (
 		),
 		"description" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_products.description",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_products.description",		
 			"config" => Array (
 				"type" => "text",
 				"cols" => "30",
 				"rows" => "5",
 				"wizards" => Array(
 					"_PADDING" => 2,
-					"RTE" => Array(
+					"RTE" => array(
 						"notNewRecords" => 1,
 						"RTEonly" => 1,
 						"type" => "script",
@@ -136,22 +136,19 @@ $TCA["tx_trade_products"] = Array (
 		),
 		"category_uid" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_products.category_uid",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_products.category_uid",		
 			"config" => Array (
-				"type" => "select",	
-				"items" => Array (
-					Array("",0),
-				),
-				"foreign_table" => "tx_trade_categories",	
-				"foreign_table_where" => "AND tx_trade_categories.pid=###STORAGE_PID### ORDER BY tx_trade_categories.uid",	
-				"size" => 10,	
+				"type" => "group",	
+				"internal_type" => "db",	
+				"allowed" => "tx_trade_categories",	
+				"size" => 1,	
 				"minitems" => 0,
-				"maxitems" => 10,
+				"maxitems" => 1,
 			)
 		),
 		"price1" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_products.price1",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_products.price1",		
 			"config" => Array (
 				"type" => "input",	
 				"size" => "10",
@@ -159,7 +156,7 @@ $TCA["tx_trade_products"] = Array (
 		),
 		"price2" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_products.price2",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_products.price2",		
 			"config" => Array (
 				"type" => "input",	
 				"size" => "10",
@@ -167,7 +164,7 @@ $TCA["tx_trade_products"] = Array (
 		),
 		"price3" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_products.price3",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_products.price3",		
 			"config" => Array (
 				"type" => "input",	
 				"size" => "10",
@@ -175,7 +172,7 @@ $TCA["tx_trade_products"] = Array (
 		),
 		"tax" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_products.tax",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_products.tax",		
 			"config" => Array (
 				"type" => "input",	
 				"size" => "5",
@@ -183,12 +180,12 @@ $TCA["tx_trade_products"] = Array (
 		),
 		"image" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_products.image",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_products.image",		
 			"config" => Array (
 				"type" => "group",
 				"internal_type" => "file",
 				"allowed" => $GLOBALS["TYPO3_CONF_VARS"]["GFX"]["imagefile_ext"],	
-				"max_size" => 1000,	
+				"max_size" => 500,	
 				"uploadfolder" => "uploads/tx_trade",
 				"show_thumbs" => 1,	
 				"size" => 3,	
@@ -198,7 +195,7 @@ $TCA["tx_trade_products"] = Array (
 		),
 		"weight" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_products.weight",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_products.weight",		
 			"config" => Array (
 				"type" => "input",	
 				"size" => "10",
@@ -206,15 +203,27 @@ $TCA["tx_trade_products"] = Array (
 		),
 		"stock" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_products.stock",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_products.stock",		
 			"config" => Array (
 				"type" => "input",	
 				"size" => "10",
 			)
 		),
+		"manufacturer_id" => Array (		
+			"exclude" => 0,		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_products.manufacturer_id",		
+			"config" => Array (
+				"type" => "select",	
+				"foreign_table" => "tx_trade_manufacturers",	
+				"foreign_table_where" => "AND tx_trade_manufacturers.pid=###STORAGE_PID### ORDER BY tx_trade_manufacturers.uid",	
+				"size" => 1,	
+				"minitems" => 0,
+				"maxitems" => 1,
+			)
+		),
 		"manufacturer" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_products.manufacturer",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_products.manufacturer",		
 			"config" => Array (
 				"type" => "input",	
 				"size" => "30",
@@ -222,20 +231,20 @@ $TCA["tx_trade_products"] = Array (
 		),
 		"url" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_products.url",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_products.url",		
 			"config" => Array (
-				"type" => "input",
-				"size" => "15",
-				"max" => "255",
+				"type"     => "input",
+				"size"     => "15",
+				"max"      => "255",
 				"checkbox" => "",
-				"eval" => "trim",
-				"wizards" => Array(
+				"eval"     => "trim",
+				"wizards"  => array(
 					"_PADDING" => 2,
-					"link" => Array(
-						"type" => "popup",
-						"title" => "Link",
-						"icon" => "link_popup.gif",
-						"script" => "browse_links.php?mode=wizard",
+					"link"     => array(
+						"type"         => "popup",
+						"title"        => "Link",
+						"icon"         => "link_popup.gif",
+						"script"       => "browse_links.php?mode=wizard",
 						"JSopenParams" => "height=300,width=500,status=0,menubar=0,scrollbars=1"
 					)
 				)
@@ -243,7 +252,7 @@ $TCA["tx_trade_products"] = Array (
 		),
 		"attributes" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_products.attributes",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_products.attributes",		
 			"config" => Array (
 				"type" => "input",	
 				"size" => "30",
@@ -251,28 +260,28 @@ $TCA["tx_trade_products"] = Array (
 		),
 		"datasheet" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_products.datasheet",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_products.datasheet",		
 			"config" => Array (
 				"type" => "group",
 				"internal_type" => "file",
-				"allowed" => 'doc,pdf,xls,sxw,odt,ppt,zip,html',	
-				"max_size" => 5000,	
+				"allowed" => $GLOBALS["TYPO3_CONF_VARS"]["GFX"]["imagefile_ext"],	
+				"max_size" => 500,	
 				"uploadfolder" => "uploads/tx_trade",
-				"size" => 10,	
+				"size" => 1,	
 				"minitems" => 0,
-				"maxitems" => 20,
+				"maxitems" => 1,
 			)
 		),
 		"special" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_products.special",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_products.special",		
 			"config" => Array (
 				"type" => "check",
 			)
 		),
 		"other_products" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_products.other_products",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_products.other_products",		
 			"config" => Array (
 				"type" => "group",	
 				"internal_type" => "db",	
@@ -282,80 +291,87 @@ $TCA["tx_trade_products"] = Array (
 				"maxitems" => 10,
 			)
 		),
+		"viewcount" => Array (		
+			"exclude" => 0,		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_products.viewcount",		
+			"config" => Array (
+				"type" => "none",
+			)
+		),
 	),
-	"types" => Array (
-		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, title;;;;2-2-2, subheader;;;;3-3-3, code, description;;;richtext[*]:rte_transform[mode=ts], category_uid, price1, price2, price3, tax, image, weight, stock, manufacturer, url, attributes, datasheet, special, other_products")
+	"types" => array (
+		"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, title;;;;2-2-2, subheader;;;;3-3-3, code, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], category_uid, price1, price2, price3, tax, image, weight, stock, manufacturer_id, manufacturer, url, attributes, datasheet, special, other_products, viewcount")
 	),
-	"palettes" => Array (
-		"1" => Array("showitem" => "starttime, endtime, fe_group")
+	"palettes" => array (
+		"1" => array("showitem" => "starttime, endtime, fe_group")
 	)
 );
 
 
 
-$TCA["tx_trade_categories"] = Array (
+$TCA["tx_trade_categories"] = array (
 	"ctrl" => $TCA["tx_trade_categories"]["ctrl"],
-	"interface" => Array (
+	"interface" => array (
 		"showRecordFieldList" => "sys_language_uid,l18n_parent,l18n_diffsource,hidden,fe_group,title,description,image,parent"
 	),
 	"feInterface" => $TCA["tx_trade_categories"]["feInterface"],
-	"columns" => Array (
-		'sys_language_uid' => Array (		
+	"columns" => array (
+		'sys_language_uid' => array (		
 			'exclude' => 1,
-			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.language',
-			'config' => Array (
-				'type' => 'select',
-				'foreign_table' => 'sys_language',
+			'label'  => 'LLL:EXT:lang/locallang_general.xml:LGL.language',
+			'config' => array (
+				'type'                => 'select',
+				'foreign_table'       => 'sys_language',
 				'foreign_table_where' => 'ORDER BY sys_language.title',
-				'items' => Array(
-					Array('LLL:EXT:lang/locallang_general.php:LGL.allLanguages',-1),
-					Array('LLL:EXT:lang/locallang_general.php:LGL.default_value',0)
+				'items' => array(
+					array('LLL:EXT:lang/locallang_general.xml:LGL.allLanguages', -1),
+					array('LLL:EXT:lang/locallang_general.xml:LGL.default_value', 0)
 				)
 			)
 		),
-		'l18n_parent' => Array (		
+		'l18n_parent' => array (		
 			'displayCond' => 'FIELD:sys_language_uid:>:0',
-			'exclude' => 1,
-			'label' => 'LLL:EXT:lang/locallang_general.php:LGL.l18n_parent',
-			'config' => Array (
-				'type' => 'select',
-				'items' => Array (
-					Array('', 0),
+			'exclude'     => 1,
+			'label'       => 'LLL:EXT:lang/locallang_general.xml:LGL.l18n_parent',
+			'config'      => array (
+				'type'  => 'select',
+				'items' => array (
+					array('', 0),
 				),
-				'foreign_table' => 'tx_trade_categories',
+				'foreign_table'       => 'tx_trade_categories',
 				'foreign_table_where' => 'AND tx_trade_categories.pid=###CURRENT_PID### AND tx_trade_categories.sys_language_uid IN (-1,0)',
 			)
 		),
-		'l18n_diffsource' => Array (		
-			'config' => Array (
+		'l18n_diffsource' => array (		
+			'config' => array (
 				'type' => 'passthrough'
 			)
 		),
-		"hidden" => Array (		
-			"exclude" => 1,
-			"label" => "LLL:EXT:lang/locallang_general.php:LGL.hidden",
-			"config" => Array (
-				"type" => "check",
-				"default" => "0"
+		'hidden' => array (		
+			'exclude' => 1,
+			'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.hidden',
+			'config'  => array (
+				'type'    => 'check',
+				'default' => '0'
 			)
 		),
-		"fe_group" => Array (		
-			"exclude" => 1,
-			"label" => "LLL:EXT:lang/locallang_general.php:LGL.fe_group",
-			"config" => Array (
-				"type" => "select",
-				"items" => Array (
-					Array("", 0),
-					Array("LLL:EXT:lang/locallang_general.php:LGL.hide_at_login", -1),
-					Array("LLL:EXT:lang/locallang_general.php:LGL.any_login", -2),
-					Array("LLL:EXT:lang/locallang_general.php:LGL.usergroups", "--div--")
+		'fe_group' => array (		
+			'exclude' => 1,
+			'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.fe_group',
+			'config'  => array (
+				'type'  => 'select',
+				'items' => array (
+					array('', 0),
+					array('LLL:EXT:lang/locallang_general.xml:LGL.hide_at_login', -1),
+					array('LLL:EXT:lang/locallang_general.xml:LGL.any_login', -2),
+					array('LLL:EXT:lang/locallang_general.xml:LGL.usergroups', '--div--')
 				),
-				"foreign_table" => "fe_groups"
+				'foreign_table' => 'fe_groups'
 			)
 		),
 		"title" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_categories.title",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_categories.title",		
 			"config" => Array (
 				"type" => "input",	
 				"size" => "30",
@@ -363,7 +379,7 @@ $TCA["tx_trade_categories"] = Array (
 		),
 		"description" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_categories.description",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_categories.description",		
 			"config" => Array (
 				"type" => "text",
 				"cols" => "30",	
@@ -372,7 +388,7 @@ $TCA["tx_trade_categories"] = Array (
 		),
 		"image" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_categories.image",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_categories.image",		
 			"config" => Array (
 				"type" => "group",
 				"internal_type" => "file",
@@ -386,7 +402,7 @@ $TCA["tx_trade_categories"] = Array (
 		),
 		"parent" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_categories.parent",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_categories.parent",		
 			"config" => Array (
 				"type" => "group",	
 				"internal_type" => "db",	
@@ -397,34 +413,34 @@ $TCA["tx_trade_categories"] = Array (
 			)
 		),
 	),
-	"types" => Array (
-		"0" => Array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, title;;;;2-2-2, description;;;richtext[*]:rte_transform[mode=ts];3-3-3, image, parent")
+	"types" => array (
+		"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, title;;;;2-2-2, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts];3-3-3, image, parent")
 	),
-	"palettes" => Array (
-		"1" => Array("showitem" => "fe_group")
+	"palettes" => array (
+		"1" => array("showitem" => "fe_group")
 	)
 );
 
 
 
-$TCA["tx_trade_orders"] = Array (
+$TCA["tx_trade_orders"] = array (
 	"ctrl" => $TCA["tx_trade_orders"]["ctrl"],
-	"interface" => Array (
+	"interface" => array (
 		"showRecordFieldList" => "hidden,feusers_uid,tracking_code,status,order_data,comment,price_total_tax"
 	),
 	"feInterface" => $TCA["tx_trade_orders"]["feInterface"],
-	"columns" => Array (
-		"hidden" => Array (		
-			"exclude" => 1,
-			"label" => "LLL:EXT:lang/locallang_general.php:LGL.hidden",
-			"config" => Array (
-				"type" => "check",
-				"default" => "0"
+	"columns" => array (
+		'hidden' => array (		
+			'exclude' => 1,
+			'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.hidden',
+			'config'  => array (
+				'type'    => 'check',
+				'default' => '0'
 			)
 		),
 		"feusers_uid" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_orders.feusers_uid",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_orders.feusers_uid",		
 			"config" => Array (
 				"type" => "group",	
 				"internal_type" => "db",	
@@ -436,7 +452,7 @@ $TCA["tx_trade_orders"] = Array (
 		),
 		"tracking_code" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_orders.tracking_code",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_orders.tracking_code",		
 			"config" => Array (
 				"type" => "input",	
 				"size" => "30",
@@ -444,7 +460,7 @@ $TCA["tx_trade_orders"] = Array (
 		),
 		"status" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_orders.status",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_orders.status",		
 			"config" => Array (
 				"type" => "select",	
 				"foreign_table" => "tx_trade_order_status",	
@@ -456,7 +472,7 @@ $TCA["tx_trade_orders"] = Array (
 		),
 		"order_data" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_orders.order_data",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_orders.order_data",		
 			"config" => Array (
 				"type" => "text",
 				"cols" => "30",	
@@ -465,7 +481,7 @@ $TCA["tx_trade_orders"] = Array (
 		),
 		"comment" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_orders.comment",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_orders.comment",		
 			"config" => Array (
 				"type" => "text",
 				"cols" => "30",	
@@ -474,52 +490,111 @@ $TCA["tx_trade_orders"] = Array (
 		),
 		"price_total_tax" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_orders.price_total_tax",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_orders.price_total_tax",		
 			"config" => Array (
 				"type" => "input",	
 				"size" => "30",
 			)
 		),
 	),
-	"types" => Array (
-		"0" => Array("showitem" => "hidden;;1;;1-1-1, feusers_uid, tracking_code, status, order_data;;;richtext[*], comment, price_total_tax")
+	"types" => array (
+		"0" => array("showitem" => "hidden;;1;;1-1-1, feusers_uid, tracking_code, status, order_data, comment, price_total_tax")
 	),
-	"palettes" => Array (
-		"1" => Array("showitem" => "")
+	"palettes" => array (
+		"1" => array("showitem" => "")
 	)
 );
 
 
 
-$TCA["tx_trade_order_status"] = Array (
+$TCA["tx_trade_order_status"] = array (
 	"ctrl" => $TCA["tx_trade_order_status"]["ctrl"],
-	"interface" => Array (
+	"interface" => array (
 		"showRecordFieldList" => "hidden,title"
 	),
 	"feInterface" => $TCA["tx_trade_order_status"]["feInterface"],
-	"columns" => Array (
-		"hidden" => Array (		
-			"exclude" => 1,
-			"label" => "LLL:EXT:lang/locallang_general.php:LGL.hidden",
-			"config" => Array (
-				"type" => "check",
-				"default" => "0"
+	"columns" => array (
+		'hidden' => array (		
+			'exclude' => 1,
+			'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.hidden',
+			'config'  => array (
+				'type'    => 'check',
+				'default' => '0'
 			)
 		),
 		"title" => Array (		
 			"exclude" => 0,		
-			"label" => "LLL:EXT:trade/locallang_db.php:tx_trade_order_status.title",		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_order_status.title",		
 			"config" => Array (
 				"type" => "input",	
 				"size" => "30",
 			)
 		),
 	),
-	"types" => Array (
-		"0" => Array("showitem" => "hidden;;1;;1-1-1, title;;;;2-2-2")
+	"types" => array (
+		"0" => array("showitem" => "hidden;;1;;1-1-1, title;;;;2-2-2")
 	),
-	"palettes" => Array (
-		"1" => Array("showitem" => "")
+	"palettes" => array (
+		"1" => array("showitem" => "")
+	)
+);
+
+
+
+$TCA["tx_trade_manufacturers"] = array (
+	"ctrl" => $TCA["tx_trade_manufacturers"]["ctrl"],
+	"interface" => array (
+		"showRecordFieldList" => "hidden,title,description,image"
+	),
+	"feInterface" => $TCA["tx_trade_manufacturers"]["feInterface"],
+	"columns" => array (
+		'hidden' => array (		
+			'exclude' => 1,
+			'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.hidden',
+			'config'  => array (
+				'type'    => 'check',
+				'default' => '0'
+			)
+		),
+		"title" => Array (		
+			"exclude" => 0,		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_manufacturers.title",		
+			"config" => Array (
+				"type" => "input",	
+				"size" => "30",	
+				"eval" => "trim",
+			)
+		),
+		"description" => Array (		
+			"exclude" => 0,		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_manufacturers.description",		
+			"config" => Array (
+				"type" => "text",
+				"cols" => "30",	
+				"rows" => "5",
+			)
+		),
+		"image" => Array (		
+			"exclude" => 0,		
+			"label" => "LLL:EXT:trade/locallang_db.xml:tx_trade_manufacturers.image",		
+			"config" => Array (
+				"type" => "group",
+				"internal_type" => "file",
+				"allowed" => $GLOBALS["TYPO3_CONF_VARS"]["GFX"]["imagefile_ext"],	
+				"max_size" => 500,	
+				"uploadfolder" => "uploads/tx_trade",
+				"show_thumbs" => 1,	
+				"size" => 1,	
+				"minitems" => 0,
+				"maxitems" => 1,
+			)
+		),
+	),
+	"types" => array (
+		"0" => array("showitem" => "hidden;;1;;1-1-1, title;;;;2-2-2, description;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts];3-3-3, image")
+	),
+	"palettes" => array (
+		"1" => array("showitem" => "")
 	)
 );
 ?>
