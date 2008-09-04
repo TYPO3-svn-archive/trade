@@ -55,6 +55,7 @@ plugin.tx_trade_pi1 {
 	hideMenuAt=thanks,order_history_list,order_history_single
 	showMiniBasket=1
 	showMenu=1
+	showProgressBar=1
 	progressBar {
 	    stdWrap.wrap=<ul id="trade_progress">|</ul>
 	    itemStdWrap.wrap=<li>|</li>

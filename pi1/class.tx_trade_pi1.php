@@ -1178,7 +1178,7 @@ class tx_trade_pi1 extends tslib_pibase {
 		
 		$hideAt=explode(",",$this->conf['hideMenuAt']);
 		$progressBar="";
-		if (!in_array($this->cmd,$hideAt)) {
+		if (($this->conf['showProgressBar']==1) && !in_array($this->cmd,$hideAt)) {
 			reset($this->conf['checkout.']);
 			$noMoreLinks=false;
 			foreach ($this->conf['checkout.'] as $cK => $cV) {
