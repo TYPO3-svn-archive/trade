@@ -376,8 +376,12 @@ margin-top: 5px;
 
 }
 includeLibs.tx_trade_minibasket =EXT:trade/pi1/class.tx_trade_minibasket.php
-plugin.tx_trade_minibasket< plugin.tx_trade_pi1
+plugin.tx_trade_minibasket < plugin.tx_trade_pi1
 plugin.tx_trade_minibasket.userFunc = tx_trade_minibasket->main
 
-tt_content.list.20.tx_trade_minibasket = <  plugin.tx_trade_minibasket
+tt_content.list.20.trade_minibasket = <  plugin.tx_trade_minibasket
+#=COA
+#tt_content.list.20.tx_trade_minibasket.5=TEXT
+#tt_content.list.20.tx_trade_minibasket.5.value=mini bak
+#tt_content.list.20.trade_minibasket.10 = <  plugin.tx_trade_minibasket
 

@@ -134,6 +134,8 @@ $TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY.'_pi1']='la
 $TCA['tt_content']['types']['list']['subtypes_addlist'][$_EXTKEY.'_pi1']='pi_flexform';
 
 t3lib_extMgm::addPlugin(array('LLL:EXT:trade/locallang_db.xml:tt_content.list_type_pi1', $_EXTKEY.'_pi1'),'list_type');
+t3lib_extMgm::addPlugin(array('LLL:EXT:trade/locallang_db.xml:tt_content.list_type_minibasket', $_EXTKEY.'_minibasket'),'list_type');
+
 t3lib_extMgm::addPiFlexFormValue($_EXTKEY.'_pi1', 'FILE:EXT:trade/flexform_ds_pi1.xml');
 
 t3lib_extMgm::addStaticFile($_EXTKEY,"pi1/static/","Trade");
