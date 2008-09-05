@@ -59,7 +59,7 @@ class tx_trade_pi1 extends tslib_pibase {
 		var $list;			// search
 		var $hideList=false;
 	// control variables
-		var $cmd='list';  	 	// default action for this request
+		var $cmd='';  	 	// default action for this request
 			//set by post variables config or default action is list of items on this page
 		var $renderWith;		// template section to render		
 		var $template='';  		// contains content of main template file
@@ -320,6 +320,7 @@ class tx_trade_pi1 extends tslib_pibase {
 	function init()  {
 		// markers are added to the renderer markerArray variable during user input
 		// processing and init so make the instance available first
+		
 		$this->renderer=t3lib_div::makeInstance('tx_trade_render');
 		$this->prevCmd=t3lib_div::GPvar('prevcmd');
 		session_start();
@@ -366,6 +367,14 @@ class tx_trade_pi1 extends tslib_pibase {
 			} 
 		}
 		$this->cmd=strtolower($this->cmd);
+		if (strlen(trim($this->cmd))==0) {
+			if (strlen(trim($this->conf['defaultCmd']))>0) {
+				$this->cmd=$this->conf['defaultCmd'];
+				$this->renderWith=$this->conf['defaultCmd'];
+			} else {
+				$this->cmd='list';	
+			}
+		}
 		// by default, use the cmd as the name of the template subpart
 		$this->renderWith=$this->cmd;
 		
