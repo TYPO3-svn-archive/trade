@@ -49,7 +49,7 @@ class tx_trade_minibasket extends tslib_pibase {
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
 		$this->renderer=t3lib_div::makeInstance('tx_trade_render');
-		//debug($this->conf['PIDS.']);
+		//debug($this->conf);
 		$cmdList=$this->conf['cmdList'];
 		foreach (explode(",",$cmdList) as $pK => $pV) {
 			if ($this->conf['PIDS.'][$pV]>0) {
@@ -72,7 +72,8 @@ class tx_trade_minibasket extends tslib_pibase {
 			//debug(array($basket));
 			$this->renderer->init($this);
 			//debug(array('here.',$this->renderer->template));
-			$content='<FORM  method="post" action="index.php?id='.$GLOBALS['TSFE']->id.'" name="myform"  >'
+			//debug($this->PIDS);
+			$content='<FORM  method="post" action="index.php?id='.$this->PIDS['checkout']['uid'].'" name="myform"  >'
 			.'<input type="hidden" name="tx_trade_pi1[cmd]" value="checkout"  >'
 			.$this->renderer->renderSectionNoWrap('BASKET_OVERVIEW').'</form>';	
 		}
