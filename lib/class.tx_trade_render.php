@@ -222,6 +222,7 @@ class tx_trade_render extends tslib_pibase {
 				// ITEM_LINK SUBPART
 				do {
 					$itemLink=$this->cObj->getSubpart($tmp,'LINK_ITEM');
+					//debug(array('link item',$itemLink));
 					if (strlen(trim($itemLink))==0) break;
 					$itemLink='<a href="index.php?id='.$this->parent->PIDS['singleview']['uid'].'&tx_trade_pi1[cmd]=singleview&tx_trade_pi1[uid]='.$clV['uid'].'&tx_trade_pi1[backPID]='.$GLOBALS['TSFE']->id.'&tx_trade_pi1[listtype]='.$this->parent->listType.'" >'.$itemLink.'</a>';
 					$tmp=$this->cObj->substituteSubpart($tmp,'###LINK_ITEM###',$itemLink,false)  ;
@@ -251,6 +252,7 @@ class tx_trade_render extends tslib_pibase {
 		
 		
 		$list=$this->renderListItems($listArray,$itemSingleTemplate);
+		//debug(array($list));
 		// place combined into main template
 		$content=$this->cObj->substituteSubpart($itemListMainTemplate,'ITEM_SINGLE',$list,false)  ;
 		return $content;		
@@ -268,6 +270,13 @@ class tx_trade_render extends tslib_pibase {
 				$markerArray=t3lib_div::array_merge($markerArray,$this->parent->getProductMarkers($clV));
 				$markerArray=t3lib_div::array_merge($markerArray,$this->parent->getUserMarkers($clV));
 				$tmp=$this->cObj->substituteMarkerArray($itemSingleTemplate,$markerArray,'###|###',true)  ;
+				do {
+					$itemLink=$this->cObj->getSubpart($tmp,'LINK_ITEM');
+					if (strlen(trim($itemLink))==0) break;
+					$itemLink='<a href="index.php?id='.$this->parent->PIDS['singleview']['uid'].'&tx_trade_pi1[cmd]=singleview&tx_trade_pi1[uid]='.$clV['uid'].'&tx_trade_pi1[backPID]='.$GLOBALS['TSFE']->id.'&tx_trade_pi1[listtype]='.$this->parent->listType.'" >'.$itemLink.'</a>';
+					$tmp=$this->cObj->substituteSubpart($tmp,'###LINK_ITEM###',$itemLink,false)  ;
+				} while (true);
+				
 				$listItems.=$tmp;
 			}
 		}

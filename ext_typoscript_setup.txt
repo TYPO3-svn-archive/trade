@@ -38,6 +38,17 @@ plugin.tx_trade_pi1 {
 	}
 	listViewImage {
 	  file.maxW = 75
+	  imageLinkWrap = 1
+	  imageLinkWrap {
+	    enable = 1
+	    bodyTag = <body bgColor=black leftmargin=0 topmargin=0 marginwidth=0 marginheight=0>
+	    wrap = <A href="javascript:close();"> | </A>
+	    width = 700
+	    height = 
+	    JSwindow = 1
+	    JSwindow.newWindow = 1
+	    JSwindow.expand = 0,0
+	  }
 	}
 
 	emailDataSheet=1
@@ -246,7 +257,6 @@ plugin.tx_trade_pi1 {
 		# MISC
 		#getRandomPassword=
 	}
-	
 _CSS_DEFAULT_STYLE (
 
 div.trade_login{
@@ -378,7 +388,7 @@ margin-top: 5px;
 includeLibs.tx_trade_minibasket =EXT:trade/pi1/class.tx_trade_minibasket.php
 plugin.tx_trade_minibasket < plugin.tx_trade_pi1
 plugin.tx_trade_minibasket.userFunc = tx_trade_minibasket->main
-
+plugin.tx_trade_minibasket._CSS_DEFAULT_STYLE >
 tt_content.list.20.trade_minibasket = <  plugin.tx_trade_minibasket
 #=COA
 #tt_content.list.20.tx_trade_minibasket.5=TEXT

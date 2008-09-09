@@ -3,6 +3,7 @@ if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
 t3lib_extMgm::allowTableOnStandardPages('tx_trade_products');
 
+t3lib_extMgm::addStaticFile($_EXTKEY, './static/cssstyled', 'Trade - CSS Styled');// ($extKey, $path, $title)
 
 t3lib_extMgm::addToInsertRecords('tx_trade_products');
 

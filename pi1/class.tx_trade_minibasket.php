@@ -77,7 +77,7 @@ class tx_trade_minibasket extends tslib_pibase {
 			.'<input type="hidden" name="tx_trade_pi1[cmd]" value="checkout"  >'
 			.$this->renderer->renderSectionNoWrap('BASKET_OVERVIEW').'</form>';	
 		}
-		return $content;
+		return '<div class="tx-trade-pi1" >'.$content.'</div>';
 	}
 	/**
 	 * Update the basket but don't update session (leave this to 

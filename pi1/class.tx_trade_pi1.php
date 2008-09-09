@@ -74,7 +74,7 @@ class tx_trade_pi1 extends tslib_pibase {
 		var $searchButtonName='do_search';
 		var $saveUserButtonName='do_save_user';
 		var $finaliseButtonName='tx_trade_pi1[buttons][thanks]';
-		
+		var $postgetvars;
 
 	/**
 	 * Main controller, entry point to plugin execution
@@ -90,6 +90,11 @@ class tx_trade_pi1 extends tslib_pibase {
 	function main($content,$conf)	{
 //phpinfo();
 //exit;
+		$postArray=is_array($GLOBALS['_POST'])?$GLOBALS['_POST']:array();
+		$getArray=is_array($GLOBALS['_GET'])?$GLOBALS['_GET']:array();
+		$this->postgetvars=array_merge($postArray,$getArray);
+		//debug($this->postgetvars);
+		
 		$this->conf=$conf;
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
@@ -330,7 +335,6 @@ class tx_trade_pi1 extends tslib_pibase {
 		//debug($this->conf);
 		// grab basket from session
 		$this->basket=tx_trade_div::getSession('basket');
-
 		// set PIDS
 		$cmdList=$this->conf['cmdList'];
 		//debug($this->conf['PIDS.']);
@@ -744,28 +748,36 @@ class tx_trade_pi1 extends tslib_pibase {
 	 */
 	function processAddToBasket() {
 		// add to basket
-		reset($GLOBALS['_POST']);
-		foreach ($GLOBALS['_POST'] as $pK => $pV) {
+		//debug(array('addtobak',t3lib_div::_GP(''),$GLOBALS['_POST'],$GLOBALS['_GET	']));
+		//$postArray=is_array($GLOBALS['_POST'])?$GLOBALS['_POST']:array();
+		//$getArray=is_array($GLOBALS['_GET'])?$GLOBALS['_GET']:array();
+		//$postvars=array_merge($postArray,$getArray);
+		//reset($GLOBALS['_POST']);
+		foreach ($this->postgetvars as $pK => $pV) {
 			// if it is an add to basket post var
 			if (strpos('x'.$pK,'tx_trade_pi1_addtobasket_')==1) {
 				$aK=substr($pK,25);
 				$aV=$pV;
-				if (strlen(trim($aV))==0||trim($aV)=='0') {
-					unset($this->basket[$aK]);
-					tx_trade_div::setSession('basket',$this->basket);
-				} else if ($aV>0) {
-					$aV=intval($aV);
-					$res=$GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_trade_products','uid='.mysql_escape_string($aK).' '.$this->getProductPIDQuery(),'','title ASC','');
-					if ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-						if (trim($aV)=='') $aV=1;
-						$row['basket_qty']=$aV;
-						$this->basket[$row['uid']]=$row;
+				//strlen(trim($aV))==0||
+				if (strlen(trim($aV))>0) {
+					if (trim($aV)=='0') {
+						unset($this->basket[$aK]);
 						tx_trade_div::setSession('basket',$this->basket);
+					} else if ($aV>0) {
+						$aV=intval($aV);
+						$res=$GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_trade_products','uid='.mysql_escape_string($aK).' '.$this->getProductPIDQuery(),'','title ASC','');
+						if ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+							if (trim($aV)=='') $aV=1;
+							$row['basket_qty']=$aV;
+							$this->basket[$row['uid']]=$row;
+	//						//debug($this->basket);
+							tx_trade_div::setSession('basket',$this->basket);
+						} else {
+							//$this->errors[]=$this->pi_getLL('basket_no_product');	
+						}
 					} else {
-						//$this->errors[]=$this->pi_getLL('basket_no_product');	
+						$this->messages[]=$this->pi_getLL('basket_invalid_qty');	
 					}
-				} else {
-					$this->messages[]=$this->pi_getLL('basket_invalid_qty');	
 				}
 			}
 		}	
@@ -851,7 +863,7 @@ class tx_trade_pi1 extends tslib_pibase {
 			$numrows=$row['numrows'];
 		}
 		$this->numrows=$numrows;
-		$liststart=$GLOBALS['_POST']['liststart'];
+		$liststart=$this->postgetvars['liststart'];
 		if ($liststart>0) {
 			$this->renderer->markerArray['SUBMIT_TO_PREVIOUS']='<input type="submit"  value="'.$this->pi_getLL('previous').'" onClick="document.'.$this->formName.'.liststart.value='.($liststart-$this->conf['maxListRows']).';" />';
 		}
@@ -863,9 +875,14 @@ class tx_trade_pi1 extends tslib_pibase {
 		} else {
 			$limit='0,'.$this->conf['maxListRows'];
 		}
+		debug(array($where,$orderBy,$limit));
 		$res=$GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_trade_products',$where,'',$orderBy,$limit);  
 		//if ($this->conf['debug']==1) debug(array($where,$orderBy,$limit));
+		$oddEven='odd';
 		while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			$row['oddeven']='trade'.$oddEven;
+			if ($oddEven=='odd') $oddEven='even';
+			else $oddEven='odd'; 
 			$list[]=$row;
 		}
 		$this->list=$list;
@@ -1158,7 +1175,7 @@ class tx_trade_pi1 extends tslib_pibase {
 				'<input type="hidden" name="cmd" value="'.$this->cmd.'">'.
 				'<input type="hidden" name="prevcmd" value="'.$this->cmd.'">'.
 				'<input type="hidden" name="extrainfo" value="">'.
-				'<input type="hidden" name="liststart" value="'.$GLOBALS['_POST']['liststart'].'">';
+				'<input type="hidden" name="liststart" value="'.$this->postgetvars['liststart'].'">';
 		foreach ($this->PIDS as $pK =>$pV) {
 			$formMarkers['PID_'.strtoupper($pK)]=$pV['uid'];
 			$formMarkers['SUBMIT_TO_'.strtoupper($pK)]=' name="'.$this->prefixId.'["buttons"]['.strtolower($pK).']" onClick="document.'.$this->formName.'.id.value='.$pV['uid'].'; document.'.$this->formName.'.cmd.value=\''.strtolower($pK).'\';"';
@@ -1301,6 +1318,7 @@ class tx_trade_pi1 extends tslib_pibase {
 		$markerArray['FINALISE_BUTTON_NAME']=$this->finaliseButtonName;
 		$markerArray['CURRENCY_CODE']=$this->conf['currencyCode'];
 		$markerArray['CURRENCY_SYMBOL']=$this->conf['currencySymbol'];
+		$markerArray['TERMS_AND_CONDITIONS_PID']=$this->conf['PIDS.']['termsandconditions'];
 		$markerArray['LIST_TITLE']=$this->conf['lists.'][$this->listType.'.']['title'];
 		$markerArray['SHOP_OWNER_DETAILS']=$this->conf['shopOwnerDetails'];
 		$listMenu="";
@@ -1463,7 +1481,7 @@ class tx_trade_pi1 extends tslib_pibase {
 				}*/
 				$this->conf['listViewImage.']['file']=$imgFiles[($i-1)];
 				$markerArray['PRODUCT_LIST_IMAGE_'.$i]=$this->cObj->IMAGE($this->conf['listViewImage.']);
-				
+				//debug(array($markerArray['PRODUCT_LIST_IMAGE_'.$i],$this->conf['listViewImage.']));
 				$markerArray['PRODUCT_IMAGE_'.$i]=$imgFiles[($i-1)];
 			} else {
 				$markerArray['PRODUCT_SINGLE_IMAGE_'.$i]="&nbsp;";	
@@ -1542,7 +1560,7 @@ class tx_trade_pi1 extends tslib_pibase {
 	 **********************************************************************/		
 	function validate() {
 		// dont validate when logging in
-		if (trim($GLOBALS['_POST']['login'])!='login'||$this->piVars['validate_now']==1) {
+		if (trim($this->postgetvars['login'])!='login'||$this->piVars['validate_now']==1) {
 			if ($this->piVars['submit_payment_method']&&$this->payment['method']==0) {
 				$this->errors[]=$this->pi_getLL('payment_method_required');	
 			}
