@@ -70,7 +70,7 @@ plugin.tx_trade_pi1 {
 	progressBar {
 	    stdWrap.wrap=<ul id="trade_progress">|</ul>
 	    itemStdWrap.wrap=<li>|</li>
-	    currentStdWrap.wrap=<span style="background-color:{$tradecolor2};">|</span>
+	    currentStdWrap.wrap=<span>|</span>
 	}
 	listMenu {
 	      stdWrap.wrap=<UL id="trade_listmenu">|</UL>
@@ -80,26 +80,27 @@ plugin.tx_trade_pi1 {
     checkout {
     	list {
     		condition=$testResult=true;
-    		next=basket
+    		next=user_shipping_details
     		label=Select&nbsp;Products
     		label.stdWrap.wrap=
     	}
-		basket {
-			condition=if (sizeof($this->basket)>0 && $this->shipping['method']>0 && $this->payment['method']>0 && (($this->piVars['submit_payment_method']==1 && $this->piVars['submit_shipping_method']==1)||$this->user['basket_approved']==1) ) $testResult=true;
-			next=user_shipping_details
-			templateSubpart=BASKET
-			label=Payment/Shipping&nbsp;Details
-			label.stdWrap.wrap=
-		}
 		user_shipping_details {
-			condition=if ($this->user['valid']==1 && $this->user['valid_shipping_details']==1&&$this->user['basket_approved']==1) $testResult=true;
-			next=confirm
+		#&&$this->user['basket_approved']==1
+			condition=if ($this->user['valid']==1 && $this->user['valid_shipping_details']==1) $testResult=true;
+			next=basket
 			templateSubpart=USER_SHIPPING_DETAILS
 			label=Customer&nbsp;Details
 			label.stdWrap.wrap=
 		}
 		# auto basket process takes you as far as the confirm page
 		# confirm page must include tx_trade_pi[finalise_checkout]=1 
+		basket {
+			condition=if (sizeof($this->basket)>0 && $this->shipping['method']>0 && $this->payment['method']>0 && (($this->piVars['submit_payment_method']==1 && $this->piVars['submit_shipping_method']==1)||$this->user['basket_approved']==1) ) $testResult=true;
+			next=confirm
+			templateSubpart=BASKET
+			label=Payment/Shipping&nbsp;Details
+			label.stdWrap.wrap=
+		}
 		confirm {
 			#condition=if ($this->order['status']==1) $testResult=true;
 			condition=$testResult=false;

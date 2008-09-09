@@ -225,13 +225,13 @@ class tx_trade_pi1 extends tslib_pibase {
 				if ($this->cmd=='confirm') $this->cmd='checkout';
 				if ($this->cmd=='thanks') $this->cmd='checkout';
 				if ($this->cmd=='checkout') { 
-					$currentCmd='basket';
+					$currentCmd='list';
 					while ($doCmd=='') {  
 						$cV=$this->conf['checkout.'][$currentCmd.'.'];
 						$testResult=false;
 						// set testResult
 						eval($cV['condition']);
-						//debug(array($currentCmd,$cV));
+					//	debug(array($currentCmd,$cV));
 						if (!$testResult) {
 							// set cmd
 							$renderTemplate=$cV['templateSubpart'];
@@ -875,7 +875,7 @@ class tx_trade_pi1 extends tslib_pibase {
 		} else {
 			$limit='0,'.$this->conf['maxListRows'];
 		}
-		debug(array($where,$orderBy,$limit));
+		//debug(array($where,$orderBy,$limit));
 		$res=$GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_trade_products',$where,'',$orderBy,$limit);  
 		//if ($this->conf['debug']==1) debug(array($where,$orderBy,$limit));
 		$oddEven='odd';
