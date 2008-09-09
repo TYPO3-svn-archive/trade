@@ -1655,6 +1655,17 @@ class tx_trade_pi1 extends tslib_pibase {
 			}
 		}
 		
+		// require positive postcode
+		if ($this->conf['validateAustralianPostcodes']) {
+			$fieldName=$GLOBALS['TCA']['fe_users']['columns']['zip']['label'];
+			$fieldName=$this->LANG->sL($fieldName);
+			if ($this->user['zip']<=0) { 	
+	 			$this->errors[]='Invalid postcode for invoice address.';
+			}
+			if ($this->user['zip']>9999) { 	
+	 			$this->errors[]='Invalid postcode for invoice address.';
+			}
+		}
 		
 	}
 	
@@ -1672,6 +1683,18 @@ class tx_trade_pi1 extends tslib_pibase {
 				$this->errors[]=$this->pi_getLL('missing_required_field').$fieldName;
 			}
 		}
+		// require positive postcode
+		if ($this->conf['validateAustralianPostcodes']) {
+			$fieldName=$GLOBALS['TCA']['fe_users']['columns']['tx_trade_shipping_zip']['label'];
+			$fieldName=$this->LANG->sL($fieldName);
+			if ($this->user['tx_trade_shipping_zip']<=0) { 	
+	 			$this->errors[]='Invalid postcode for shipping address.';
+			}
+			if ($this->user['tx_trade_shipping_zip']>9999) { 	
+	 			$this->errors[]='Invalid postcode for shipping address.';
+			}
+		}
+	
 		if ($this->shipping['method']>0) {
 			$this->user['valid_shipping_details']=$valid;
 		} else {

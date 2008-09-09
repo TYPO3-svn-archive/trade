@@ -57,8 +57,9 @@ plugin.tx_trade_pi1 {
 	tracking_code_start=1
 	tracking_code_increment=1
 	
-	userRequiredFields=username,password,email,name
-	shippingRequiredFields=tx_trade_shipping_name
+	userRequiredFields=username,password,email,name,address,city,zip,tx_trade_state,country,telephone,email
+	shippingRequiredFields=tx_trade_shipping_name,tx_trade_shipping_zip,tx_trade_shipping_country,tx_trade_shipping_address,tx_trade_shipping_city
+	validateAustralianPostcodes=0
 	cmdList=productstorage,categorystorage,orderstorage,userstorage,list,list_default,list_search,list_recent,list_specialoffers,singleview,basket,basket_overview,checkout,user_details,user_shipping_details,user_shipping_payment_details,usersave,login,lost_password,confirm,thanks,order_history_list,order_history_single,copy_address_to_shipping,wishlist_list
     # all stages in checkout are added to this list
     validCmds=list,checkout,singleview,copy_address_to_shipping,order_history_single,order_history_list
