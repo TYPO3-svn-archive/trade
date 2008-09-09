@@ -1,0 +1,89 @@
+
+  <h1>combination templates</h1>
+  These templates include submit button(s) <br> 
+
+ 
+  <!-- ###PRODUCT_SINGLEVIEW_TEMPLATE### begin-->
+  ###PRODUCT_SINGLE_VIEW### 
+  <!-- ###PRODUCT_SINGLEVIEW_TEMPLATE### END-->
+  
+  
+  <!-- ###USER_SHIPPING_DETAILS_TEMPLATE### start -->
+<div class="usershippingdetails">
+	 ###USER_DETAILS_SECTION###
+	 ###SHIPPING_DETAILS_SECTION###
+	<input type="submit"  ###SUBMIT_TO_CONFIRM###  value="Checkout"  >
+</div>  
+<!-- ###USER_SHIPPING_DETAILS_TEMPLATE### end -->
+<BR>
+ <HR> <BR> <BR> <BR> 
+<h3>&nbsp; </h3>
+  
+  
+
+  
+  <h3>ERROR_ WRAPPER</h3>
+  <!--###ERROR_WRAPPER###-->
+  <font COLOR='RED' > ###ERROR_SINGLE### </font><br/> 
+  <!--###ERROR_WRAPPER###-->
+  
+  <h3>MESSAGE_ WRAPPER</h3>
+  <!--###MESSAGE_WRAPPER###-->
+  <font COLOR='green' > ###MESSAGE_SINGLE### </font><br/> 
+  <!--###MESSAGE_WRAPPER###-->
+  <BR> <HR> <BR> <BR> <BR> 
+  <!--###HELP###-->
+  <h1>Help</h1>
+  How to use this system 
+  <!--###HELP###-->
+  
+  
+  <h3>FORM _WRAPPER</h3>
+  
+<!--###FORM_WRAPPER###-->
+<script language='JavaScript'><!--
+	var cnt=0;
+	
+	//function nap (m) {var then = new Date(new Date().getTime() + m); while (new Date() < then) {}}
+		
+	function submitOnce(b) {
+		//for (i=0; i < f.length; i++) {
+		//  if (f.elements[i].type=='submit') f.elements[i].disabled=true;
+		//}
+		b.disabled=true;
+		if (cnt==0) {
+			//nap(0.25* Date.ONE_SECOND);
+			b.form.submit();
+		} else {
+			cnt++;
+			return false;
+		}	
+	}
+	//  to use it  --->     onClick="return submitOnce(this.form);"        on a submit type input
+
+	function noSubmit(myfield,e)
+	{
+		var keycode;
+		if (window.event) keycode = window.event.keyCode;
+		else if (e) keycode = e.which;
+		else return true;
+		if (keycode == 13) {
+		   return false;
+		} else {
+		   return true;
+		}
+	}
+	//  to use it  --->     onKeyPress="return noSubmit(this,event);"        in a text type input
+
+
+--></script>
+<FORM  method="post" action="###FORM_URL###" name="###FORM_NAME###" id='myform' >
+  <div class="progressbar" >###PROGRESS_BAR###</div>
+  <div class="loginbox"  >###LOGIN_BOX_USER###</div>
+  <div class="messages"  >###MESSAGE_MESSAGES###</div>
+  <div class="errormessages"  > ###ERROR_MESSAGES###</div>
+  ###HIDDEN_FIELDS### 
+  ###CONTENT### 
+</FORM>
+
+<!--###FORM_WRAPPER###-->

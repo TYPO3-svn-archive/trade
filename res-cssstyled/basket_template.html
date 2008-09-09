@@ -1,0 +1,145 @@
+ 
+ 
+ <H1>Basket Overview</H1>
+ <!-- ###BASKET_OVERVIEW_TEMPLATE### begin -->
+<div class="minibasket" >
+<table>
+  <tr > 
+    <th colspan="2" >Cart Contents</th>
+  </tr>
+  <!-- ###ITEM_CATEGORY_AND_ITEMS### begin -->
+  <!-- ###ITEM_CATEGORY### begin -->
+  <!-- ###ITEM_CATEGORY### end -->
+  <!-- ###ITEM_LIST### begin -->
+  <!-- ###ITEM_SINGLE### begin-->
+  <tr> 
+    <td class="title"> ###FIELD_QTY### x 
+      <!--###LINK_ITEM###-->
+      ###PRODUCT_TITLE### 
+      <!--###LINK_ITEM###-->
+    </td>
+    <td class="price">###PRICE_TOTAL_TAX###</td>
+  </tr>
+  <!-- ###ITEM_SINGLE### end -->
+  <!-- ###ITEM_LIST### end -->
+  <!-- ###ITEM_CATEGORY_AND_ITEMS###  end -->
+  <tr class="carttotal" > 
+    <th >Cart Total: </th>
+    <td ><b>###PRICE_NOSHIPPINGPAYMENT_TAX###</b> </td>
+  </tr>
+  <tr class="buttons" > 
+    <td colspan="2">
+    	<input type='submit' value='Checkout' ###SUBMIT_TO_CHECKOUT###>
+     </td>
+  </tr>
+  <tr> 
+    <td colspan="2" class="exchangerates"><a href="http://www.x-rates.com/cgi-bin/cgicalc.cgi?base=###CURRENCY_CODE###&value=###PRICE_TOTAL_TAX###"  target="_blank">exchange 
+      rates&nbsp;<img src="typo3conf/ext/trade/res-cssstyled/external_link_new_window.gif" /> </a></td>
+  </tr>
+</table>
+</div>    
+<!-- ###EMPTY### begin -->
+<div  class="minibasket" >
+<table>
+  <tr > 
+    <th>Cart Contents</th>
+  </tr>
+  <tr> 
+    <td><p> Your basket is empty.</p> </td>
+  </tr> 
+</table>
+</div>
+<!-- ###EMPTY### end --->
+<!-- ###BASKET_OVERVIEW_TEMPLATE### end -->
+
+
+
+<br>
+<HR>
+    <BR>
+    <BR>
+    <BR>
+  </div>
+
+  <BR> <HR> <BR> <BR> <BR> <h3> BASKET _TEMPLATE </h3>
+  <!-- ###BASKET_TEMPLATE### begin
+
+	Subpart used to display the content of the shopping basket.
+
+	The product list part has the exact same features as the regular LIST_ITEM_TEMPLATE subpart.
+
+	In addition there's a number of fields used for delivery and payment information.
+
+-->
+  <input type="hidden" name="tx_trade_pi1[shipping][user_selected]" value="1" />
+  <input type="hidden" name="tx_trade_pi1[payment][user_selected]" value="1" />
+<div class="basket" >
+<table class="trade" >
+  <tr> 
+    <th>Basket Contents:</th>
+    <th>Price:</th>
+    <th>Qty:</th>
+    <th >Total:</th>
+  </tr>
+  <!-- ###ITEM_CATEGORY_AND_ITEMS### begin -->
+  <!-- ###ITEM_CATEGORY### begin -->
+  <tr> 
+    <td colspan="4">
+    <div class="category1"> ###CATEGORY_TITLE_HEADER_1###</div>
+    <div class="category2"> ###CATEGORY_TITLE_HEADER_2###</div>
+    </td>
+  </tr>
+  <!-- ###ITEM_CATEGORY### end -->
+  <!-- ###ITEM_LIST### begin -->
+  <!-- ###ITEM_SINGLE### begin-->
+  <tr> 
+    <td valign=top class="title"> 
+      <!--###LINK_ITEM###-->
+      ###PRODUCT_TITLE### 
+      <!--###LINK_ITEM###-->
+    </td>
+    <td class="price" >###PRICE_TAX###</td>
+    <td class="addtocart" ><input size="3" maxlength="4" type="text" name="###FIELD_NAME###" value="###FIELD_QTY###"></td>
+    <td class="pricetax" >###PRICE_TOTAL_TAX###</td>
+  </tr>
+  <!-- ###ITEM_SINGLE### end -->
+  <!-- ###ITEM_LIST### end -->
+  <!-- ###ITEM_CATEGORY_AND_ITEMS###  end -->
+  <tr class="buttons"  > 
+    <td colspan="3" >&nbsp; </td>
+    <td><input type="submit"  value="Update" > </td>
+  </tr>
+  <tr> 
+    <th colspan="4"  >Delivery:</th>
+  </tr>
+  <tr class="shippingmethod" > 
+    <td colspan="3"> ###SHIPPING_METHOD_SECTION###</td>
+    <td>###PRICE_SHIPPING_TAX###</td>
+  </tr>
+
+  <tr class="paymentmethod"> 
+    <th colspan="4" >Select payment method:</th>
+  </tr>
+  <tr> 
+    <td colspan="3"> ###PAYMENT_METHOD_SECTION### </td>
+    <td>###PRICE_PAYMENT_TAX###</td>
+  </tr>
+  <tr class="pricetotal" > 
+    <th colspan="3" >TOTAL (###CURRENCY_CODE### ###CURRENCY_SYMBOL###): 
+    </th>
+    <th>###PRICE_TOTAL_TAX###</th>
+  </tr>
+  <tr> 
+    <td colspan="4" class="buttons" > 
+      <input type="submit" value="Go to payment/ordering" onClick="document.myform.id.value=###PID_CHECKOUT###; document.myform.extrainfo.value='approvebasket'; document.myform.cmd.value='checkout';" ></td>
+  </tr>
+</table>
+</div>
+  <!-- ###EMPTY### begin -->
+  <div class="basket">
+  <h1>Empty Basket</h1> 
+  There are currently no products in your shopping cart.
+  </div>
+  <!-- ###EMPTY### end --->
+  <!-- ###BASKET_TEMPLATE### end -->
+  

@@ -1,0 +1,151 @@
+ <h3> USER _DETAILS </h3>
+<!--###USER_DETAILS_COMPONENT### START-->
+<div class="userdetails" >
+<input type="hidden" name="tx_trade_pi1[user][uid]" value="###USER_UID###"  >
+<input type="hidden" name="tx_trade_pi1[user][username]" value="###USER_USERNAME###"  >
+<input type="hidden" name="tx_trade_pi1[user][force_new_user]" value="###USER_FORCE_NEW_USER###"  >
+<input name="tx_trade_pi1[submit_user_details]" value="1" type="hidden">
+<table class="trade">
+  <tr align="left"> 
+    <th colspan="2"><b>Invoice Details</b></th>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">Company</th>
+    <td><input type="text"  onKeyPress="return noSubmit(this,event);" name="tx_trade_pi1[user][company]" value="###USER_COMPANY###"  ></td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">Title</th>
+    <td><input onKeyPress="return noSubmit(this,event);" name="tx_trade_pi1[user][title]" type="text" value="###USER_TITLE###" size="30"  ></td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">*Full Name</th>
+    <td><input onKeyPress="return noSubmit(this,event);" name="tx_trade_pi1[user][name]" type="text" value="###USER_NAME###" size="30"  ></td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">*Address</th>
+    <td><textarea name="tx_trade_pi1[user][address]" cols="30" rows="3">###USER_ADDRESS###</textarea></td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">*City</th>
+    <td><input onKeyPress="return noSubmit(this,event);" name="tx_trade_pi1[user][city]" type="text" value="###USER_CITY###" size="30"  ></td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">*Postcode/zip</th>
+    <td><input onKeyPress="return noSubmit(this,event);" name="tx_trade_pi1[user][zip]" type="text" value="###USER_ZIP###" size="10"  ></td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">*State</th>
+    <td><input onKeyPress="return noSubmit(this,event);" name="tx_trade_pi1[user][tx_trade_state]" type="text" value="###USER_TX_TRADE_STATE###" size="30"  ></td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">*Country</th>
+    <td><select name="tx_trade_pi1[user][country]" size="1" value="###USER_COUNTRY###"  >
+        <option value="###USER_COUNTRY###">###USER_COUNTRY###</option>
+        <option value="Australia">Australia</option>
+        <option value="New_Zealand">New Zealand</option>
+        <option value="Japan">Japan</option>
+        <option value="USA">United States Of America</option>
+        <option value="Canada">Canada</option>
+        <option value="UK">United Kingdom</option>
+        <option value="Austria">Austria</option>
+        <option value="Belgium">Belgium</option>
+        <option value="China">China</option>
+        <option value="Denmark_and_Greenland">Denmark and Greenland</option>
+        <option value="Finland">Finland</option>
+        <option value="France">France</option>
+        <option value="Germany">Germany</option>
+        <option value="Greece">Greece</option>
+        <option value="India">India</option>
+        <option value="Indonesia">Indonesia</option>
+        <option value="Ireland">Ireland Rep.Of</option>
+        <option value="Italy">Italy</option>
+        <option value="Malaysia">Malaysia</option>
+        <option value="Malta">Malta</option>
+        <option value="Netherlands">Netherlands</option>
+        <option value="Norway">Norway</option>
+        <option value="Portugal">Portugal</option>
+        <option value="South_Africa_Rep.Of">South Africa Rep.Of</option>
+        <option value="South_Korea">South Korea</option>
+        <option value="Spain">Spain</option>
+        <option value="Sweden">Sweden</option>
+        <option value="Switzerland">Switzerland</option>
+        <option value="Taiwan">Taiwan</option>
+        <option value="Thailand">Thailand</option>
+        <option value="Turkey">Turkey</option>
+        <option value="not listed">Not listed</option>
+      </select></td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">*Telephone</th>
+    <td><input onKeyPress="return noSubmit(this,event);" name="tx_trade_pi1[user][telephone]" type="text" value="###USER_TELEPHONE###" size="30"  ></td>
+  </tr>
+  <tr> 
+    <th height="26" align="right" valign="top">*Email</th>
+    <td><input onKeyPress="return noSubmit(this,event);" name="tx_trade_pi1[user][email]" type="text" value="###USER_EMAIL###" size="30"  ></td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">Homepage</th>
+    <td><input onKeyPress="return noSubmit(this,event);" name="tx_trade_pi1[user][www]" type="text" value="###USER_WWW###" size="30"  ></td>
+  </tr>
+</table>
+ </div>
+  <!--###USER_DETAILS_COMPONENT### END--->
+  <h3> USER _DETAILS VIEW_</h3>
+  <!--###USER_DETAILS_VIEW_COMPONENT### START-->
+  <div class="userdetails" >
+  <b>User Details</b><br/> 
+<table class="trade">
+  <tr> 
+    <th valign="top">Username</th>
+    <td> ###USER_USERNAME### </td>
+  </tr>
+  <tr> 
+    <th colspan="2" valign="top"><b>Personal Details</b></th>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">Company</th>
+    <td> ###USER_COMPANY### </td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">Title</th>
+    <td> ###USER_TITLE### </td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">Full Name</th>
+    <td> ###USER_NAME### </td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">Address</th>
+    <td> ###USER_ADDRESS### </td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">City</th>
+    <td> ###USER_CITY### </td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">Postcode/zip</th>
+    <td> ###USER_ZIP### </td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">State</th>
+    <td> ###USER_TX_TRADE_STATE### </td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">Country</th>
+    <td> ###USER_COUNTRY### </td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">Telephone</th>
+    <td> ###USER_TELEPHONE### </td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">Email</th>
+    <td> ###USER_EMAIL### </td>
+  </tr>
+  <tr> 
+    <th align="right" valign="top">Homepage</th>
+    <td> ###USER_WWW### </td>
+  </tr>
+</table>
+</div>
+  <!--###USER_DETAILS_VIEW_COMPONENT### END--->

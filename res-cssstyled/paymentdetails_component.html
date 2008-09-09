@@ -1,0 +1,147 @@
+ 
+<h3>PAYMENT _DETAILS_ALL </h3>
+<!-- ###PAYMENT_DETAILS_ALL###-->
+<div class="paymentdetailsform">
+<input name="tx_trade_pi1[submit_payment_details]" value="1" type="hidden">
+<table class="trade">
+  <!-- ###PAYMENT_DETAILS_10### begin -->
+  <tr> 
+    <th colspan="4" class="left">Payment Method:</th>
+  </tr>
+  <tr> 
+    <th rowspan="4" class="right">Credit Card Details:</th>
+    <th nowrap>Number: </th> 
+    <td><input type="text"  onKeyPress="return noSubmit(this,event);" name="tx_trade_pi1[card_number]" ></td>
+     <td>&nbsp;</td>
+  </tr>
+  <tr> 
+   <th>CVN:</th><td><input type="text"  onKeyPress="return noSubmit(this,event);" name="tx_trade_pi1[card_cvn]" ></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr> 
+    <th nowrap>Expiry Date: </th>
+    <td colspan="2" nowrap > <select name="tx_trade_pi1[payment][card_exp_month]" >
+          ###SELECT_MONTH_OPTIONS###
+      </select>&nbsp;-&nbsp;<select name="tx_trade_pi1[payment][card_exp_year]">
+          ###SELECT_YEAR_OPTIONS###
+      </select></td>
+      
+    <td>&nbsp;</td>
+  </tr>
+  <tr> 
+    <th nowrap>Card name: </th>
+    <td><input type="text"  onKeyPress="return noSubmit(this,event);" name="tx_trade_pi1[payment][card_name]" value="###PAYMENT_CARD_NAME###"></td>
+    <td>&nbsp;</td>
+  </tr>
+   <tr> 
+    <th nowrap>Payment Processing Fee: </th>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td align='right'>###PRICE_PAYMENT_TAX###</td>
+  </tr>
+  <!-- ###PAYMENT_DETAILS_10### end -->
+  <!--###PAYMENT_DETAILS_20###start-->
+  <tr> 
+    <th colspan="4" class="left">Payment Method:</th>
+  </tr>
+  <tr> 
+    <th class="left"> Credit Card/Paypal</th>
+    <td colspan="3"> </td>
+  </tr>
+   <tr> 
+    <th nowrap>Payment Processing Fee: </th>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td align='right'>###PRICE_PAYMENT_TAX###</td>
+  </tr>
+  <!--###PAYMENT_DETAILS_20###end-->
+  <!--###PAYMENT_DETAILS_40###start-->
+  <tr> 
+    <th colspan="4" class="left">Payment Method:</th>
+  </tr>
+  <tr> 
+    <th class="left"> Cheque / Money Order </th>
+    <td colspan="3">Address details for your remittance be printed on your invoice. 
+      Goods will be shipped when payment arrives.</td>
+  </tr>
+   <tr> 
+    <th nowrap>Payment Processing Fee: </th>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td align='right'>###PRICE_PAYMENT_TAX###</td>
+  </tr>
+
+  <!--###PAYMENT_DETAILS_40###end-->
+
+</table>
+</div>
+<!-- ###PAYMENT_DETAILS_ALL###-->
+<BR>
+<HR>
+<BR>
+<BR>
+<BR>
+<h3>PAYMENT_DETAILS_ view </h3>
+<!-- ###PAYMENT_DETAILS_VIEW_SUPERSECTION###-->
+<div class="paymentdetailsview">
+<table  class="trade">
+  <!-- ###PAYMENT_DETAILS_10### begin -->
+  <tr> 
+    <th colspan="4" class="left">Payment Method:</th>
+  </tr>
+  <tr> 
+    <th rowspan="3" class="right">Credit Card Details:</th>
+    </th>
+    
+  </tr>
+  <tr> 
+    <th nowrap>Expiry Date: </th>
+    <td> ###PAYMENT_CARD_EXP_MONTH###/###PAYMENT_CARD_EXP_YEAR### </td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr> 
+    <th nowrap>Card name: </th>
+    <td>###PAYMENT_CARD_NAME###</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr> 
+    <th nowrap>Payment Processing Fee: </th>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td align='right'>###PRICE_PAYMENT_TAX###</td>
+  </tr>
+  <!-- ###PAYMENT_DETAILS_10### end -->
+  <!--###PAYMENT_DETAILS_20###start-->
+  <tr> 
+    <th colspan="4" class="left">Payment Method:</th>
+  </tr>
+  <tr> 
+    <th class="left"> Credit Card/Paypal </th>
+    <td colspan="3"></td>
+  </tr>
+   <tr> 
+    <th nowrap>Payment Processing Fee: </th>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td align='right'>###PRICE_PAYMENT_TAX###</td>
+  </tr>
+  <!--###PAYMENT_DETAILS_20###end-->
+  <!--###PAYMENT_DETAILS_40###start-->
+  <tr> 
+    <th colspan="4" class="left">Payment Method:</th>
+  </tr>
+  <tr> 
+    <th class="left"> Cheque / Money Order </th>
+    <td colspan="3">Address details for your remittance be printed on your invioce. 
+      Goods will be shipped when payment arrives.</td>
+  </tr>
+   <tr> 
+    <th nowrap>Payment Processing Fee: </th>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td align='right'>###PRICE_PAYMENT_TAX###</td>
+  </tr>
+  <!--###PAYMENT_DETAILS_40###end-->
+</table>
+</div>
+<!-- ###PAYMENT_DETAILS_VIEW_SUPERSECTION###-->

@@ -1,0 +1,58 @@
+  <h3>ITEM _LIST_TEMPLATE</h3>
+  <!-- ###ITEM_LIST_TEMPLATE### begin-->
+<div class="itemlist" > 
+    <div class="pagination" > 
+      <div class="previous"  >###SUBMIT_TO_PREVIOUS###</div>
+      <div class="next" >###SUBMIT_TO_NEXT###</div>
+    </div>
+  
+    <div class="listmenu" > ###LIST_MENU###</div>
+    ###MINI_BASKET###
+    <div class="searchbox" >###SEARCH_BOX_COMPONENT### </div>
+    
+<div class="itemlistuncategorised" >  
+<TABLE >
+        <!-- ###ITEM_LIST### begin -->
+       <!-- ###ITEM_SINGLE### begin-->
+        <tr class="###PRODUCT_ODDEVEN###" > 
+          <td colspan=3 class="title" > 
+	   ###PRODUCT_ANCHOR###
+            <!--###LINK_ITEM###-->
+            ###PRODUCT_TITLE### 
+            <!--###LINK_ITEM###-->
+          </td>
+        </tr>
+        <tr  class="###PRODUCT_ODDEVEN###"> 
+          <td class="products" >
+            <!--###LINK_ITEM###-->
+            ###PRODUCT_LIST_IMAGE_1###
+            <!--###LINK_ITEM###-->
+          </td>
+          <td class="subheader" >###PRODUCT_SUBHEADER### 
+            <!--###LINK_ITEM###-->
+            <div class="moreinfo" >more info</div> 
+            <!--###LINK_ITEM###-->
+          </td>
+          <TD><div class="price">###PRICE_TAX### 
+            </div>
+	    <div class="addtocart" >
+            <INPUT size="2" maxlength="4" type="text" name="###FIELD_NAME###" value="###FIELD_QTY###"> 
+            <input type="submit"  value="add" onclick="if (!document.###FORM_NAME###.###FIELD_NAME###.value!=''){document.###FORM_NAME###.###FIELD_NAME###.value=1;};  "> 
+            </div>
+          </TD>
+        </tr>
+        <!-- ###ITEM_SINGLE### end -->
+        <!-- ###ITEM_LIST### end -->
+</TABLE>
+</div>
+<div class="pagination" > 
+      <div class="previous"  >###SUBMIT_TO_PREVIOUS###</div>
+      <div class="next" >###SUBMIT_TO_NEXT###</div>
+</div>
+</div>
+<!-- ###EMPTY### begin -->
+<h1>No Matching Products</h1><p>There are no products matching your criteria. Please search again.</p> 
+  <!-- ###EMPTY### end -->
+  <!-- ###ITEM_LIST_TEMPLATE### end -->
+  <br>
+

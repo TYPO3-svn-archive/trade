@@ -1,0 +1,94 @@
+<H1>PRODUCT TEMPLATES</H1>
+<h2>EXAMPLE</h2>
+
+<BR>
+<BR>
+<BR>
+<h1>component templates</h1>
+
+
+<!--###REPEAT_VISITOR### start-->
+Welcome back ###NAME###<br/>It appears that you have used our store previously. Login to retrieve your details.<br/>
+<!--###REPEAT_VISITOR### end-->
+
+<!--###NEW_VISITOR### start-->
+Welcome
+<!--###NEW_VISITOR### end-->
+
+
+
+<BR>
+<HR>
+<BR>
+<BR>
+<BR>
+<h3>ITEM_SINGLE_ DISPLAY</h3>
+<!-- ###ITEM_SINGLE_DISPLAY_COMPONENT### begin
+	This subpart is used to display single products.
+-->
+<input type="hidden" name="tx_trade_pi1[uid]" value="###PRODUCT_UID###" />
+<div class='single'>
+	<div class='backlink'> <a href='index.php?id=###LISTTYPE_PID###&cmd=list_###LISTTYPE###'  > &lt;-Go back</a> </div>
+    <div class="title" > ###PRODUCT_TITLE### </div>
+    <div class="category"> ###CATEGORY_TITLE###</div>
+    <div class="image"> ###PRODUCT_SINGLE_IMAGE_1###     </div>
+    <div class="productcode">     product code: ###PRODUCT_CODE### </div>
+  	<div class="addtocart">
+   		<div class="price">###PRICE_TAX### </div>
+    	<div class="addtocartinputs">
+    	   <label for="###FIELD_NAME###" >Qty: </label>
+    	   <input size="3" maxlength="4" type="text" id="###FIELD_NAME###" name="###FIELD_NAME###" value="###FIELD_QTY###"> 
+    	  <input type="Submit" border="0" name="order" value="add to cart" onClick="if (!document.###FORM_NAME###.###FIELD_NAME###.value!=''){document.###FORM_NAME###.###FIELD_NAME###.value=1;}; document.myform.id.value=###PID_BASKET###; document.###FORM_NAME###.cmd.value='basket';" > 
+    	</div>
+    </div>
+   
+  
+    <div class="subheader" > ###PRODUCT_SUBHEADER###</div>
+    <div class="description">###PRODUCT_DESCRIPTION###</div>
+    <div class="otherimages" ><div class="image2" >###PRODUCT_SINGLE_IMAGE_2### </div><div class="image3" >###PRODUCT_SINGLE_IMAGE_3###</div></div>
+    <div class="backlink"><a href='index.php?id=###LISTTYPE_PID###&cmd=list_###LISTTYPE###'  > &lt;-Go back</a>  </div>
+ </div>
+<!-- ###ITEM_SINGLE_DISPLAY_COMPONENT### end -->
+<BR>
+<HR>
+<BR>
+<BR>
+<BR>
+<h3>ITEM _SEARCH</h3>
+<!-- ###ITEM_SEARCH_COMPONENT### begin
+	Subpart for the search-form
+-->
+<div class="search" >
+<INPUT class="search" size="20" maxlength="100" type="text"   name="###SEARCH_FIELD_NAME###" value="###SWORDS###" >
+  <input type="submit" border="0" value="Search"  alt="search"  ###SUBMIT_TO_LIST_SEARCH### >
+</div>
+<!-- ###ITEM_SEARCH_COMPONENT### end -->
+<BR>
+<HR>
+<BR>
+<BR>
+<BR>
+
+  <!--###LOGIN_BOX_COMPONENT### ---> <div class="login">
+###REPEAT_VISITOR### <br/>
+<input name="logintype" value="login" type="hidden"> 
+<input name="pid" value="###PID_USERSTORAGE###" type="hidden">
+<label for="txtradepi1loginusername" >username </label>
+<input id="txtradepi1loginusername" name="user" title="Enter username" value="###USER_USERNAME###" type="text">
+<label for="txtradepi1loginpassword" >password </label>
+  <input id="txtradepi1loginpassword" name="pass" value="" title="Enter password" type="password">
+  <input name="login" class="loginbutton" value="login" type="submit">
+ </div> 
+  <!--###LOGIN_BOX_COMPONENT### END--->
+  
+  
+  
+  <BR> <HR> <BR> <BR> <BR> <h3>SESSION TIMEOUT</h3>
+  <!-- ###SESSION_TIMEOUT###-->
+  It appears your login session has timed out for security reasons. Any products 
+  or other information in your shopping cart has been lost. Please recommence 
+  your shopping session. 
+  <!-- ###SESSION_TIMEOUT###-->
+
+
+

@@ -1,0 +1,79 @@
+ 
+<!--###THANKS_TEMPLATE###-->
+<div class="thanks">
+<h1>Confirmation</h1>
+<p>Your order has been completed and your invoice is below. Thank your ordering with us.</p>
+<div class="transactiondetails">  ###TRANSACTION_DETAILS###</div>
+
+<table class="trade">
+  <tr> 
+    <th colspan="3"  >
+    <div class="ownerdetails" >###SHOP_OWNER_DETAILS###</div>
+      <h3>Invoice <br>
+        No: ###ORDER_TRACKING_CODE### </h3>
+</th>
+  </tr>
+  <tr> 
+    <th >Qty x Product:</th>
+    <th >Price:</th>
+    <th >Total:</th>
+  </tr>
+  <!-- ###ITEM_CATEGORY_AND_ITEMS### begin -->
+  <!-- ###ITEM_CATEGORY### begin -->
+  <!-- ###ITEM_CATEGORY### end -->
+  <!-- ###ITEM_LIST### begin -->
+  <!-- ###ITEM_SINGLE### begin-->
+  <tr class="amounts" > 
+    <td>###FIELD_QTY### x ###PRODUCT_TITLE###</td>
+    <td class="price pricesingle" >###PRICE_TAX### </td>
+    <td  class="price pricetax" >###PRICE_TOTAL_TAX###</td>
+  </tr>
+  <!-- ###ITEM_SINGLE### end -->
+  <!-- ###ITEM_LIST### end -->
+  <!-- ###ITEM_CATEGORY_AND_ITEMS###  end -->
+  <TR class="shippingdetails" > 
+    <th  >Shipping: </th>
+    <td>###SHIPPING_IMAGE### ###SHIPPING_TITLE###</td>
+    <td >###PRICE_SHIPPING_TAX###</td>
+  </TR>
+  ###PAYMENT_DETAILS_VIEW_SECTION### 
+  <TR> 
+    <th colspan="2" > Total amount in ###CURRENCY_CODE### 
+      ###CURRENCY_SYMBOL###:</th>
+    <th  class="price totalprice" >###PRICE_TOTAL_TAX###</th>
+  </TR>
+  <tr class="invoiceaddress" > 
+    <th  valign="top" >Invoice Address: </th>
+    <td colspan="2" valign="top"><p>###USER_NAME###<br/>
+        ###USER_ADDRESS###<br/>
+        ###USER_CITY###, ###USER_TX_TRADE_STATE###, ###USER_ZIP###<br/>
+        ###USER_COUNTRY###</p>
+      <p>Phone: ###USER_TELEPHONE### <br/>
+        Email: ###USER_EMAIL### </p></td>
+  </tr>
+  <tr class="shippingaddress" > 
+    <th  valign="top" >Delivery Address:</th>
+    <td colspan="2" ><p>###USER_TX_TRADE_SHIPPING_NAME###<br/>
+        ###USER_TX_TRADE_SHIPPING_ADDRESS###<br/>
+        ###USER_TX_TRADE_SHIPPING_CITY###, ###USER_TX_TRADE_SHIPPING_ZONE###, 
+        ###USER_TX_TRADE_SHIPPING_ZIP###<br/>
+        ###USER_TX_TRADE_SHIPPING_COUNTRY###</p></td>
+  </tr>
+  <tr class="comments" > 
+    <th valign="top">Comments and requests:</th>
+    <td >###ORDER_COMMENT###</td>
+    <td >&nbsp;</td>
+  </tr>
+</table>
+</div>
+<!-- ###THANKS_TEMPLATE### end -->
+
+<!-- ###LOSTORDER_TEMPLATE### start -->
+<h1>Order Submission Failed</h1><p>
+No order data available for processing. It is likely that you have submitted your order request twice in which case your order has been processed and confirmation will be sent by email. If you do not receive a confirmation email, please send your order again.</p>
+<!-- ###LOSTORDER_TEMPLATE### end -->
+
+<!-- ###ALREADYCLOSEDORDER_TEMPLATE### start -->
+<h1>Duplicate Order Submission</h1><p>
+This order is already complete. It is likely that you have submitted your order request twice in which case your order has been processed and confirmation will be sent by email.</p>
+<!-- ###ALREADYCLOSEDORDER_TEMPLATE### end -->
