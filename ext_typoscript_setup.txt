@@ -69,12 +69,12 @@ plugin.tx_trade_pi1 {
 	showMenu=1
 	showProgressBar=1
 	progressBar {
-	    stdWrap.wrap=<ul id="trade_progress">|</ul>
+	    stdWrap.wrap=<ul id="trade_progress" class="progress" >|</ul>
 	    itemStdWrap.wrap=<li>|</li>
 	    currentStdWrap.wrap=<span>|</span>
 	}
 	listMenu {
-	      stdWrap.wrap=<UL id="trade_listmenu">|</UL>
+	      stdWrap.wrap=<UL id="trade_listmenu" class="listmenu" >|</UL>
 	      itemStdWrap.wrap=<LI>|</LI>
 	      currentStdWrap.wrap=<b>|</b>
 	}

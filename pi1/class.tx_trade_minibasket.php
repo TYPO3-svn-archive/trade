@@ -40,11 +40,15 @@ class tx_trade_minibasket extends tslib_pibase {
 	// other
 		var $basket;
 		var $PIDS;	
+		var $postgetvars;
 		
 	/**
 	 * Main controller, entry point to plugin execution
 	*/	
 	function main($content,$conf) {
+		$postArray=is_array($GLOBALS['_POST'])?$GLOBALS['_POST']:array();
+		$getArray=is_array($GLOBALS['_GET'])?$GLOBALS['_GET']:array();
+		$this->postgetvars=array_merge($postArray,$getArray);
 		$this->conf=$conf;
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
@@ -85,26 +89,35 @@ class tx_trade_minibasket extends tslib_pibase {
 	 */
 	function processAddToBasket($basket) {
 		// add to basket
-		reset($GLOBALS['_POST']);
-		foreach ($GLOBALS['_POST'] as $pK => $pV) {
+		foreach ($this->postgetvars as $pK => $pV) {
 			// if it is an add to basket post var
 			if (strpos('x'.$pK,'tx_trade_pi1_addtobasket_')==1) {
 				$aK=substr($pK,25);
 				$aV=$pV;
-				if (strlen(trim($aV))==0||trim($aV)=='0') {
-					unset($basket[$aK]);
-				} else if ($aV>0) {
-					$aV=intval($aV);
-					$res=$GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_trade_products','uid='.mysql_escape_string($aK),'','title ASC','');
-					if ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-						if (trim($aV)=='') $aV=1;
-						$row['basket_qty']=$aV;
-						$basket[$row['uid']]=$row;
+				//strlen(trim($aV))==0||
+				if (strlen(trim($aV))>0) {
+					if (trim($aV)=='0') {
+						unset($this->basket[$aK]);
+						tx_trade_div::setSession('basket',$this->basket);
+					} else if ($aV>0) {
+						$aV=intval($aV);
+						$res=$GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_trade_products','uid='.mysql_escape_string($aK),'','title ASC','');
+						if ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+							if (trim($aV)=='') $aV=1;
+							$row['basket_qty']=$aV;
+							$this->basket[$row['uid']]=$row;
+	//						//debug($this->basket);
+							tx_trade_div::setSession('basket',$this->basket);
+						} else {
+							//$this->errors[]=$this->pi_getLL('basket_no_product');	
+						}
+					} else {
+						$this->messages[]=$this->pi_getLL('basket_invalid_qty');	
 					}
 				}
 			}
-		}
-		return $basket;	
+		}	
+		return $basket;
 	}
 	
 	function getGlobalMarkers($markerArray) {

@@ -28,7 +28,7 @@ Welcome
 -->
 <input type="hidden" name="tx_trade_pi1[uid]" value="###PRODUCT_UID###" />
 <div class='single'>
-	<div class='backlink'> <a href='index.php?id=###LISTTYPE_PID###&cmd=list_###LISTTYPE###'  > &lt;-Go back</a> </div>
+	 ###BACKLINK###
     <div class="title" > ###PRODUCT_TITLE### </div>
     <div class="category"> ###CATEGORY_TITLE###</div>
     <div class="image"> ###PRODUCT_SINGLE_IMAGE_1###     </div>
@@ -38,7 +38,7 @@ Welcome
     	<div class="addtocartinputs">
     	   <label for="###FIELD_NAME###" >Qty: </label>
     	   <input size="3" maxlength="4" type="text" id="###FIELD_NAME###" name="###FIELD_NAME###" value="###FIELD_QTY###"> 
-    	  <input type="Submit" border="0" name="order" value="add to cart" onClick="if (!document.###FORM_NAME###.###FIELD_NAME###.value!=''){document.###FORM_NAME###.###FIELD_NAME###.value=1;}; document.myform.id.value=###PID_BASKET###; document.###FORM_NAME###.cmd.value='basket';" > 
+    	  <input type="Submit" border="0" name="order" value="add to cart" onClick="if (!document.###FORM_NAME###.###FIELD_NAME###.value!=''){document.###FORM_NAME###.###FIELD_NAME###.value=1;}; document.myform.id.value=###PID_BASKET###; " > 
     	</div>
     </div>
    
@@ -46,7 +46,7 @@ Welcome
     <div class="subheader" > ###PRODUCT_SUBHEADER###</div>
     <div class="description">###PRODUCT_DESCRIPTION###</div>
     <div class="otherimages" ><div class="image2" >###PRODUCT_SINGLE_IMAGE_2### </div><div class="image3" >###PRODUCT_SINGLE_IMAGE_3###</div></div>
-    <div class="backlink"><a href='index.php?id=###LISTTYPE_PID###&cmd=list_###LISTTYPE###'  > &lt;-Go back</a>  </div>
+    ###BACKLINK###
  </div>
 <!-- ###ITEM_SINGLE_DISPLAY_COMPONENT### end -->
 <BR>

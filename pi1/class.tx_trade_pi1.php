@@ -765,7 +765,7 @@ class tx_trade_pi1 extends tslib_pibase {
 						tx_trade_div::setSession('basket',$this->basket);
 					} else if ($aV>0) {
 						$aV=intval($aV);
-						$res=$GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_trade_products','uid='.mysql_escape_string($aK).' '.$this->getProductPIDQuery(),'','title ASC','');
+						$res=$GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_trade_products','uid='.mysql_escape_string($aK),'','title ASC','');
 						if ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 							if (trim($aV)=='') $aV=1;
 							$row['basket_qty']=$aV;
@@ -781,6 +781,7 @@ class tx_trade_pi1 extends tslib_pibase {
 				}
 			}
 		}	
+		return $basket;
 	}
 	
 	/**
@@ -1219,6 +1220,7 @@ class tx_trade_pi1 extends tslib_pibase {
 					eval($cV['condition']);
 					if ($testResult) {
 						$item='<a href="index.php?id='.$this->PIDS[$cKNoDot]['uid'].'&tx_trade_pi1[cmd]='.$cKNoDot.'" >'.$item.'</a>';
+						//debug($this->PIDS);
 					}
 				} else {
 					$item=$this->cObj->stdWrap($item,$this->conf['progressBar.']['currentStdWrap.']);
@@ -1497,12 +1499,26 @@ class tx_trade_pi1 extends tslib_pibase {
 		$markerArray['PRODUCT_PRICE1']=$this->conf['currencySymbol'].tx_trade_pricecalc::getPrice($data,$this->user,$this);
 		if (strlen(trim($data['url']))>0) $markerArray['PRODUCT_URL']='<a href="'.$data['url'].'" target="_new">External Website</a>';
 		else $markerArray['PRODUCT_URL']='';
+		// OLD
 		$markerArray['LISTTYPE']=$this->piVars['listtype'];
 		if ($this->piVars['backPID']>0)  {
 			$markerArray['LISTTYPE_PID']=$this->piVars['backPID'];
 		} else {
 			$markerArray['LISTTYPE_PID']=$this->PIDS['list_'.$this->piVars['listtype']]['uid'];
 		}
+		// NEW
+		$listType=$this->piVars['listtype']?$this->piVars['listtype']:'default';
+		if ($this->piVars['backPID']>0)  {
+			$listTypePid=$this->piVars['backPID'];
+		} else {
+			$listTypePid=$this->PIDS['list_'.$listType]['uid'];
+		}
+		if ($listTypePid>0)  {
+			$markerArray['BACKLINK']='<div class="backlink"><a href="index.php?id='.$listTypePid.'&cmd=list_'.$listType.'"  > &lt;-Go back</a>  </div>';
+		} else {
+				$markerArray['BACKLINK']='<div class="backlink"><a href="#" onclick="history.go(-1);"   > &lt;-Go back</a>  </div>';
+		}
+		
 		if (strlen(trim($data['datasheet']))>0) {
 			$markerArray['PRODUCT_DATASHEET_LINK']='<a href="uploads/tx_trade/'.$data['datasheet'].'" >Data Sheet</a>';
 		} else {

@@ -1,0 +1,191 @@
+plugin.tx_trade_pi1 {
+	template=EXT:trade/res-cssstyled/misc_template.html,EXT:trade/res-cssstyled/item_list_uncategorised_template.html,EXT:trade/res-cssstyled/item_list_template.html,EXT:trade/res-cssstyled/basket_template.html,EXT:trade/res-cssstyled/confirm_template.html,EXT:trade/res-cssstyled/email_checkout_template.html,EXT:trade/res-cssstyled/saved_order_items_template.html,EXT:trade/res-cssstyled/thanks_template.html,EXT:trade/res-cssstyled/order_history_template.html,EXT:trade/res-cssstyled/misc_component.html,EXT:trade/res-cssstyled/userdetails_component.html,EXT:trade/res-cssstyled/paymentdetails_component.html,EXT:trade/res-cssstyled/shippingdetails_component.html
+	
+	_CSS_DEFAULT_STYLE (
+/* general settings */
+div.tx-trade-pi1 {
+ width: 800px;
+ border: 2px solid {$tradecolor3};
+ color: {$tradecolor3};
+}
+
+.right-col div.tx-trade-pi1 {
+ width: auto;
+ color: #00096F;
+}
+.right-col div.tx-trade-pi1 table.trade_minibasket {
+ width: auto;
+ border: 1px solid #00096F;
+}
+.right-col div.tx-trade-pi1 table.trade_minibasket  td,th {
+ color: #00096F;
+ font-size: 80%;
+ padding: 2px;
+}
+div.tx-trade-pi1 {
+ width: auto;
+ border: 0px;
+ color: #00096F;
+}
+div.tx-trade-pi1 a:hover,a:visited,a:link,p,td,th {
+/* color: {$tradecolor3};*/
+}
+
+div.tx-trade-pi1 th {
+  background-color: {$tradecolor1};
+  text-align:left;
+  vertical-align: top;
+  padding: 4px;
+}
+
+div.tx-trade-pi1 img {
+  border: 0px;
+}
+div.tx-trade-pi1 ul {
+  list-style: none;
+  text-align: left;
+  margin: 2px;
+  padding: 2px;
+}
+
+div.tx-trade-pi1 .price {
+  font-weight: bold;
+  font-size: 110%;
+}
+div.tx-trade-pi1 .moreinfo {
+  font-weight: bold;
+}
+
+div.tx-trade-pi1 .exchangerates {
+  font-weight: bold;
+  font-size: 80%;
+  padding-top: 5px;
+}
+
+/* specific components */
+div.tx-trade-pi1 .usershippingdetails,.basket,.confirm,.thanks  {
+width: 760px;
+border: 1px solid black;
+display: block;
+padding: 10px;
+margin: 10px;
+}
+div.tx-trade-pi1 .usershippingdetails {
+ height: 400px;
+}
+div.tx-trade-pi1 .userdetails {
+width: 340px;
+display: inline;
+clear: none;
+float: left;
+margin: 10px;
+}
+div.tx-trade-pi1 .shippingdetails {
+width: 340px;
+float: left;
+display: inline;
+clear: none;
+margin: 10px;
+}
+div.tx-trade-pi1 .usershippingdetails table.trade input,textarea,select{
+ width: 180px;
+}
+
+div.tx-trade-pi1	.minibasket ,.listmenu  {
+width: 150px;
+border: 1px solid black;
+padding: 2px;
+margin: 5px;
+font-size: 90%;
+float: right;
+clear: right;
+align: top;
+}
+
+div.tx-trade-pi1	.minibasket  .title {
+  font-size: 80%;
+  font-weight: bold;
+}
+div.tx-trade-pi1 .loginbox {
+  margin: 10px;
+  font-size: 70%;
+}
+
+
+div.tx-trade-pi1 .pagination {
+  padding-top: 10px;
+}
+div.tx-trade-pi1 input[type="submit"] {
+  border: 1px solid {$tradecolor3};
+  background-color: {$tradecolor2};
+}
+div.tx-trade-pi1 .pagination .next {
+  margin-left: 450px;
+  display: inline;
+}
+div.tx-trade-pi1 .pagination .previous {
+  margin-left: 20px;
+  display: inline;
+}
+
+div.tx-trade-pi1	.single {
+border: 1px solid black;
+padding: 2px;
+margin: 5px;
+}
+div.tx-trade-pi1 .title {
+  font-size: 120%;
+  font-weight: bold;
+}
+div.tx-trade-pi1	.single .productcode {
+  display: none;
+}
+div.tx-trade-pi1	.single .backlink {
+
+}
+div.tx-trade-pi1	.single .addtocart {
+  padding-bottom: 10px;
+}
+div.tx-trade-pi1	.single .category {
+
+}
+div.tx-trade-pi1	.confirm .input[type="select"] {
+  width : 100px;
+}
+
+
+div.tx-trade-pi1	td.subheader {
+ border-bottom: 1px solid black;
+}
+
+div.tx-trade-pi1	ul#trade_progress{
+	padding: 5px;
+}
+div.tx-trade-pi1 ul#trade_progress li{
+	background-color: {$tradecolor1};
+	color: {$tradecolor3};
+	display: inline;
+	font-size: 90%;
+	font-weight: bold;
+	list-style: none outside none;
+	padding: 3px;
+	border: 1px solid {$tradecolor3};
+}
+div.tx-trade-pi1	ul#trade_progress li a{
+	color: {$tradecolor3};
+	background-color: {$tradecolor2};
+	text-decoration: none;
+}
+
+div.tx-trade-pi1	ul#trade_progress li span{
+	color: {$tradecolor2};
+	text-decoration: none;
+}
+
+div.tx-trade-pi1 .trade_small {
+  font-size: 80%;
+}
+
+)	
+plugin.tx_trade_minibasket.template < plugin.tx_trade_pi1.template
+plugin.tx_trade_minibasket._CSS_DEFAULT_STYLE < plugin.tx_trade_pi1._CSS_DEFAULT_STYLE

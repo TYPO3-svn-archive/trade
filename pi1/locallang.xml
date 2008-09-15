@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>module</type>
+		<description>Language labels for plugin &quot;tx_trade_pi1&quot;</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="next">Next</label>
+			<label index="previous">Previous</label>
+			<label index="basket_no_product">Cannot add to basket. No such product found</label>
+			<label index="basket_invalid_qty">Invalid quantity to add to basket</label>
+			<label index="save_successful">Save Successful</label>
+			<label index="missing_required_field">Missing required field </label>
+			<label index="password_no_match">Passwords do not match</label>
+			<label index="payment_method_required">You must select a payment method.</label>
+			<label index="shipping_method_required">You must select a shipping method.</label>
+			<label index="missing_shipping_details">Missing shipping details.</label>
+			<label index="missing_user_details">Missing user details.</label>
+			<label index="payment_method_required">You must select a payment method.</label>
+			<label index="invalid_cc_date">Invalid card date.</label>
+			<label index="invalid_cc_number">Invalid card number.</label>
+			<label index="cc_name_required">You must enter the credit card owners name.</label>
+			<label index="cc_cvn_required">You must enter the cvn number on the back of your credit card.</label>
+			<label index="username_in_use">That username is in use. Please try again with a different username.</label>
+			<label index="logged_in_as">Logged in as </label>
+			<label index="user_discount">Applying user discount of %</label>
+			<label index="group_discount">Applying alternative pricing scheme number </label>
+			<label index="email_in_use">Your email address exists on our system in a previous order. Login to the system to retrieve your previous order details or resubmit your data to proceed as a new user.</label>
+			<label index="lost_session">We have lost track of your shopping cart because of extended inactivity. Please start again by selecting products.</label>
+		</languageKey>
+	</data>
+</T3locallang>

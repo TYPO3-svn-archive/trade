@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for database tables/fields belonging to extension 'trade'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="tx_trade_products">Products</label>
+			<label index="tx_trade_products.title">Product Title</label>
+			<label index="tx_trade_products.subheader">Subheader</label>
+			<label index="tx_trade_products.code">Item Code</label>
+			<label index="tx_trade_products.description">Product Description</label>
+			<label index="tx_trade_products.category_uid">Category</label>
+			<label index="tx_trade_products.price1">Price 1</label>
+			<label index="tx_trade_products.price2">Price 2</label>
+			<label index="tx_trade_products.price3">Price 3</label>
+			<label index="tx_trade_products.tax">Tax</label>
+			<label index="tx_trade_products.image">Image</label>
+			<label index="tx_trade_products.weight">Weight</label>
+			<label index="tx_trade_products.stock">Quantity in Stock</label>
+			<label index="tx_trade_products.manufacturer_id">Manufacturer</label>
+			<label index="tx_trade_products.manufacturer">Manufacturer</label>
+			<label index="tx_trade_products.url">URL Link</label>
+			<label index="tx_trade_products.attributes">Attributes</label>
+			<label index="tx_trade_products.datasheet">Data Sheet</label>
+			<label index="tx_trade_products.special">Special Offer</label>
+			<label index="tx_trade_products.other_products">Contains Other Products</label>
+			<label index="tx_trade_products.viewcount">View Count</label>
+			<label index="tx_trade_categories">Product Categories</label>
+			<label index="tx_trade_categories.title">Title</label>
+			<label index="tx_trade_categories.description">Description</label>
+			<label index="tx_trade_categories.image">Category Image</label>
+			<label index="tx_trade_categories.parent">Parent Category</label>
+			<label index="tx_trade_orders">Orders</label>
+			<label index="tx_trade_orders.feusers_uid">Frontend User ID</label>
+			<label index="tx_trade_orders.tracking_code">Tracking Code</label>
+			<label index="tx_trade_orders.status">Status</label>
+			<label index="tx_trade_orders.order_data">Order Data</label>
+			<label index="tx_trade_orders.comment">Comment</label>
+			<label index="tx_trade_orders.price_total_tax">Total Order Price</label>
+			<label index="tx_trade_order_status">Order Status</label>
+			<label index="tx_trade_order_status.title">Title</label>
+			<label index="tx_trade_manufacturers">Manufacturers</label>
+			<label index="tx_trade_manufacturers.title">title</label>
+			<label index="tx_trade_manufacturers.description">description</label>
+			<label index="tx_trade_manufacturers.image">image</label>
+			<label index="tt_content.list_type_pi1">Trade Shopping Cart</label>
+			<label index="tt_content.list_type_minibasket">Trade Mini Basket</label>
+			<label index="tt_content.pi_flexform.list_type_pi1">Sample Flexform Plugin</label>
+			<label index="tt_content.pi_flexform.sheet_basic">Basic Settings</label>
+			<label index="tt_content.pi_flexform.sheet_advanced">Advanced Settings</label>
+			<label index="tt_content.pi_flexform.enable_debug">Enable Debug</label>
+			<label index="tt_content.pi_flexform.conf_override">TS Configuration</label>
+			<label index="tt_content.pi_flexform.record_storage">Product/Category Storage Page</label>
+			<label index="tt_content.pi_flexform.shop_owner_email">Ship Owner Email</label>
+			<label index="tt_content.pi_flexform.shop_owner_details">Ship Owner Details</label>
+			<label index="tt_content.pi_flexform.shop_type">Shop Type</label>
+			<label index="tt_content.pi_flexform.shop_type.I.1">Quick Checkout</label>
+			<label index="tt_content.pi_flexform.shop_type.I.2">Normal</label>
+			<label index="tt_content.pi_flexform.shop_type.I.3">Extended Checkout</label>
+			<label index="tt_content.pi_flexform.payment_options">Payment Options</label>
+			<label index="tt_content.pi_flexform.payment_options.I.1">Paypal</label>
+			<label index="tt_content.pi_flexform.payment_options.I.2">Eway</label>
+			<label index="tt_content.pi_flexform.payment_options.I.3">Cheque/Money Order/Direct Deposit</label>
+			<label index="tt_content.pi_flexform.paypal_email">Paypal Email Address</label>
+			<label index="tt_content.pi_flexform.eway_merchant_code">Eway Merchant Code</label>
+			<label index="tt_content.pi_flexform.eway_test_mode">Eway Test Mode</label>
+			<label index="fe_users.tx_trade_shipping_name">Shipping Address Contact Name</label>
+			<label index="fe_users.tx_trade_shipping_address">Shipping Address</label>
+			<label index="fe_users.tx_trade_shipping_city">Shipping Address City/Town</label>
+			<label index="fe_users.tx_trade_shipping_zip">Shipping Address Postcode/ZIP</label>
+			<label index="fe_users.tx_trade_shipping_zone">Shipping Address State</label>
+			<label index="fe_users.tx_trade_shipping_country">Shipping Address Country</label>
+			<label index="fe_users.tx_trade_discount">Discount</label>
+			<label index="fe_users.tx_trade_wishlist">Products Wishlist</label>
+			<label index="fe_users.tx_trade_state">State</label>
+		</languageKey>
+	</data>
+</T3locallang>
