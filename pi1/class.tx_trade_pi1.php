@@ -1703,7 +1703,7 @@ class tx_trade_pi1 extends tslib_pibase {
 		if ($this->conf['validateAustralianPostcodes']) {
 			$fieldName=$GLOBALS['TCA']['fe_users']['columns']['tx_trade_shipping_zip']['label'];
 			$fieldName=$this->LANG->sL($fieldName);
-			if ($this->user['tx_trade_shipping_zip']<=0) { 	
+			if ($this->user['tx_trade_shipping_zip']<200) { 	
 	 			$this->errors[]='Invalid postcode for shipping address.';
 			}
 			if ($this->user['tx_trade_shipping_zip']>9999) { 	
