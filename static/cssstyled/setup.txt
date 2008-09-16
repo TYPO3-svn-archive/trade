@@ -187,5 +187,7 @@ div.tx-trade-pi1 .trade_small {
 }
 
 )	
+}
+
 plugin.tx_trade_minibasket.template < plugin.tx_trade_pi1.template
 plugin.tx_trade_minibasket._CSS_DEFAULT_STYLE < plugin.tx_trade_pi1._CSS_DEFAULT_STYLE
