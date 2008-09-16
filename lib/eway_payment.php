@@ -25,7 +25,7 @@
 		return; 
 	}
 	$expiryyear=$this->payment["card_exp_year"];
-	if ($expirymonth<2008||$expirymonth>2090) {
+	if ($expiryyear<2008||$expiryyear>2090) {
 		$this->errors[]='Invalid card expiry year';
 		return; 
 	}
