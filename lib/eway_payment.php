@@ -15,10 +15,26 @@
 	$country=$this->user["country"];
 	$invoicedescription=$this->conf['invoiceDescription'];
 	$cardname=$this->payment["card_name"];
+	if (strlen($cardname)<1) {
+		$this->errors[]='Invalid card holder name';
+		return; 
+	}
 	$expirymonth=$this->payment["card_exp_month"];
+	if ($expirymonth<1||$expirymonth>12) {
+		$this->errors[]='Invalid card expiry month';
+		return; 
+	}
 	$expiryyear=$this->payment["card_exp_year"];
+	if ($expirymonth<2008||$expirymonth>2090) {
+		$this->errors[]='Invalid card expiry year';
+		return; 
+	}
 	$totalamount=round($this->order['price_total_tax']*100);
 	$cardnumber=$this->piVars["card_number"];
+	if (strlen($cardnumber)<10) {
+		$this->errors[]='Invalid card number';
+		return; 
+	}
 	$cardcvn=$this->piVars["card_cvn"];
 	$merchantnumber=$this->conf["payment."][$this->payment['method'].'.']['merchantCode'];
 	$orderUid=$this->order['tracking_code'];
