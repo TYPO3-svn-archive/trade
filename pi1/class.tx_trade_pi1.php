@@ -1675,7 +1675,7 @@ class tx_trade_pi1 extends tslib_pibase {
 		if ($this->conf['validateAustralianPostcodes']) {
 			$fieldName=$GLOBALS['TCA']['fe_users']['columns']['zip']['label'];
 			$fieldName=$this->LANG->sL($fieldName);
-			if ($this->user['zip']<=0) { 	
+			if ($this->user['zip']<200) { 	
 	 			$this->errors[]='Invalid postcode for invoice address.';
 			}
 			if ($this->user['zip']>9999) { 	
