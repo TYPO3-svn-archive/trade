@@ -46,6 +46,7 @@ $TCA["tx_trade_categories"] = array (
 		'languageField'            => 'sys_language_uid',	
 		'transOrigPointerField'    => 'l18n_parent',	
 		'transOrigDiffSourceField' => 'l18n_diffsource',	
+		'sortby' => 'sorting',	
 		'default_sortby' => "ORDER BY crdate",	
 		'delete' => 'deleted',	
 		'enablecolumns' => array (		

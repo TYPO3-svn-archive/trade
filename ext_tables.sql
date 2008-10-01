@@ -62,7 +62,7 @@ CREATE TABLE tx_trade_categories (
 	description text NOT NULL,
 	image blob NOT NULL,
 	parent blob NOT NULL,
-	
+	sorting int NOT NULL,
 	PRIMARY KEY (uid),
 	KEY parent (pid)
 );
