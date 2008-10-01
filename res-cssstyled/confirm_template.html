@@ -103,9 +103,16 @@ $(document).ready(function() {
         if (!$("#agreeterms").attr("checked")) {
 		alert('You must tick the box to agree to our terms and conditions');
 		event.preventDefault();
-		 event.stopPropagation();
+		event.stopPropagation();
 		return false;
 	} else {
+		if (confirm('Proceed with order Processing?')) { 
+			return true;
+		} else {
+			event.preventDefault();
+			event.stopPropagation();
+			return false;
+		}
 		// TODO problems with js in non validating pages. Disabled  so user can checkout reliably.
 		//$("#myform").attr("id","###PID_THANKS###");
 		//$("#submitbutton").attr('disabled','true');
