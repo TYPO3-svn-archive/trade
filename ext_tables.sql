@@ -86,7 +86,7 @@ CREATE TABLE tx_trade_orders (
 	order_data text NOT NULL,
 	comment text NOT NULL,
 	price_total_tax tinytext NOT NULL,
-	
+	total_items int(11) NOT NULL,
 	PRIMARY KEY (uid),
 	KEY parent (pid)
 );

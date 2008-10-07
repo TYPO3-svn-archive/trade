@@ -128,6 +128,7 @@ class tx_trade_pricecalc extends tslib_pibase {
 			}
 		}
 		$markerArray['NUMBER_GOODSTOTAL']=$total;
+		$order['total_items']=$total;
 		$markerArray['PRICE_GOODSTOTAL_TAX']=$this->conf['currencySymbol'].sprintf("%01.2f", $totalPrice);
 		
 		
