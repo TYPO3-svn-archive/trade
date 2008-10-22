@@ -88,13 +88,14 @@ class tx_trade_pi1 extends tslib_pibase {
 	 
 	 */
 	function main($content,$conf)	{
+	//	debug ($GLOBALS['_POST']);
 //phpinfo();
 //exit;
 		$postArray=is_array($GLOBALS['_POST'])?$GLOBALS['_POST']:array();
 		$getArray=is_array($GLOBALS['_GET'])?$GLOBALS['_GET']:array();
 		$this->postgetvars=array_merge($postArray,$getArray);
 		//debug($this->postgetvars);
-		
+		// 04 662 380
 		$this->conf=$conf;
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
@@ -244,9 +245,22 @@ class tx_trade_pi1 extends tslib_pibase {
 					$this->renderWith=$renderTemplate;
 				}
 			}
-		}	
+		}
+		if ($this->conf['doRedirectToForceCmd']==1) {
+			if ($this->conf['PIDS.'][$this->cmd]!=$GLOBALS['TSFE']->id)  {
+				$linkConf['parameter']=$this->conf['PIDS.'][$this->cmd];
+				$linkConf['returnLast']='url';
+				$linkConf['addQueryString']='1'; 
+				$linkConf['addQueryString.']['exclude']='id'; 
+				$linkConf['additionalParams']='&tx_trade_pi1[cmd]='.$this->cmd;
+				$link=$this->cObj->typoLink('continue',$linkConf);
+				header('Location: '.$link);
+				echo $continue;
+				exit;	
+			}
+		}
 		//debug(array('after basket',$this->cmd,$this->renderWith));
-		tx_trade_div::setSession('user',$this->user);
+		tx_trade_div::setSession($this->conf,'user',$this->user);
 		
 		// FINALLY RENDERING BASED ON renderWith
 		$this->renderer->init($this);
@@ -334,7 +348,7 @@ class tx_trade_pi1 extends tslib_pibase {
 		$this->includeFFConf();
 		//debug($this->conf);
 		// grab basket from session
-		$this->basket=tx_trade_div::getSession('basket');
+		$this->basket=tx_trade_div::getSession($this->conf,'basket');
 		// set PIDS
 		$cmdList=$this->conf['cmdList'];
 		//debug($this->conf['PIDS.']);
@@ -344,7 +358,12 @@ class tx_trade_pi1 extends tslib_pibase {
 			} else {
 				$this->PIDS[$pV]['uid']=$GLOBALS['TSFE']->id;
 			}
-			$this->PIDS[$pV]['link']='index.php?id='.$this->PIDS[$pV]['uid'].'&tx_trade_pi1[cmd]='.$pV;
+			$linkConf['parameter']=$this->PIDS[$pV]['uid'];
+			$linkConf['returnLast']='url';
+			$linkConf['additionalParams']='&tx_trade_pi1[cmd]='.$pV;
+			$this->PIDS[$pV]['link']=$this->cObj->typoLink($item,$linkConf);
+		
+			//$this->PIDS[$pV]['link']='index.php?id='.$this->PIDS[$pV]['uid'].'&tx_trade_pi1[cmd]='.$pV;
 		}
 		//debug($this->PIDS);
 		t3lib_div::loadTCA('fe_users');
@@ -594,7 +613,7 @@ class tx_trade_pi1 extends tslib_pibase {
 		// force renderer back to previous editing page
 		$this->errors[]=' ';
 		// save updates
-		tx_trade_div::setSession('user',$this->user);	
+		tx_trade_div::setSession($this->conf,'user',$this->user);	
 	}
 	
 	/**
@@ -639,18 +658,18 @@ class tx_trade_pi1 extends tslib_pibase {
 	 */	
 	function processPostData() {
 		// merge posted search params with session
-		$this->search=tx_trade_div::getSession('search');
+		$this->search=tx_trade_div::getSession($this->conf,'search');
 		if (!is_array($this->search)) $this->search=array();
 		if (!is_array($this->piVars['search'])) $this->piVars['search']=array();
 		$this->search=t3lib_div::array_merge($this->search,$this->piVars['search']);
-		tx_trade_div::setSession('search',$this->search);
+		tx_trade_div::setSession($this->conf,'search',$this->search);
 		
 		// merge posted user details with session
 		
 		// clear user on logout
 		if (t3lib_div::GPvar('logintype')=='logout') {
 			$this->user=array();
-			tx_trade_div::setSession('user',$this->user);
+			tx_trade_div::setSession($this->conf,'user',$this->user);
 			unset($this->piVars['user']);
 		} 
 		// if login is submitted, dont catch user details
@@ -665,7 +684,7 @@ class tx_trade_pi1 extends tslib_pibase {
 			$this->errors[]="Login failure. Incorrect user or password details";	
 		} else {
 			// grab user from session
-			$this->user=tx_trade_div::getSession('user');
+			$this->user=tx_trade_div::getSession($this->conf,'user');
 			if (!is_array($this->user)) $this->user=array();
 			if (!is_array($this->piVars['user'])) $this->piVars['user']=array();
 			if (!is_array($GLOBALS['TSFE']->fe_user->user)) $GLOBALS['TSFE']->fe_user->user=array();
@@ -698,11 +717,11 @@ class tx_trade_pi1 extends tslib_pibase {
 			$content=$this->cObj->substituteMarkerArray($content,array('NAME'=>$prevUser[0]['name']),'###|###',true)  ;
 			$this->renderer->markerArray['REPEAT_VISITOR']=$content;
 		}
-		tx_trade_div::setSession('user',$this->user);
+		tx_trade_div::setSession($this->conf,'user',$this->user);
 		//debug('username in session is '.$this->user['username']);
 		
 		// merge posted shipping details with session
-		$this->shipping=tx_trade_div::getSession('shipping');
+		$this->shipping=tx_trade_div::getSession($this->conf,'shipping');
 		$shippingChanged=false;
 		if (!is_array($this->shipping)) $this->shipping=array();
 		if (!is_array($this->piVars['shipping'])) $this->piVars['shipping']=array();
@@ -719,7 +738,7 @@ class tx_trade_pi1 extends tslib_pibase {
 		}
 		
 		// merge posted payment details with session
-		$this->payment=tx_trade_div::getSession('payment');
+		$this->payment=tx_trade_div::getSession($this->conf,'payment');
 		if (!is_array($this->payment)) $this->payment=array();
 		if (!is_array($this->piVars['payment'])) $this->piVars['payment']=array();
 		$this->payment=t3lib_div::array_merge($this->payment,$this->piVars['payment']);
@@ -732,15 +751,15 @@ class tx_trade_pi1 extends tslib_pibase {
 			}
 		}
 		
-		tx_trade_div::setSession('shipping',$this->shipping);
+		tx_trade_div::setSession($this->conf,'shipping',$this->shipping);
 		
-		tx_trade_div::setSession('payment',$this->payment);
+		tx_trade_div::setSession($this->conf,'payment',$this->payment);
 		// merge posted order details with session
-		$this->order=tx_trade_div::getSession('order');
+		$this->order=tx_trade_div::getSession($this->conf,'order');
 		if (!is_array($this->order)) $this->order=array();
 		if (!is_array($this->piVars['order'])) $this->piVars['order']=array();
 		$this->order=t3lib_div::array_merge($this->order,$this->piVars['order']);
-		tx_trade_div::setSession('order',$this->order);
+		tx_trade_div::setSession($this->conf,'order',$this->order);
 	}
 	
 	/**
@@ -762,7 +781,7 @@ class tx_trade_pi1 extends tslib_pibase {
 				if (strlen(trim($aV))>0) {
 					if (trim($aV)=='0') {
 						unset($this->basket[$aK]);
-						tx_trade_div::setSession('basket',$this->basket);
+						tx_trade_div::setSession($this->conf,'basket',$this->basket);
 					} else if ($aV>0) {
 						$aV=intval($aV);
 						$res=$GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_trade_products','uid='.mysql_escape_string($aK),'','title ASC','');
@@ -771,7 +790,7 @@ class tx_trade_pi1 extends tslib_pibase {
 							$row['basket_qty']=$aV;
 							$this->basket[$row['uid']]=$row;
 	//						//debug($this->basket);
-							tx_trade_div::setSession('basket',$this->basket);
+							tx_trade_div::setSession($this->conf,'basket',$this->basket);
 						} else {
 							//$this->errors[]=$this->pi_getLL('basket_no_product');	
 						}
@@ -922,7 +941,7 @@ class tx_trade_pi1 extends tslib_pibase {
 				$this->user['uid']=$uid;
 				if ($this->conf['debug']=='1') $this->messages['saveuser']=$this->pi_getLL('save_successful');
 				// PATCH STEVER
-				tx_trade_div::setSession('user',$this->user);
+				tx_trade_div::setSession($this->conf,'user',$this->user);
 			}	
 		}
 		tx_trade_div::setUserCookie($user['username']);
@@ -964,7 +983,7 @@ class tx_trade_pi1 extends tslib_pibase {
 					$uid=$GLOBALS['TYPO3_DB']->sql_insert_id();
 					//$this->order=$orderToSave;
 					$this->order['uid']=$uid;
-					tx_trade_div::setSession('order',$this->order);
+					tx_trade_div::setSession($this->conf,'order',$this->order);
 				}
 				if ($this->order['uid']>0) {
 					if ($this->conf['tracking_code_increment']==0) $this->conf['tracking_code_increment']=1; 
@@ -1026,7 +1045,7 @@ class tx_trade_pi1 extends tslib_pibase {
 			$uid=$GLOBALS['TYPO3_DB']->sql_insert_id();
 			//$this->order=$orderToSave;
 			$this->order['uid']=$uid;
-			tx_trade_div::setSession('order',$this->order);
+			tx_trade_div::setSession($this->conf,'order',$this->order);
 		}
 		if ($this->order['uid']>0) {
 			if ($this->conf['tracking_code_increment']==0) $this->conf['tracking_code_increment']=1; 
@@ -1079,7 +1098,7 @@ class tx_trade_pi1 extends tslib_pibase {
 					$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_trade_orders',$this->order);
 					$uid=$GLOBALS['TYPO3_DB']->sql_insert_id();
 					$this->order['uid']=$uid;
-					tx_trade_div::setSession('order',$this->order);
+					tx_trade_div::setSession($this->conf,'order',$this->order);
 				}
 				//debug('process finlaise checkout got inser id '.$this->order['uid']);
 				if ($this->order['uid']>0) {
@@ -1124,7 +1143,7 @@ class tx_trade_pi1 extends tslib_pibase {
 						mail($this->conf['adminEmail'],$this->conf['confirmEmailAdminTitle'],$message,$headers);
 						//debug($this->conf['adminEmail']);
 						$this->doReset=true;
-						tx_trade_div::setSession('order',$this->order);
+						tx_trade_div::setSession($this->conf,'order',$this->order);
 					}
 				} else {
 					 $this->errors[]='Failed order processing when saving order details.';
@@ -1180,7 +1199,11 @@ class tx_trade_pi1 extends tslib_pibase {
 		foreach ($this->PIDS as $pK =>$pV) {
 			$formMarkers['PID_'.strtoupper($pK)]=$pV['uid'];
 			$formMarkers['SUBMIT_TO_'.strtoupper($pK)]=' name="'.$this->prefixId.'["buttons"]['.strtolower($pK).']" onClick="document.'.$this->formName.'.id.value='.$pV['uid'].'; document.'.$this->formName.'.cmd.value=\''.strtolower($pK).'\';"';
-			$formMarkers['LINK_TO_'.strtoupper($pK)]='index.php?id='.$pV['uid'].'&tx_trade_pi1[cmd]='.strtolower($pK);
+			$linkConf['parameter']=$pV['uid'];
+			$linkConf['returnLast']='url';
+			$linkConf['additionalParams']='&tx_trade_pi1[cmd]='.strtolower($pK);
+			$formMarkers['LINK_TO_'.strtoupper($pK)]=$this->cObj->typoLink($item,$linkConf);
+			//$formMarkers['LINK_TO_'.strtoupper($pK)]='index.php?id='.$pV['uid'].'&tx_trade_pi1[cmd]='.strtolower($pK);
 		}
 		$errors=' ';
 		if (is_array($this->errors)) {
@@ -1219,7 +1242,11 @@ class tx_trade_pi1 extends tslib_pibase {
 				if ($this->cmd!=$cKNoDot&&$noMoreLinks==false) {
 					eval($cV['condition']);
 					if ($testResult) {
-						$item='<a href="index.php?id='.$this->PIDS[$cKNoDot]['uid'].'&tx_trade_pi1[cmd]='.$cKNoDot.'" >'.$item.'</a>';
+						$linkConf['parameter']=$this->PIDS[$cKNoDot]['uid'];
+						$linkConf['returnLast']='';
+						$linkConf['additionalParams']='&tx_trade_pi1[cmd]='.$cKNoDot;
+						$item=$this->cObj->typoLink($item,$linkConf);
+					//	$item='<a href="index.php?id='.$this->PIDS[$cKNoDot]['uid'].'&tx_trade_pi1[cmd]='.$cKNoDot.'" >'.$item.'</a>';
 						//debug($this->PIDS);
 					}
 				} else {
@@ -1312,7 +1339,11 @@ class tx_trade_pi1 extends tslib_pibase {
 			} else {
 				$markerArray['SUBMIT_TO_'.strtoupper($pK)]=' name="'.$this->prefixId.'[buttons]['.strtolower($pK).']" onClick="document.'.$this->formName.'.id.value='.$pV['uid'].'; " ';
 			}
-			$formMarkers['LINK_TO_'.strtoupper($pK)]='index.php?id='.$pV['uid'].'&tx_trade_pi1[cmd]='.strtolower($pK);
+			$linkConf['parameter']=$pV['uid'];
+			$linkConf['returnLast']='url';
+			$linkConf['additionalParams']='&tx_trade_pi1[cmd]='.strtolower($pK);
+			$formMarkers['LINK_TO_'.strtoupper($pK)]=$this->cObj->typoLink($item,$linkConf);
+			//$formMarkers['LINK_TO_'.strtoupper($pK)]='index.php?id='.$pV['uid'].'&tx_trade_pi1[cmd]='.strtolower($pK);
 		}
 		$markerArray['FORM_NAME']=$this->formName;
 		$markerArray['SEARCH_BUTTON_NAME']=$this->searchButtonName;
@@ -1321,6 +1352,13 @@ class tx_trade_pi1 extends tslib_pibase {
 		$markerArray['CURRENCY_CODE']=$this->conf['currencyCode'];
 		$markerArray['CURRENCY_SYMBOL']=$this->conf['currencySymbol'];
 		$markerArray['TERMS_AND_CONDITIONS_PID']=$this->conf['PIDS.']['termsandconditions'];
+
+		$linkConf['parameter']=$this->conf['PIDS.']['termsandconditions'];
+		$linkConf['returnLast']='url';
+		$markerArray['TERMS_AND_CONDITIONS_LINK']=$this->cObj->typoLink('aaa',$linkConf);
+		//debug(array($this->conf['PIDS.'],$linkConf,$markerArray['TERMS_AND_CONDITIONS_LINK']));
+		
+		
 		$markerArray['LIST_TITLE']=$this->conf['lists.'][$this->listType.'.']['title'];
 		$markerArray['SHOP_OWNER_DETAILS']=$this->conf['shopOwnerDetails'];
 		$listMenu="";
@@ -1331,7 +1369,12 @@ class tx_trade_pi1 extends tslib_pibase {
 				$cKNoDot=substr($cK,0,strlen($cK)-1);
 				if (in_array('list_'.$cKNoDot,$cmdList)) {
 					$item=$cV['label'];	
-					$item='<a href="index.php?id='.$this->PIDS['list_'.$cKNoDot]['uid'].'&tx_trade_pi1[cmd]=list_'.$cKNoDot.'" >'.$item.'</a>';
+					//$item='<a href="index.php?id='.$this->PIDS['list_'.$cKNoDot]['uid'].'&tx_trade_pi1[cmd]=list_'.$cKNoDot.'" >'.$item.'</a>';
+					$linkConf['parameter']=$this->PIDS['list_'.$cKNoDot]['uid'];
+					$linkConf['returnLast']='';
+					$linkConf['additionalParams']='&tx_trade_pi1[cmd]=list_'.$cKNoDot;
+					$item=$this->cObj->typoLink($item,$linkConf);
+					//debug(array($linkConf,$item));
 					$item=$this->cObj->stdWrap($item,$cV['label.']['stdWrap.']);
 					$item=$this->cObj->stdWrap($item,$this->conf['listMenu.']['itemStdWrap.']);
 					$listMenu.=$item;
@@ -1368,7 +1411,11 @@ class tx_trade_pi1 extends tslib_pibase {
 			//$this->conf['currencySymbol'].
 			$markerArray['ORDER_PRICE_TOTAL_TAX']=sprintf("%01.2f",$data['price_total_tax']); 
 		}
-		$markerArray['LINK_TO_ORDER_HISTORY_SINGLE']='index.php?id='.$this->PIDS['order_history_single']['uid'].'&tx_trade_pi1[cmd]=order_history_single&tx_trade_pi1[order_uid]='.$data['uid'];
+		//$markerArray['LINK_TO_ORDER_HISTORY_SINGLE']='index.php?id='.$this->PIDS['order_history_single']['uid'].'&tx_trade_pi1[cmd]=order_history_single&tx_trade_pi1[order_uid]='.$data['uid'];
+		$linkConf['parameter']=$this->PIDS['order_history_single']['uid'];
+		$linkConf['returnLast']='url';
+		$linkConf['additionalParams']='&tx_trade_pi1[cmd]=order_history_single&tx_trade_pi1[order_uid]='.$data['uid'];
+		$markerArray['LINK_TO_ORDER_HISTORY_SINGLE']=$this->cObj->typoLink($item,$linkConf);
 		return $markerArray;
 	}
 	
@@ -1459,6 +1506,7 @@ class tx_trade_pi1 extends tslib_pibase {
 		$markerArray=tx_trade_pricecalc::updateProductMarkers($markerArray,$data,$this->user,$this);
 		// need to use no brackets to allow javascript update
 		$markerArray['FIELD_NAME']='tx_trade_pi1_addtobasket_'.$data['uid'];
+		$markerArray['FIELD_VALUE']=$this->basket[$data['uid']]['basket_qty'];
 		$imgFiles=explode(",",$data['image']);
 		
 		for ($i=1; $i<4; $i++ ) {
@@ -1639,7 +1687,7 @@ class tx_trade_pi1 extends tslib_pibase {
 			}
 		}
 		$this->user['valid']=$valid;
-		tx_trade_div::setSession('user',$this->user);	
+		tx_trade_div::setSession($this->conf,'user',$this->user);	
 		
 		// if password is not passed as post var and there is not FE user, generate a password
 		if ((!isset($this->piVars['user']['password1']))) {
@@ -1717,7 +1765,7 @@ class tx_trade_pi1 extends tslib_pibase {
 			$this->user['valid_shipping_details']=0;
 			$this->errors[]=$this->pi_getLL('shipping_method_required');
 		}
-		tx_trade_div::setSession('user',$this->user);
+		tx_trade_div::setSession($this->conf,'user',$this->user);
 		return $this->errors;
 	}
 	
@@ -1750,7 +1798,7 @@ class tx_trade_pi1 extends tslib_pibase {
 		} else {
 			$this->errors[]=$this->pi_getLL('payment_method_required');
 		}
-		tx_trade_div::setSession('user',$this->user);
+		tx_trade_div::setSession($this->conf,'user',$this->user);
 	}
 	
 	/**

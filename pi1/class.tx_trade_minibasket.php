@@ -61,12 +61,16 @@ class tx_trade_minibasket extends tslib_pibase {
 			} else {
 				$this->PIDS[$pV]['uid']=$GLOBALS['TSFE']->id;
 			}
-			$this->PIDS[$pV]['link']='index.php?id='.$this->PIDS[$pV]['uid'].'&tx_trade_pi1[cmd]='.$pV;
+			$linkConf['parameter']=$this->PIDS[$pV]['uid'];
+			$linkConf['returnLast']='url';
+			$linkConf['additionalParams']='&tx_trade_pi1[cmd]='.$pV;
+			$this->PIDS[$pV]['link']=$this->cObj->typoLink($item,$linkConf);
+			//$this->PIDS[$pV]['link']='index.php?id='.$this->PIDS[$pV]['uid'].'&tx_trade_pi1[cmd]='.$pV;
 		}
 		
 		//session_start();
 		// get basket contents
-		$this->basket=tx_trade_div::getSession('basket');
+		$this->basket=tx_trade_div::getSession($this->conf,'basket');
 		// allow for post vars
 		//debug(array($basket));
 		$this->basket=$this->processAddToBasket($this->basket);
@@ -98,7 +102,7 @@ class tx_trade_minibasket extends tslib_pibase {
 				if (strlen(trim($aV))>0) {
 					if (trim($aV)=='0') {
 						unset($this->basket[$aK]);
-						tx_trade_div::setSession('basket',$this->basket);
+						tx_trade_div::setSession($this->conf,'basket',$this->basket);
 					} else if ($aV>0) {
 						$aV=intval($aV);
 						$res=$GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_trade_products','uid='.mysql_escape_string($aK),'','title ASC','');
@@ -107,7 +111,7 @@ class tx_trade_minibasket extends tslib_pibase {
 							$row['basket_qty']=$aV;
 							$this->basket[$row['uid']]=$row;
 	//						//debug($this->basket);
-							tx_trade_div::setSession('basket',$this->basket);
+							tx_trade_div::setSession($this->conf,'basket',$this->basket);
 						} else {
 							//$this->errors[]=$this->pi_getLL('basket_no_product');	
 						}
@@ -175,6 +179,7 @@ class tx_trade_minibasket extends tslib_pibase {
 			} else {
 				$markerArray['SUBMIT_TO_'.strtoupper($pK)]=' '; // name="'.$this->prefixId.'[buttons]['.strtolower($pK).']" onClick="document.'.$this->formName.'.id.value='.$pV['uid'].'; " ';
 			}
+			
 			$formMarkers['LINK_TO_'.strtoupper($pK)]=' '; //index.php?id='.$pV['uid'].'&tx_trade_pi1[cmd]='.strtolower($pK);
 		}
 		$markerArray['FORM_NAME']=$this->formName;
@@ -232,7 +237,7 @@ class tx_trade_minibasket extends tslib_pibase {
 			//$this->conf['currencySymbol'].
 			$markerArray['ORDER_PRICE_TOTAL_TAX']=sprintf("%01.2f",$data['price_total_tax']); 
 		}
-		$markerArray['LINK_TO_ORDER_HISTORY_SINGLE']='index.php?id='.$this->PIDS['order_history_single']['uid'].'&tx_trade_pi1[cmd]=order_history_single&tx_trade_pi1[order_uid]='.$data['uid'];
+		$markerArray['LINK_TO_ORDER_HISTORY_SINGLE']=' ?id='.$this->PIDS['order_history_single']['uid'].'&tx_trade_pi1[cmd]=order_history_single&tx_trade_pi1[order_uid]='.$data['uid'];
 		return $markerArray;
 	}
 	

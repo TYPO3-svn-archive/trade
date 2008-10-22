@@ -7,7 +7,7 @@ plugin.tx_trade_pi1 {
     }
     #< tt_content.text.20.parseFunc.stdWrap
 	#lib.parseFunc_RTE 
-	
+	lockSessionToDomain=0
 	adminEmail=
 	bccOrderEmail=
 	maxListRows=20

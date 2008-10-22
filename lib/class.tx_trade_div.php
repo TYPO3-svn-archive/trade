@@ -40,12 +40,22 @@ class tx_trade_div extends tslib_pibase {
 	/***********************************************************************
 	 * Session Handling Functions
 	 **********************************************************************/
-	function setSession($key,$val) {
-		$GLOBALS['_SESSION']['tx_trade'][$key]=$val;	
+	function setSession($conf,$key,$val) {
+		if ($conf['lockSessionToDomain']==1) {
+			$domain=$GLOBALS['_SERVER']['HTTP_HOST'];
+			$GLOBALS['_SESSION'][$domain]['tx_trade'][$key]=$val;	
+		} else {
+			$GLOBALS['_SESSION']['tx_trade'][$key]=$val;	
+		}
 	}	
 	
-	function getSession($key) {
-		return $GLOBALS['_SESSION']['tx_trade'][$key];	
+	function getSession($conf,$key) {
+		if ($conf['lockSessionToDomain']==1) {
+			$domain=$GLOBALS['_SERVER']['HTTP_HOST'];
+			return $GLOBALS['_SESSION'][$domain]['tx_trade'][$key];	
+		} else {
+			return $GLOBALS['_SESSION']['tx_trade'][$key];		
+		}
 	}	
 	function removeSession($key) {
 		unset($GLOBALS['_SESSION']['tx_trade'][$key]);	

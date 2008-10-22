@@ -224,7 +224,10 @@ class tx_trade_render extends tslib_pibase {
 					$itemLink=$this->cObj->getSubpart($tmp,'LINK_ITEM');
 					//debug(array('link item',$itemLink));
 					if (strlen(trim($itemLink))==0) break;
-					$itemLink='<a href="index.php?id='.$this->parent->PIDS['singleview']['uid'].'&tx_trade_pi1[cmd]=singleview&tx_trade_pi1[uid]='.$clV['uid'].'&tx_trade_pi1[backPID]='.$GLOBALS['TSFE']->id.'&tx_trade_pi1[listtype]='.$this->parent->listType.'" >'.$itemLink.'</a>';
+					//$itemLink='<a href="index.php?id='.$this->parent->PIDS['singleview']['uid'].'&tx_trade_pi1[cmd]=singleview&tx_trade_pi1[uid]='.$clV['uid'].'&tx_trade_pi1[backPID]='.$GLOBALS['TSFE']->id.'&tx_trade_pi1[listtype]='.$this->parent->listType.'" >'.$itemLink.'</a>';
+					$linkConf['parameter']=$this->parent->PIDS['singleview']['uid'];
+					$linkConf['additionalParams']='&tx_trade_pi1[cmd]=singleview&tx_trade_pi1[uid]='.$clV['uid'].'&tx_trade_pi1[backPID]='.$GLOBALS['TSFE']->id.'&tx_trade_pi1[listtype]='.$this->parent->listType;
+					$itemLink=$this->cObj->typoLink($itemLink,$linkConf);
 					$tmp=$this->cObj->substituteSubpart($tmp,'###LINK_ITEM###',$itemLink,false)  ;
 				} while (true);
 				
@@ -273,7 +276,10 @@ class tx_trade_render extends tslib_pibase {
 				do {
 					$itemLink=$this->cObj->getSubpart($tmp,'LINK_ITEM');
 					if (strlen(trim($itemLink))==0) break;
-					$itemLink='<a href="index.php?id='.$this->parent->PIDS['singleview']['uid'].'&tx_trade_pi1[cmd]=singleview&tx_trade_pi1[uid]='.$clV['uid'].'&tx_trade_pi1[backPID]='.$GLOBALS['TSFE']->id.'&tx_trade_pi1[listtype]='.$this->parent->listType.'" >'.$itemLink.'</a>';
+					//$itemLink='<a href="index.php?id='.$this->parent->PIDS['singleview']['uid'].'&tx_trade_pi1[cmd]=singleview&tx_trade_pi1[uid]='.$clV['uid'].'&tx_trade_pi1[backPID]='.$GLOBALS['TSFE']->id.'&tx_trade_pi1[listtype]='.$this->parent->listType.'" >'.$itemLink.'</a>';
+					$linkConf['parameter']=$this->parent->PIDS['singleview']['uid'];
+					$linkConf['additionalParams']='&tx_trade_pi1[cmd]=singleview&tx_trade_pi1[uid]='.$clV['uid'].'&tx_trade_pi1[backPID]='.$GLOBALS['TSFE']->id.'&tx_trade_pi1[listtype]='.$this->parent->listType;
+					$itemLink=$this->cObj->typoLink($itemLink,$linkConf);
 					$tmp=$this->cObj->substituteSubpart($tmp,'###LINK_ITEM###',$itemLink,false)  ;
 				} while (true);
 				
